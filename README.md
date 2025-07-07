@@ -53,6 +53,5 @@
 
 > 🚀 **开始使用**  
 > ```bash
-> git clone https://github.com/你的用户名/八股文.git
-> cd 八股文
+> git clone https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style.git
 > ```
