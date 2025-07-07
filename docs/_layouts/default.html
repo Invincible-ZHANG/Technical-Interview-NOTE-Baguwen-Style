@@ -8,7 +8,8 @@
     {{ content_for_header }}
 </head>
 <body>
-    <!-- 可选：在所有页面都加导航 -->
+
+    <!-- 全站导航（可选放在所有页面顶部） -->
     <nav class="navbar">
         {% for item in site.data.navigation %}
         <a href="{{ item.url | relative_url }}"
@@ -18,6 +19,7 @@
         {% endfor %}
     </nav>
 
+    <!-- 页面主体 -->
     <main class="content">
         {{ content }}
     </main>
