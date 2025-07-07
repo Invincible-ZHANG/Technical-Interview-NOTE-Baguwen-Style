@@ -13,7 +13,7 @@
     <nav class="navbar">
         {% for item in site.data.navigation %}
         <a href="{{ item.url | relative_url }}"
-           {% if page.url= =item.url %}class="active" {% endif %}>
+           {% if page.url= = item.url %}class="active" {% endif %}>
             {{ item.title }}
         </a>
         {% endfor %}
