@@ -1,24 +1,27 @@
-﻿<header class="site-header">
-    <div class="wrapper site-nav-wrapper">
-        <h1 class="site-title">
-            <a href="{{ "/" | relative_url }}">{{ site.title }}</a>
-        </h1>
+﻿<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+    {%- include head.html -%}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }} | {{ site.title }}</title>
+    {{ content_for_header }}
+</head>
+<body>
+    <!-- 可选：在所有页面都加导航 -->
+    <nav class="navbar">
+        {% for item in site.data.navigation %}
+        <a href="{{ item.url | relative_url }}"
+           {% if page.url= =item.url %}class="active" {% endif %}>
+            {{ item.title }}
+        </a>
+        {% endfor %}
+    </nav>
 
-        <!-- 自定义导航开始 -->
-        <nav class="custom-nav">
-            <ul>
-                {% for item in site.data.navigation %}
-                <li>
-                    <a href="{{ item.url | relative_url }}"
-                       class="{% if page.url == item.url %}active{% endif %}">
-                        {{ item.title }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </nav>
-        <!-- 自定义导航结束 -->
-        <!-- 原有导航或搜索可以保留 -->
-        {{ content | where_exp: "c", "c != nil" }}
-    </div>
-</header>
+    <main class="content">
+        {{ content }}
+    </main>
+
+    {{ content_for_footer }}
+</body>
+</html>
