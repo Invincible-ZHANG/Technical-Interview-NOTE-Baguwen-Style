@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+    {%- include head.html -%}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }} | {{ site.title }}</title>
+    {{ content_for_header }}
+</head>
+<body>
+
+    <!-- Hero 区块 -->
+    <section class="hero">
+        <h1>{{ site.title }}</h1>
+        <p>✨ 嵌入式 · 软件开发 · GPU/CUDA · 算法</p>
+    </section>
+
+    <!-- 顶部导航 -->
+    <nav class="navbar">
+        {% for item in site.data.navigation %}
+        <a href="{{ item.url | relative_url }}"
+           {% if page.url= =item.url %}class="active" {% endif %}>
+            {{ item.title }}
+        </a>
+        {% endfor %}
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="content">
+        {{ content }}
+    </main>
+
+    {{ content_for_footer }}
+</body>
+</html>

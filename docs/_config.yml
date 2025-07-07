@@ -1,7 +1,25 @@
-﻿# docs/_config.yml
-title: 八股文笔记
-description: 嵌入式 · 软件开发 · GPU/CUDA · 算法
-theme: minima              # 使用 GitHub 默认的 Minima 主题
-plugins:                   # 如果有自定义插件可列在此
-  - jekyll-feed
-markdown: kramdown
+﻿title: 八股文笔记
+theme: minima
+
+# Jekyll Collections（如果之前已配置可保留）
+collections:
+  embedded:
+    output: true
+    permalink: /embedded/:path/
+  software:
+    output: true
+    permalink: /software/:path/
+  gpu_cuda:
+    output: true
+    permalink: /gpu-cuda/:path/
+  algorithms:
+    output: true
+    permalink: /algorithms/:path/
+
+# 默认把 head.html 注入到所有页面的 <head>
+defaults:
+  - scope:
+      path: ""
+    values:
+      includes:
+        - head.html

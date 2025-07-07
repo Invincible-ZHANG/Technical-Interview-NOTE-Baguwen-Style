@@ -58,6 +58,7 @@ bundle exec jekyll serve --port 4000
 ├── docs/                  # Jekyll 源码 & GitHub Pages 根
 │   ├── _config.yml        # Jekyll 配置
 │   ├── index.md           # 站点首页
+│   ├── assets/            # 静态资源（CSS、图片）
 │   ├── _embedded/         # 嵌入式笔记集合
 │   ├── _software/         # 软件开发笔记集合
 │   ├── _gpu_cuda/         # GPU/CUDA 笔记集合
@@ -66,7 +67,6 @@ bundle exec jekyll serve --port 4000
 │   ├── software/          # 软件索引页
 │   ├── gpu-cuda/          # GPU/CUDA 索引页
 │   └── algorithms/        # 算法索引页
-├── assets/                # 静态资源（CSS、图片）
 ├── examples/              # 配套示例代码
 ├── notes/                 # 原始笔记（可选同步）
 ├── scripts/               # 构建、校验脚本

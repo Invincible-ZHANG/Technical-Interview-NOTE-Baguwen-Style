@@ -1,0 +1,86 @@
+﻿/* 整体暗色基调 */
+body {
+    background: #0a0f23;
+    color: #e0e6f1;
+    font-family: 'Roboto Mono', monospace;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Hero 区块 */
+.hero {
+    background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+    padding: 4rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+    .hero h1 {
+        margin: 0 0 .5rem;
+        font-size: 3rem;
+        color: #fff;
+    }
+
+    .hero p {
+        margin: 0;
+        font-size: 1.25rem;
+        color: #c0d0ff;
+    }
+
+/* 顶部导航 */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: .75rem 0;
+    background: #010612;
+}
+
+    .navbar a {
+        color: #a0b0ff;
+        text-decoration: none;
+        font-weight: 600;
+        position: relative;
+    }
+
+        .navbar a.active,
+        .navbar a:hover {
+            color: #fff;
+        }
+
+            .navbar a.active::after,
+            .navbar a:hover::after {
+                content: "";
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: #3f8efc;
+            }
+
+/* 主内容区 */
+.content {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+    .content h2,
+    .content h3 {
+        color: #d0d8ff;
+    }
+
+    .content p,
+    .content li {
+        color: #e0e6f1;
+    }
+
+/* 普通链接 */
+a {
+    color: #6ea0ff;
+}
+
+    a:hover {
+        color: #95bfff;
+    }
