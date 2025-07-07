@@ -1,0 +1,36 @@
+﻿name: Build & Deploy Jekyll Site
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # 安装 Ruby & Bundler
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      # 安装依赖
+      - name: Install dependencies
+        run: |
+          cd docs
+          bundle install
+
+      # 构建站点
+      - name: Build site
+        run: |
+          cd docs
+          bundle exec jekyll build --destination _site
+
+      # 部署到 gh-pages 分支
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_site

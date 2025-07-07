@@ -1,0 +1,7 @@
+﻿# docs/_config.yml
+title: 八股文笔记
+description: 嵌入式 · 软件开发 · GPU/CUDA · 算法
+theme: minima              # 使用 GitHub 默认的 Minima 主题
+plugins:                   # 如果有自定义插件可列在此
+  - jekyll-feed
+markdown: kramdown
