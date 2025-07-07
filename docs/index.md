@@ -42,4 +42,4 @@ title: 八股文笔记
 
 ## 嵌入式 · 软件开发 · GPU/CUDA · 算法
 
-更多内容请点击上方导航或查看 [README](https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style/blob/main/README.md){:target="_blank")。  
+更多内容请点击上方导航或查看 [README](https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style/blob/main/README.md)。  
