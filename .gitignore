@@ -1,0 +1,40 @@
+﻿# ─── 静态站点输出 ──────────────────────────
+_site/
+docs/_site/
+
+# ┟─────────────────────────────────────────
+
+# ─── Node.js ───────────────────────────────
+node_modules/
+
+# ─── Visual Studio ─────────────────────────
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ─── CMake / Make ──────────────────────────
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# 忽略常见的构建输出目录
+build/
+bin/
+obj/
+
+# ─── 系统文件 ──────────────────────────────
+.DS_Store
+
+# ─── Python ────────────────────────────────
+*.pyc
+__pycache__/
+
+# ─── 二进制／库文件 ─────────────────────────
+*.exe
+*.dll
+*.lib
+*.ilk
+*.pdb
