@@ -1,0 +1,24 @@
+﻿<header class="site-header">
+    <div class="wrapper site-nav-wrapper">
+        <h1 class="site-title">
+            <a href="{{ "/" | relative_url }}">{{ site.title }}</a>
+        </h1>
+
+        <!-- 自定义导航开始 -->
+        <nav class="custom-nav">
+            <ul>
+                {% for item in site.data.navigation %}
+                <li>
+                    <a href="{{ item.url | relative_url }}"
+                       class="{% if page.url == item.url %}active{% endif %}">
+                        {{ item.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <!-- 自定义导航结束 -->
+        <!-- 原有导航或搜索可以保留 -->
+        {{ content | where_exp: "c", "c != nil" }}
+    </div>
+</header>
