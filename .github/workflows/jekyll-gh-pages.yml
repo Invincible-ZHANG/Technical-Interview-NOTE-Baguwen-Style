@@ -1,4 +1,3 @@
-# .github/workflows/deploy-pages.yml
 name: Deploy Jekyll Site to GitHub Pages
 
 on:
@@ -7,9 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read        # 允许 checkout 代码
-  pages: write          # 允许部署到 GitHub Pages
-  id-token: write       # 允许使用 OIDC（可选）
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: "pages"
@@ -29,13 +28,13 @@ jobs:
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: docs              # 指定你站点源码所在目录
-          destination: _site        # 输出目录，Pages 会把它当成 artifact
+          source: docs
+          destination: _site
 
-      - name: Upload artifact for deployment
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site               # 跟上面一致
+          path: _site
 
   deploy:
     name: Deploy to GitHub Pages
