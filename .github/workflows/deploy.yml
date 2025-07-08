@@ -1,13 +1,11 @@
 ﻿# .github/workflows/deploy.yml
 name: Deploy Jekyll Site to GitHub Pages
 
-# 触发条件：每次向 main 分支 push，或手动触发
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
 
-# 核心权限：允许 GITHUB_TOKEN 部署 Pages
 permissions:
   contents: read
   pages: write
@@ -18,39 +16,33 @@ jobs:
     name: Build site
     runs-on: ubuntu-latest
     steps:
-      # 1. 签出代码
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. 配置 Pages 环境
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      # 3. 用 Jekyll 构建 docs/ 下的站点
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: docs         # 指定源码目录
-          destination: _site   # 输出目录
+          source: docs
+          destination: _site
 
-      # 4. 上传构建产物供部署
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site         # 与上面 destination 一致
+          path: _site
 
   deploy:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages    # 与 Settings→Pages 中的环境名对应
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # 5. 将 _site 中的文件推送到 gh-pages
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site  # 指定要发布的目录
+          token: ${{ secrets.GITHUB_TOKEN }}

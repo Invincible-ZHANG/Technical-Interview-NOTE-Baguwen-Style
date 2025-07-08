@@ -21,17 +21,18 @@
             <nav class="dashboard-nav">
                 {% for item in site.data.navigation %}
                 <a href="{{ item.url | relative_url }}"
-                   class="{% if page.url == item.url %}active{% endif %}">{{ item.title }}</a>
+                   class="{% if page.url == item.url %}active{% endif %}">
+                    {{ item.title }}
+                </a>
                 {% endfor %}
             </nav>
         </header>
 
-        <!-- Top 区：动态一言 + 实时时钟 -->
+        <!-- Top 区：文学一言 + 实时时钟 -->
         <section class="dashboard-top">
             <div class="card quote-card">
-                <p id="hitokoto">
-                    <a href="#" id="hitokoto_text">:D 获取中...</a>
-                </p>
+                <blockquote id="hitokoto_text">“加载中…”</blockquote>
+                <cite id="hitokoto_source">— 获取中…</cite>
             </div>
             <div class="card clock-card">
                 <div id="time"></div>
@@ -85,22 +86,33 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 动态加载一言（Hitokoto API）
-        async function fetchHitokoto() {
+        // 加载“文学”分类的一言并渲染
+        async function fetchHitokotoLiterature() {
             try {
-                const resp = await fetch('https://v1.hitokoto.cn');
+                const resp = await fetch('https://v1.hitokoto.cn?c=d');
                 const data = await resp.json();
-                const elm = document.getElementById('hitokoto_text');
-                elm.href = `https://hitokoto.cn/?uuid=${data.uuid}`;
-                elm.innerText = data.hitokoto;
+
+                // 渲染文本部分
+                const textEl = document.getElementById('hitokoto_text');
+                textEl.textContent = `“${data.hitokoto}”`;
+                textEl.onclick = () => {
+                    window.open(`https://hitokoto.cn/?uuid=${data.uuid}`, '_blank');
+                };
+
+                // 渲染出处：作者 + 来源
+                const srcEl = document.getElementById('hitokoto_source');
+                let parts = [];
+                if (data.from_who) parts.push(data.from_who);
+                if (data.from) parts.push(`《${data.from}》`);
+                srcEl.textContent = parts.length ? `— ${parts.join('，')}` : '';
             } catch (e) {
                 console.error('Hitokoto API Error:', e);
-                const elm = document.getElementById('hitokoto_text');
-                elm.href = '#';
-                elm.innerText = '“加载失败，请稍后重试。”';
+                const textEl = document.getElementById('hitokoto_text');
+                textEl.textContent = '“加载失败，请稍后重试。”';
+                document.getElementById('hitokoto_source').textContent = '';
             }
         }
-        document.addEventListener('DOMContentLoaded', fetchHitokoto);
+        document.addEventListener('DOMContentLoaded', fetchHitokotoLiterature);
     </script>
 </body>
 </html>
