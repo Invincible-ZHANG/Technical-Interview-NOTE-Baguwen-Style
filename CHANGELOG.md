@@ -5,8 +5,7 @@
 
 ### 新增
 - 🖼️ 添加多分辨率 `favicon.ico`，支持浏览器标签页和书签图标  
-- 🌄 首页新增背景图支持，并修复 Liquid 模板在 SCSS 中渲染背景路径的问题  (依旧存在BUG)
-- 🔧 引入 `custom.scss`（原 `custom.css` 重命名并添加 Front-Matter），开启 Jekyll 对背景 URL 的解析  
+- 🌄 首页新增背景图支持，并修复 Liquid 模板在 SCSS 中渲染背景路径的问题  (依旧存在BUG)  
 - ⏰ “实时时钟”模块加入秒级刷新显示  
 - 💬 “Hitokoto 一言”模块集成 v1.hitokoto.cn API，异步加载名人名言并附带出处链接  
 - 📱 新增响应式媒体查询：手机、平板、PC 三档布局自动适配  

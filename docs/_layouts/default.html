@@ -5,6 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
+
+    <!-- 先加载原有的 custom.css -->
+    <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+    <!-- 再加载新的 background.css -->
+    <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
+
     {{ content_for_header }}
 </head>
 <body>
@@ -13,7 +19,7 @@
     <nav class="navbar">
         {% for item in site.data.navigation %}
         <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
+           {% if page.url= =item.url %}class="active" {% endif %}>
             {{ item.title }}
         </a>
         {% endfor %}

@@ -1,0 +1,7 @@
+﻿body {
+    /* 使用背景图，居中不平铺并覆盖整个窗口 */
+    background: url('/assets/images/dashboard-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    /* 如果图片加载慢，先给个渐变色做占位 */
+    background-color: #f0f0f0;
+}
