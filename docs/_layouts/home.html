@@ -26,11 +26,12 @@
             </nav>
         </header>
 
-        <!-- Top 区：个性话语 + 实时时钟 -->
+        <!-- Top 区：动态一言 + 实时时钟 -->
         <section class="dashboard-top">
             <div class="card quote-card">
-                <blockquote>“技术源自实践，成于分享。”</blockquote>
-                <cite>— 八股文笔记</cite>
+                <p id="hitokoto">
+                    <a href="#" id="hitokoto_text">:D 获取中...</a>
+                </p>
             </div>
             <div class="card clock-card">
                 <div id="time"></div>
@@ -55,7 +56,9 @@
                     <li>对嵌入式或并行计算有新思路？</li>
                     <li>欢迎 Fork &amp; Pull Request，一起打造最有料笔记库！</li>
                 </ul>
-                <a class="btn" href="https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style" target="_blank">⭐ 给仓库加 Star</a>
+                <a class="btn"
+                   href="https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style"
+                   target="_blank">⭐ 给仓库加 Star</a>
             </div>
         </section>
 
@@ -73,14 +76,31 @@
     {{ content_for_footer }}
 
     <script>
-    // 实时时钟
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('time').textContent = now.toLocaleTimeString();
-      document.getElementById('date').textContent = now.toLocaleDateString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+        // 实时时钟
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('time').textContent = now.toLocaleTimeString();
+            document.getElementById('date').textContent = now.toLocaleDateString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 动态加载一言（Hitokoto API）
+        async function fetchHitokoto() {
+            try {
+                const resp = await fetch('https://v1.hitokoto.cn');
+                const data = await resp.json();
+                const elm = document.getElementById('hitokoto_text');
+                elm.href = `https://hitokoto.cn/?uuid=${data.uuid}`;
+                elm.innerText = data.hitokoto;
+            } catch (e) {
+                console.error('Hitokoto API Error:', e);
+                const elm = document.getElementById('hitokoto_text');
+                elm.href = '#';
+                elm.innerText = '“加载失败，请稍后重试。”';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', fetchHitokoto);
     </script>
 </body>
 </html>

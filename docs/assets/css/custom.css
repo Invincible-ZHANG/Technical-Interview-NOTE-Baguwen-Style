@@ -1,4 +1,6 @@
-﻿/* 仪表盘背景 */
+﻿---
+---
+/* 仪表盘背景 */
 .dashboard-bg {
     position: fixed;
     inset: 0;
@@ -128,6 +130,45 @@
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
+
+/* —— 一言模块（quote-card）样式 —— */
+.quote-card {
+    /* 使用通用卡片底色和阴影 */
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    /* 语句文字 */
+    .quote-card blockquote {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.4;
+        color: #fff;
+    }
+
+    /* 来源署名 */
+    .quote-card cite {
+        margin-top: 0.5rem;
+        text-align: right;
+        font-size: 0.9rem;
+        color: #ddd;
+    }
+
+    /* 链接显示时的文字样式 */
+    .quote-card a#hitokoto_text {
+        color: #fff;
+        text-decoration: none;
+    }
+
+        .quote-card a#hitokoto_text:hover {
+            text-decoration: underline;
+        }
+
 
 /* —— 响应式媒体查询 —— */
 
