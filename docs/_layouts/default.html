@@ -19,16 +19,25 @@
     <nav class="navbar">
         {% for item in site.data.navigation %}
         <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
+           {% if page.url= =item.url %}class="active" {% endif %}>
             {{ item.title }}
         </a>
         {% endfor %}
     </nav>
 
     <!-- 页面主体 -->
-    <main class="content">
+    <main class="card-grid">
         {{ content }}
     </main>
+
+    <div class="nav-cards">
+        {% for item in site.data.navigation %}
+        <a class="card nav-card" href="{{ item.url | relative_url }}">
+            {{ item.title }}
+        </a>
+        {% endfor %}
+    </div>
+
 
     {{ content_for_footer }}
 </body>

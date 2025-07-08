@@ -124,13 +124,39 @@
         background: rgba(255,255,255,0.2);
     }
 
-/* 通用卡片 */
+/* ─────────────────────────────────────
+   通用“卡片”样式：半透明 + 毛玻璃 + 投影
+───────────────────────────────────── */
 .card {
-    background: rgba(0,0,0,0.4);
+    /* 半透明白，便于和背景融合 */
+    background: rgba(255, 255, 255, 0.2);
+    /* 毛玻璃模糊 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    /* 轻微边框和阴影，增加立体感 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    /* 圆角、内边距 */
+    border-radius: 12px;
     padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    /* 文字颜色微调 */
+    color: #fff;
 }
+/* ─────────────────────────────────────
+   全局卡片网格布局
+───────────────────────────────────── */
+.card-grid {
+    display: grid;
+    /* 最少 280px，最多平分剩余空间 */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* 卡片之间的间距 */
+    gap: 1.5rem;
+    /* 水平居中，最大宽度 1200px */
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
 
 /* —— 一言模块（quote-card）样式 —— */
 .quote-card {
