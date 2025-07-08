@@ -41,14 +41,26 @@ bundle exec jekyll serve --port 4000
 ```
 
 ---
+## 更新日志
+
+详见 [CHANGELOG](CHANGELOG.md)。
+
+---
 
 ## 核心特性
+🚀 领域覆盖：嵌入式开发 · 软件工程 · GPU/CUDA 加速 · 算法与数值求解
 
-* 🚀 **领域覆盖**：嵌入式开发 · 软件工程 · GPU/CUDA 加速 · 算法与数值求解
-* ✍️ **Markdown 笔记**：统一格式、YAML Front Matter、自动生成导航和索引
-* 🔄 **Jekyll 构建**：`docs/` 目录 + Minima 主题，自动渲染成静态网站
-* 🔧 **GitHub Actions**：CI/CD 流水线，支持自动构建与部署到 GitHub Pages
-* 📂 **Jekyll Collections**：按模块（embedded、software、gpu\_cuda、algorithms）组织内容
+✍️ Markdown 笔记：统一格式、YAML Front Matter、自动生成导航和索引
+
+🔄 Jekyll 构建：docs/ 目录 + Minima 主题 + 自定义 home.html 布局
+
+🔧 GitHub Actions：自动化构建与部署到 GitHub Pages
+
+📦 Docker 预览：无需本地 Ruby 环境，容器中一键启动
+
+🔗 名言模块：Hitokoto API 动态加载并附带出处链接
+
+📱 响应式布局：手机/平板/PC 三档自适应
 
 ---
 
@@ -108,3 +120,5 @@ bundle exec jekyll serve --port 4000
 ## 许可证
 
 本项目遵循 [MIT License](LICENSE)。 欢迎自由使用、修改和分发，请保留版权声明。
+
+---
