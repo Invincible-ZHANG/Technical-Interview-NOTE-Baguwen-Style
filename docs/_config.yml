@@ -24,5 +24,3 @@ defaults:
       includes:
         - head.html
 
-sass:
-  style: compressed
