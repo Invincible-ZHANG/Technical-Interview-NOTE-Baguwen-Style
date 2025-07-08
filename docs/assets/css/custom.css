@@ -1,86 +1,130 @@
-﻿/* 整体暗色基调 */
-body {
-    background: #0a0f23;
-    color: #e0e6f1;
-    font-family: 'Roboto Mono', monospace;
-    line-height: 1.6;
-    margin: 0;
+﻿/* 仪表盘背景 */
+.dashboard-bg {
+    position: fixed;
+    inset: 0;
+    background: url('/assets/images/dashboard-bg.jpg') center/cover no-repeat;
+    filter: brightness(0.5);
+    z-index: -1;
 }
 
-/* Hero 区块 */
-.hero {
-    background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
-    padding: 4rem 1rem;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+/* 主容器网格布局 */
+.dashboard-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto 1fr;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #fff;
 }
 
-    .hero h1 {
-        margin: 0 0 .5rem;
-        font-size: 3rem;
-        color: #fff;
-    }
-
-    .hero p {
-        margin: 0;
-        font-size: 1.25rem;
-        color: #c0d0ff;
-    }
-
-/* 顶部导航 */
-.navbar {
+/* 顶栏 */
+.dashboard-header {
     display: flex;
-    justify-content: center;
-    gap: 2rem;
-    padding: .75rem 0;
-    background: #010612;
+    justify-content: space-between;
+    align-items: center;
 }
 
-    .navbar a {
-        color: #a0b0ff;
-        text-decoration: none;
-        font-weight: 600;
-        position: relative;
+    .dashboard-header h1 {
+        font-size: 2.5rem;
     }
 
-        .navbar a.active,
-        .navbar a:hover {
-            color: #fff;
-        }
-
-            .navbar a.active::after,
-            .navbar a:hover::after {
-                content: "";
-                position: absolute;
-                bottom: -4px;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: #3f8efc;
-            }
-
-/* 主内容区 */
-.content {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+.dashboard-nav a {
+    margin: 0 1rem;
+    color: #ccc;
+    text-decoration: none;
+    font-weight: 500;
 }
 
-    .content h2,
-    .content h3 {
-        color: #d0d8ff;
+    .dashboard-nav a.active,
+    .dashboard-nav a:hover {
+        color: #fff;
+        border-bottom: 2px solid #3f8efc;
     }
 
-    .content p,
-    .content li {
-        color: #e0e6f1;
-    }
-
-/* 普通链接 */
-a {
-    color: #6ea0ff;
+/* Top 区 */
+.dashboard-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
-    a:hover {
-        color: #95bfff;
+.quote-card blockquote {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+}
+
+.quote-card cite {
+    text-align: right;
+    display: block;
+    opacity: 0.8;
+}
+
+.clock-card {
+    text-align: center;
+}
+
+    .clock-card #time {
+        font-size: 2rem;
     }
+
+    .clock-card #date {
+        margin-top: .5rem;
+        opacity: 0.8;
+    }
+
+/* 中区 */
+.dashboard-middle {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1rem;
+}
+
+.about-card h2,
+.invite-card h2 {
+    margin-top: 0;
+}
+
+.invite-card ul {
+    list-style: disc inside;
+    margin: .5rem 0;
+}
+
+.invite-card .btn {
+    display: inline-block;
+    margin-top: .5rem;
+    padding: .5rem 1rem;
+    background: #3f8efc;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* 底区链接卡 */
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.link-card {
+    background: rgba(255,255,255,0.1);
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    transition: background .3s;
+}
+
+    .link-card:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+/* 通用卡片 */
+.card {
+    background: rgba(0,0,0,0.4);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}

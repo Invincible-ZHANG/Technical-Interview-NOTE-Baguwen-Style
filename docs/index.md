@@ -12,10 +12,13 @@ title: 八股文笔记
 
 ## 关于作者
 
-👤 **Invincible-ZHANG**  
-- RWTH Aachen 大学 计算机工程 MSc 在读  
-- 热衷嵌入式系统、多体动力学与 GPU 加速  
-- 喜欢将复杂算法用优雅代码呈现  
+👤 **张子健 (Zijian Zhang)**  
+- RWTH Aachen University 计算机工程硕士在读  
+- 电子信息工程与人工智能架构复合背景  
+- 扎实的嵌入式系统开发能力与 AI 算法基础  
+- 曾参与 Intel MCU 驱动、KaihongOS 驱动与多体动力学求解器项目  
+- 致力于智能系统在实际工程场景中的落地与性能优化  
+
 
 ---
 

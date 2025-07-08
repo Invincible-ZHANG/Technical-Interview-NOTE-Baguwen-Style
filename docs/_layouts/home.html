@@ -1,35 +1,86 @@
 ﻿<!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
 <head>
     {%- include head.html -%}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ page.title }} | {{ site.title }}</title>
+    <title>{{ site.title }}</title>
     {{ content_for_header }}
 </head>
-<body>
+<body class="dashboard">
 
-    <!-- Hero 区块 -->
-    <section class="hero">
-        <h1>{{ site.title }}</h1>
-        <p>✨ 嵌入式 · 软件开发 · GPU/CUDA · 算法</p>
-    </section>
+    <!-- 背景层 -->
+    <div class="dashboard-bg"></div>
 
-    <!-- 顶部导航 -->
-    <nav class="navbar">
-        {% for item in site.data.navigation %}
-        <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
-            {{ item.title }}
-        </a>
-        {% endfor %}
-    </nav>
+    <!-- 主容器 -->
+    <div class="dashboard-container">
 
-    <!-- 主内容区 -->
-    <main class="content">
-        {{ content }}
-    </main>
+        <!-- 顶栏：Logo + 导航 -->
+        <header class="dashboard-header">
+            <h1>{{ site.title }}</h1>
+            <nav class="dashboard-nav">
+                {% for item in site.data.navigation %}
+                <a href="{{ item.url | relative_url }}"
+                   class="{% if page.url == item.url %}active{% endif %}">{{ item.title }}</a>
+                {% endfor %}
+            </nav>
+        </header>
+
+        <!-- Top 区：个性话语 + 实时时钟 -->
+        <section class="dashboard-top">
+            <div class="card quote-card">
+                <blockquote>“技术源自实践，成于分享。”</blockquote>
+                <cite>— 八股文笔记</cite>
+            </div>
+            <div class="card clock-card">
+                <div id="time"></div>
+                <div id="date"></div>
+            </div>
+        </section>
+
+        <!-- 中区：关于作者 + 创意共创 -->
+        <section class="dashboard-middle">
+            <div class="card about-card">
+                <h2>关于作者</h2>
+                <p>
+                    👤 张子健（Zijiang Zhang）<br>
+                    🎓 RWTH Aachen MSc·计算机工程在读<br>
+                    🚀 嵌入式 · GPU/CUDA · 算法爱好者
+                </p>
+            </div>
+            <div class="card invite-card">
+                <h2>创意共创</h2>
+                <ul>
+                    <li>分享你的面试实战案例？</li>
+                    <li>对嵌入式或并行计算有新思路？</li>
+                    <li>欢迎 Fork &amp; Pull Request，一起打造最有料笔记库！</li>
+                </ul>
+                <a class="btn" href="https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style" target="_blank">⭐ 给仓库加 Star</a>
+            </div>
+        </section>
+
+        <!-- 底区：快速入口卡片 -->
+        <section class="dashboard-links">
+            {% for item in site.data.navigation %}
+            <a class="card link-card" href="{{ item.url | relative_url }}">
+                {{ item.title }}
+            </a>
+            {% endfor %}
+        </section>
+
+    </div>
 
     {{ content_for_footer }}
+
+    <script>
+    // 实时时钟
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('time').textContent = now.toLocaleTimeString();
+      document.getElementById('date').textContent = now.toLocaleDateString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    </script>
 </body>
 </html>
