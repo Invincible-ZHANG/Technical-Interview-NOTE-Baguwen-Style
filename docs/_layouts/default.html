@@ -6,38 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
 
-    <!-- 先加载原有的 custom.css -->
+    <!-- 先加载你的原有样式 -->
     <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
-    <!-- 再加载新的 background.css -->
-    <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
+    <!-- 再加载下面这份仪表盘专用样式 -->
+    <link rel="stylesheet" href="{{ '/assets/css/dashboard.css' | relative_url }}">
 
     {{ content_for_header }}
 </head>
 <body>
 
-    <!-- 全站导航（可选放在所有页面顶部） -->
-    <nav class="navbar">
-        {% for item in site.data.navigation %}
-        <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
-            {{ item.title }}
-        </a>
-        {% endfor %}
-    </nav>
+    <!-- （可选）全屏背景图 -->
+    <div class="dashboard-bg"></div>
 
-    <!-- 页面主体 -->
-    <main class="card-grid">
-        {{ content }}
+    <!-- 仪表盘主体 -->
+    <main class="dashboard-container">
+
+        <!-- 顶部：Logo + 站点名 -->
+        <div class="dashboard-header">
+            <img class="site-logo"
+                 src="{{ '/assets/images/logo.png' | relative_url }}"
+                 alt="logo">
+            <span class="site-title">{{ site.title }}</span>
+        </div>
+
+        <!-- 第一行：名言 & 时钟 -->
+        <div class="dashboard-top">
+            <div class="card quote-card">
+                <blockquote>{{ site.data.quote.text }}</blockquote>
+                <cite>— {{ site.data.quote.author }}</cite>
+            </div>
+            <div class="card clock-card">
+                <div id="time">{{ site.time | date: "%H:%M:%S" }}</div>
+                <div id="date">{{ site.time | date: "%Y 年 %m 月 %d 日 星期%u" }}</div>
+                <!-- 如果要天气，也可以在这里加上 -->
+            </div>
+        </div>
+
+        <!-- 第二行：简介（Hello World + 社交图标） & 站点列表 -->
+        <div class="dashboard-middle">
+            <div class="card intro-card">
+                {{ content }}
+            </div>
+            <div class="links-area">
+                <div class="links-title">
+                    <i class="icon-link"></i> 网站列表
+                </div>
+                <div class="dashboard-links">
+                    {% for item in site.data.navigation %}
+                    <a class="link-card" href="{{ item.url | relative_url }}">
+                        {{ item.title }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
     </main>
-
-    <div class="nav-cards">
-        {% for item in site.data.navigation %}
-        <a class="card nav-card" href="{{ item.url | relative_url }}">
-            {{ item.title }}
-        </a>
-        {% endfor %}
-    </div>
-
 
     {{ content_for_footer }}
 </body>

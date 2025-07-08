@@ -5,3 +5,143 @@
     /* 如果图片加载慢，先给个渐变色做占位 */
     background-color: #f0f0f0;
 }
+
+/* ─── 主容器：居中 + 限宽 + 自动分行 ─── */
+.dashboard-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-rows: auto auto;
+    row-gap: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ─── 顶部：Logo + 站点名 ─── */
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.site-logo {
+    width: 48px;
+    height: 48px;
+}
+
+.site-title {
+    font-size: 2.25rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* ─── 第一行：名言 & 时钟 ─── */
+.dashboard-top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    padding: 1.25rem;
+    color: #fff;
+}
+
+.quote-card blockquote {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.quote-card cite {
+    display: block;
+    text-align: right;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.clock-card {
+    text-align: center;
+}
+
+    .clock-card #time {
+        font-size: 2rem;
+        margin-bottom: .25rem;
+    }
+
+    .clock-card #date {
+        font-size: .9rem;
+        opacity: .8;
+    }
+
+/* ─── 第二行：简介 & 网站列表 ─── */
+.dashboard-middle {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1rem;
+}
+
+.intro-card { /* 使用 .card 即可 */
+}
+
+.links-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.links-title {
+    font-size: 1.1rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+    gap: .75rem;
+}
+
+.link-card {
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: .75rem;
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    transition: background .3s, transform .2s;
+}
+
+    .link-card:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+/* ─── 响应式 ─── */
+@media (max-width:767px) {
+    .dashboard-middle,
+    .dashboard-top {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (min-width:768px) and (max-width:1023px) {
+    .dashboard-middle,
+    .dashboard-top {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .dashboard-links {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
