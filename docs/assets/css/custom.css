@@ -4,7 +4,8 @@
 .dashboard-bg {
     position: fixed;
     inset: 0;
-    background: url('{{ "/assets/images/dashboard-bg.jpg" | relative_url }}') center/cover no-repeat;
+    background: url('/Technical-Interview-NOTE-Baguwen-Style/assets/images/dashboard-bg.jpg')
+              center/cover no-repeat;
     filter: brightness(0.5);
     z-index: -1;
 }
