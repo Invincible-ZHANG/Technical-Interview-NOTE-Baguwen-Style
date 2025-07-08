@@ -115,6 +115,32 @@ bundle exec jekyll serve --port 4000
 3. 提交改动并推送
 4. 提交 Pull Request，描述你的改动内容
 
+
+---
+
+## 动画主页设计说明（WebGL-Fluid 首页）
+
+本项目集成了一个现代动态主页，作为笔记导航的视觉入口，主页具有如下特点：
+
+🎨 **WebGL 动态背景**：使用 [WebGL-Fluid-Simulation](https://github.com/PavelDoGreat/WebGL-Fluid-Simulation/) 实现流体互动动画，具有强烈科技感。
+
+🧩 **响应式布局 + 动效切换**：适配手机与 PC 端，导航区采用模块化配置，可自定义图标与跳转链接。
+
+🔧 **纯静态部署**：主页构建后产出纯 HTML/CSS/JS，可部署在 GitHub Pages 或任意静态服务器。
+
+📁 **主站入口地址**：[https://invincible-zhang.github.io/blog](https://invincible-zhang.github.io/blog)
+
+---
+
+### 致谢 SimonAKing 🙏
+
+主页设计参考并改编自 [SimonAKing/HomePage](https://github.com/SimonAKing/HomePage) 项目，该项目原始仓库结构清晰、界面优雅，是国内极具美感的开源主页设计之一。
+
+原始作者仓库中文文档：[README.zh_CN.md](https://github.com/SimonAKing/HomePage/blob/master/README.zh_CN.md)
+
+在此向原作者 SimonAKing 致以诚挚感谢 🙇！
+
+
 ---
 
 ## 许可证
