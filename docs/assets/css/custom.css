@@ -1,14 +1,14 @@
 ﻿---
 ---
 /* 仪表盘背景 */
-.dashboard-bg {
+/*.dashboard-bg {
     position: fixed;
     inset: 0;
     background: url('/Technical-Interview-NOTE-Baguwen-Style/assets/images/dashboard-bg.jpg')
               center/cover no-repeat;
     filter: brightness(0.5);
     z-index: -1;
-}
+}*/
 
 /* 主容器网格布局 */
 .dashboard-container {
