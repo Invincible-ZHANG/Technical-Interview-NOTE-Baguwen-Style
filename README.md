@@ -38,6 +38,11 @@ cd docs
 bundle install        # 如果第一次运行需安装依赖
 bundle exec jekyll serve --port 4000
 # 浏览器访问 http://localhost:4000
+
+# 代码速记
+git add .
+git commit -m ""
+git push
 ```
 
 ---
