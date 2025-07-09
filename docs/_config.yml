@@ -1,29 +1,27 @@
 ﻿title: 八股文笔记
 theme: minima
 
-# Jekyll Collections（如果之前已配置可保留）
+# 告诉 Jekyll 所有 _xxx collection 都放在 notes/ 目录下
+collections_dir: notes
+
 collections:
   embedded:
     output: true
-    source: notes/_embedded
     permalink: /embedded/:path/
   software:
     output: true
-    source: notes/_software
     permalink: /software/:path/
   gpu_cuda:
     output: true
-    source: notes/_gpu_cuda
     permalink: /gpu-cuda/:path/
   algorithms:
     output: true
-    source: notes/_algorithms
     permalink: /algorithms/:path/
   mbd:
     output: true
-    source: notes/_mbd
     permalink: /mbd/:path/
 
+# 其余配置保持不变……
 
 
 # 默认把 head.html 注入到所有页面的 <head>
