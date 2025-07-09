@@ -17,7 +17,7 @@ collections:
     permalink: /algorithms/:path/
   mbd:
     output: true
-    permalink: /MBD/:path/
+    permalink: /mbd/:path/
 
 
 # 默认把 head.html 注入到所有页面的 <head>
