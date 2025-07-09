@@ -1,15 +1,11 @@
 ﻿---
 layout: default
-title: 嵌入式 系列
-permalink: /embedded/
+title: 算法 系列
+permalink: /algorithms/
 ---
 
-# 嵌入式 系列
-
-下面是所有嵌入式相关笔记：
-
 <ul>
-{% for post in site.embedded %}
+{% for post in site.algorithms %}
   <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a> - {{ post.date | date: "%Y-%m-%d" }}</li>
 {% endfor %}
 </ul>

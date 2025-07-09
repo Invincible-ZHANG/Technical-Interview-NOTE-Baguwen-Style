@@ -1,13 +1,11 @@
 ﻿---
 layout: default
-title: 算法 系列
-permalink: /algorithms/
+title: GPU/CUDA 系列
+permalink: /gpu-cuda/
 ---
 
-# 算法 系列
-
 <ul>
-{% for post in site.algorithms %}
+{% for post in site.gpu_cuda %}
   <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a> - {{ post.date | date: "%Y-%m-%d" }}</li>
 {% endfor %}
 </ul>

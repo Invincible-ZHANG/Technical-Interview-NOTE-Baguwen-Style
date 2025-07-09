@@ -1,13 +1,11 @@
 ﻿---
 layout: default
-title: 软件开发 系列
-permalink: /software/
+title: 嵌入式 系列
+permalink: /embedded/
 ---
 
-# 软件开发 系列
-
 <ul>
-{% for post in site.software %}
+{% for post in site.embedded %}
   <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a> - {{ post.date | date: "%Y-%m-%d" }}</li>
 {% endfor %}
 </ul>
