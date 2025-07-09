@@ -5,19 +5,25 @@ theme: minima
 collections:
   embedded:
     output: true
+    source: notes/_embedded
     permalink: /embedded/:path/
   software:
     output: true
+    source: notes/_software
     permalink: /software/:path/
   gpu_cuda:
     output: true
+    source: notes/_gpu_cuda
     permalink: /gpu-cuda/:path/
   algorithms:
     output: true
+    source: notes/_algorithms
     permalink: /algorithms/:path/
   mbd:
     output: true
+    source: notes/_mbd
     permalink: /mbd/:path/
+
 
 
 # 默认把 head.html 注入到所有页面的 <head>
