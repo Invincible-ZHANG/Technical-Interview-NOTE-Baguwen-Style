@@ -1,8 +1,6 @@
 ﻿title: 八股文笔记
 theme: minima
 
-# 告诉 Jekyll 所有 _xxx collection 都放在 notes/ 目录下
-collections_dir: notes
 
 collections:
   embedded:
@@ -19,7 +17,7 @@ collections:
     permalink: /algorithms/:path/
   mbd:
     output: true
-    permalink: /mbd/:name.html
+    permalink: /software/:path/
 
 # ———————— 在这里新增 ————————
 
