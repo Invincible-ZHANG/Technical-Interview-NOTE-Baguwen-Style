@@ -1,10 +1,10 @@
 ﻿- title: 嵌入式
-  url: /embedded/
+  url: notes/embedded/
 - title: 软件开发
-  url: /software/
+  url: notes/software/
 - title: GPU/CUDA
-  url: /gpu-cuda/
+  url: notes/gpu-cuda/
 - title: 算法
-  url: /algorithms/
+  url: notes/algorithms/
 - title: 多体动力学
-  url: /mbd/
+  url: notes/mbd/
