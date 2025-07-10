@@ -5,44 +5,53 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
-    <!-- 可以按需添加自定义 CSS -->
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     {{ content_for_header }}
     <style>
-        /* —— 导航栏美化 —— */
+        /* —— 导航栏渐变美化 —— */
         .main-nav {
             display: flex;
             gap: 1.5rem;
             margin: 1.5rem 0 1rem 0;
-            padding: 0.5rem 1rem;
-            background: rgba(255,255,255,0.7);
-            border-radius: 10px;
-            box-shadow: 0 2px 8px #eee;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(90deg, #6eaaffcc 0%, #a885ffcc 100%);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px #d1d6ee;
             justify-content: center;
         }
 
             .main-nav a {
-                color: #2464dc;
-                font-weight: bold;
+                color: #233c7b;
+                font-weight: 600;
+                text-shadow: 0 1px 2px #e0eaff44;
                 text-decoration: none;
-                padding: 0.4rem 1.2rem;
-                border-radius: 6px;
-                transition: background 0.2s, color 0.2s;
-                font-size: 1.08rem;
+                padding: 0.45rem 1.5rem;
+                border-radius: 8px;
+                font-size: 1.13rem;
+                letter-spacing: 0.02em;
+                transition: background 0.18s, color 0.18s, box-shadow 0.18s;
             }
 
                 .main-nav a.active,
                 .main-nav a:hover {
-                    background: #2464dc;
+                    background: linear-gradient(90deg, #267aff 40%, #a885ff 100%);
                     color: #fff;
+                    box-shadow: 0 2px 16px #b2c6ff66;
+                    text-shadow: 0 2px 10px #267aff77, 0 1px 3px #fff9;
                 }
-        /* 内容区简单留白美化 */
+
+                .main-nav a:active {
+                    filter: brightness(0.98);
+                }
+
+        /* —— 内容区美化 —— */
         .subpage-container {
             max-width: 880px;
             margin: 2rem auto 3rem auto;
             background: rgba(255,255,255,0.88);
-            border-radius: 12px;
-            box-shadow: 0 2px 16px 2px #eee;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px 2px #e1eaff;
             padding: 2.2rem 2rem 2rem 2rem;
         }
 
@@ -59,21 +68,19 @@
     </style>
 </head>
 <body>
-    <!-- 全局导航栏：子页面也有 -->
+    <!-- 全局导航栏 -->
     <nav class="main-nav">
         {% for item in site.data.navigation %}
         <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
+           {% if page.url= =item.url %}class="active" {% endif %}>
             {{ item.title }}
         </a>
         {% endfor %}
     </nav>
-
     <!-- 子页面内容主体 -->
     <main class="subpage-container">
         {{ content }}
     </main>
-
     {{ content_for_footer }}
 </body>
 </html>
