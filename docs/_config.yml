@@ -19,7 +19,7 @@ collections:
     permalink: /algorithms/:path/
   mbd:
     output: true
-    permalink: /mbd/:path/
+    permalink: /mbd/:name.html
 
 # ———————— 在这里新增 ————————
 
