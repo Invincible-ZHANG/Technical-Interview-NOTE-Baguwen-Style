@@ -1,32 +1,12 @@
 ﻿title: 八股文笔记
 theme: minima
 
-
-#collections:
-#  embedded:
-#    output: true
-#    permalink: /embedded/:path/
-#  software:
-#    output: true
-#    permalink: /software/:path/
-#  gpu_cuda:
-#    output: true
-#    permalink: /gpu-cuda/:path/
-#  algorithms:
-#    output: true
-#    permalink: /algorithms/:path/
-#  mbd:
-#    output: true
-#    permalink: /software/:path/
-
-# ———————— 在这里新增 ————————
-
 # 1. 如果需要在 Markdown 内用相对 .md 链接，启用这个插件（可选）
 plugins:
   - jekyll-relative-links
 relative_links:
   enabled: true
-  collections: false
+  collections: true
 include:
   - CONTRIBUTING.md
   - README.md
@@ -35,17 +15,37 @@ include:
   - ISSUE_TEMPLATE.md
   - PULL_REQUEST_TEMPLATE.md
 
-## 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
-#defaults:
-#  - scope:
-#      path: ""
-#    values:
-#      layout: default
-#  - scope:
-#      path: ""
-#    values:
-#      includes:
-#        - head.html
+collections:
+  embedded:
+    output: true
+    permalink: /embedded/:path/
+  software:
+    output: true
+    permalink: /software/:path/
+  gpu_cuda:
+    output: true
+    permalink: /gpu-cuda/:path/
+  algorithms:
+    output: true
+    permalink: /algorithms/:path/
+  mbd:
+    output: true
+    permalink: /software/:path/
+
+# ———————— 在这里新增 ————————
+
+
+# 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+  - scope:
+      path: ""
+    values:
+      includes:
+        - head.html
 
 
 ## ———————— 新增结束 ————————

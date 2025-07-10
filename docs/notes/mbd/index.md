@@ -13,7 +13,7 @@ permalink: /mbd/
   <!-- 第一篇笔记 -->
   <article class="post-card">
     <h3 class="post-title">
-      <a href="./MA_weeklyplan.html">MA周工作记录</a>
+      <a href="../notes/mbd/MA_weeklyplan.html">MA周工作记录</a>
     </h3>
     <p class="post-excerpt">
       关于毕业设计每周任务同步以及在实现过程中的想法与设计思路，方便之后的追溯和毕业论文的编写。:)
@@ -24,7 +24,7 @@ permalink: /mbd/
   <!-- 第二篇笔记 -->
   <article class="post-card">
     <h3 class="post-title">
-      <a href="./MBD.html">多体动力学基础</a>
+      <a href="../notes/mbd/MBD.html">多体动力学基础</a>
     </h3>
     <p class="post-excerpt">
       本文介绍多体动力学系统的基本概念、方程推导与常用求解器……
