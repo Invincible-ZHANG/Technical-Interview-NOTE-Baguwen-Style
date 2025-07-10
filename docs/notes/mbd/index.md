@@ -1,7 +1,6 @@
 ﻿---
 layout: default
 title: 多体动力学 系列
-permalink: /mbd/
 ---
 
 <!-- 标题区域：半透明磨砂背景 -->

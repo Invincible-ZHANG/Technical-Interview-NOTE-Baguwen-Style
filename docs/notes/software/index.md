@@ -1,7 +1,6 @@
 ﻿---
 layout: default
 title: 软件开发 系列
-permalink: /software/
 ---
 
 <ul>

@@ -1,7 +1,6 @@
 ﻿---
 layout: default
 title: GPU/CUDA 系列
-permalink: /gpu-cuda/
 ---
 
 <ul>
