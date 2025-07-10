@@ -39,17 +39,16 @@ include:
 
 # 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
 defaults:
-  # a) 针对所有 .md 文件
   - scope:
-      ext: "md"
+      path: ""
     values:
       layout: default
-  # b) 保留你原来的 head.html 注入逻辑
   - scope:
       path: ""
     values:
       includes:
         - head.html
+
 
 # ———————— 新增结束 ————————
 
