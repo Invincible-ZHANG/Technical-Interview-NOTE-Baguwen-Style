@@ -2,22 +2,22 @@
 theme: minima
 
 
-collections:
-  embedded:
-    output: true
-    permalink: /embedded/:path/
-  software:
-    output: true
-    permalink: /software/:path/
-  gpu_cuda:
-    output: true
-    permalink: /gpu-cuda/:path/
-  algorithms:
-    output: true
-    permalink: /algorithms/:path/
-  mbd:
-    output: true
-    permalink: /software/:path/
+#collections:
+#  embedded:
+#    output: true
+#    permalink: /embedded/:path/
+#  software:
+#    output: true
+#    permalink: /software/:path/
+#  gpu_cuda:
+#    output: true
+#    permalink: /gpu-cuda/:path/
+#  algorithms:
+#    output: true
+#    permalink: /algorithms/:path/
+#  mbd:
+#    output: true
+#    permalink: /software/:path/
 
 # ———————— 在这里新增 ————————
 
@@ -35,19 +35,19 @@ include:
   - ISSUE_TEMPLATE.md
   - PULL_REQUEST_TEMPLATE.md
 
-# 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
-defaults:
-  - scope:
-      path: ""
-    values:
-      layout: default
-  - scope:
-      path: ""
-    values:
-      includes:
-        - head.html
+## 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
+#defaults:
+#  - scope:
+#      path: ""
+#    values:
+#      layout: default
+#  - scope:
+#      path: ""
+#    values:
+#      includes:
+#        - head.html
 
 
-# ———————— 新增结束 ————————
+## ———————— 新增结束 ————————
 
-# 其余配置保持不变……
+## 其余配置保持不变……
