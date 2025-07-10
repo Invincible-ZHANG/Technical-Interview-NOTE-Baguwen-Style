@@ -21,14 +21,30 @@ collections:
     output: true
     permalink: /mbd/:path/
 
-# 其余配置保持不变……
+# ———————— 在这里新增 ————————
 
+# 1. 如果需要在 Markdown 内用相对 .md 链接，启用这个插件（可选）
+plugins:
+  - jekyll-relative-links
 
-# 默认把 head.html 注入到所有页面的 <head>
+relative_links:
+  enabled: true
+  collections: true
+
+# 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
 defaults:
+  # a) 针对所有 .md 文件
+  - scope:
+      ext: "md"
+    values:
+      layout: default
+  # b) 保留你原来的 head.html 注入逻辑
   - scope:
       path: ""
     values:
       includes:
         - head.html
 
+# ———————— 新增结束 ————————
+
+# 其余配置保持不变……
