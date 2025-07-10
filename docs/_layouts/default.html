@@ -5,75 +5,74 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
-
-    <!-- 原有样式 -->
-    <!--<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">-->
+    <!-- 可以按需添加自定义 CSS -->
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
-    <!-- 仪表盘专用 -->
-    <!--<link rel="stylesheet" href="{{ '/assets/css/dashboard.css' | relative_url }}">-->
-
     {{ content_for_header }}
+    <style>
+        /* —— 导航栏美化 —— */
+        .main-nav {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #eee;
+            justify-content: center;
+        }
+
+            .main-nav a {
+                color: #2464dc;
+                font-weight: bold;
+                text-decoration: none;
+                padding: 0.4rem 1.2rem;
+                border-radius: 6px;
+                transition: background 0.2s, color 0.2s;
+                font-size: 1.08rem;
+            }
+
+                .main-nav a.active,
+                .main-nav a:hover {
+                    background: #2464dc;
+                    color: #fff;
+                }
+        /* 内容区简单留白美化 */
+        .subpage-container {
+            max-width: 880px;
+            margin: 2rem auto 3rem auto;
+            background: rgba(255,255,255,0.88);
+            border-radius: 12px;
+            box-shadow: 0 2px 16px 2px #eee;
+            padding: 2.2rem 2rem 2rem 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .main-nav {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+
+            .subpage-container {
+                padding: 1.1rem 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- 全局导航（如果你还想在子页保留顶部菜单） -->
-    <nav class="navbar">
+    <!-- 全局导航栏：子页面也有 -->
+    <nav class="main-nav">
         {% for item in site.data.navigation %}
         <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
+           {% if page.url= =item.url %}class="active" {% endif %}>
             {{ item.title }}
         </a>
         {% endfor %}
     </nav>
 
-    {% comment %}
-    只有在首页时，渲染仪表盘：
-    {% endcomment %}
-    {% if page.url == "/" %}
-    <div class="dashboard-bg"></div>
-    <main class="dashboard-container">
-        <!-- 顶部 Logo + 标题 -->
-        <div class="dashboard-header">
-            <img class="site-logo"
-                 src="{{ '/Technical-Interview-NOTE-Baguwen-Style/assets/images/logo.png' | relative_url }}"
-                 alt="logo">
-            <span class="site-title">{{ site.title }}</span>
-        </div>
-        <!-- 第一行：名言 & 时钟 -->
-        <div class="dashboard-top">
-            <div class="card quote-card">
-                <blockquote>{{ site.data.quote.text }}</blockquote>
-                <cite>— {{ site.data.quote.author }}</cite>
-            </div>
-            <div class="card clock-card">
-                <div id="time">{{ site.time | date: "%H:%M:%S" }}</div>
-                <div id="date">{{ site.time | date: "%Y 年 %m 月 %d 日 星期%u" }}</div>
-            </div>
-        </div>
-        <!-- 第二行：简介（Hello World + 社交图标） & 网站列表 -->
-        <div class="dashboard-middle">
-            <div class="card intro-card">
-                {{ content }}
-            </div>
-            <div class="links-area">
-                <div class="links-title">
-                    <i class="icon-link"></i> 网站列表
-                </div>
-                <div class="dashboard-links">
-                    {% for item in site.data.navigation %}
-                    <a class="link-card" href="{{ item.url | relative_url }}">
-                        {{ item.title }}
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </main>
-    {% else %}
-    <!-- 子页面只渲染内容 -->
+    <!-- 子页面内容主体 -->
     <main class="subpage-container">
         {{ content }}
     </main>
-    {% endif %}
 
     {{ content_for_footer }}
 </body>
