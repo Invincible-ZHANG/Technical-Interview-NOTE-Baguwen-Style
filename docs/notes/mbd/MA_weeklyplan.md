@@ -142,8 +142,26 @@ else if (solverName.toLower() == "apgd")
  - 单摆的绳长保持不变属于等式约束（holonomic equality constraint）。
  - 约束方程写作：
 
+单摆的 holonomic equality constraint（等式约束）写作：
+
 $$
-E = mc^2
+g(\mathbf{q})
+=
+\bigl\lVert\,\mathbf{x}_{\text{质点}} - \mathbf{x}_{\text{支点}}\bigr\rVert
+- L
+= 0.
+$$
+
+对应的速度约束是
+
+$$
+J(\mathbf{q})\,\dot{\mathbf{q}} = 0,
+$$
+
+其中
+
+$$
+J(\mathbf{q}) = \frac{\partial g}{\partial \mathbf{q}}.
 $$
 
 

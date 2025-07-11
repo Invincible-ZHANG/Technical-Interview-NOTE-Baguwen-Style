@@ -3,7 +3,11 @@ description: "嵌入式 / CUDA / 多体动力学 / 面试记录"
 url: "https://blog.k1n.asia"
 baseurl: ""
 
-markdown: kramdown    # 新增，推荐
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge     # 或者 "rouge" / "pygments"
+
 
 plugins:
   - jekyll-relative-links
