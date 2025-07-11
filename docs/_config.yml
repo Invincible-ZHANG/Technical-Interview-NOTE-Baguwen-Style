@@ -5,6 +5,8 @@ baseurl: ""
 
 markdown: kramdown
 kramdown:
+  toc_levels: 1..6
+  auto_ids: true
   input: GFM
   syntax_highlighter: rouge     # 或者 "rouge" / "pygments"
 
