@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: note
 title: "C语言基础"
 date: 2025-07-11
 excerpt: "嵌入式开发常用的C语言基础知识梳理，包括关键字用法、内存管理、编译原理等，助力面试与实际项目开发。"
