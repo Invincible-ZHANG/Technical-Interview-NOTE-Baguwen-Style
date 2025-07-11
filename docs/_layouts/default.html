@@ -7,6 +7,18 @@
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     {{ content_for_header }}
+    <!-- 引入 MathJax -->
+    <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
     <style>
         /* ——— 导航栏样式基础设置 ——— */
         /*.main-nav {
@@ -20,13 +32,13 @@
             box-shadow: 0 10px 32px 0 #b1c4ff88, 0 2px 16px #d1d6ee;
             justify-content: center;
             border: 1.5px solid rgba(255,255,255,0.16);*/
-            /* 关闭导航栏的悬浮动画和变形效果，避免“抖动” */
-            /*transition: none !important;
+        /* 关闭导航栏的悬浮动画和变形效果，避免“抖动” */
+        /*transition: none !important;
             transform: none !important;
         }*/
 
-            /* 关闭导航栏悬浮时的阴影和位移效果 */
-            /*.main-nav:hover {
+        /* 关闭导航栏悬浮时的阴影和位移效果 */
+        /*.main-nav:hover {
                 box-shadow: none !important;
                 transform: none !important;
             }*/
@@ -87,6 +99,7 @@
                 .main-nav a:active {
                     filter: brightness(0.98);
                 }
+
             .main-nav a {
                 color: #233c7b;
                 font-weight: 600;
