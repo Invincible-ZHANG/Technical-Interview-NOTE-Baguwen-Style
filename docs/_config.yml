@@ -1,10 +1,10 @@
 ﻿title: 八股文笔记
 description: "嵌入式 / CUDA / 多体动力学 / 面试记录"
-url: "https://blog.k1n.asia"     # 自定义域名 ✅
-baseurl: ""                      # 设置为空 ✅
+url: "https://blog.k1n.asia"
+baseurl: ""
 
+markdown: kramdown    # 新增，推荐
 
-# 1. 如果需要在 Markdown 内用相对 .md 链接，启用这个插件（可选）
 plugins:
   - jekyll-relative-links
 relative_links:
@@ -33,12 +33,8 @@ collections:
     permalink: /algorithms/:path/
   mbd:
     output: true
-    permalink: /software/:path/
+    permalink: /mbd/:name/  
 
-# ———————— 在这里新增 ————————
-
-
-# 2. 默认所有 .md 文件都使用 default 布局（即使没写 Front Matter）
 defaults:
   - scope:
       path: ""
@@ -49,8 +45,3 @@ defaults:
     values:
       includes:
         - head.html
-
-
-## ———————— 新增结束 ————————
-
-## 其余配置保持不变……
