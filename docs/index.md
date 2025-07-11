@@ -8,17 +8,6 @@ title: 八股文笔记
 ✨ 本站点由 **Jekyll + GitHub Pages** 构建  
 - 嵌入式 · 软件开发 · GPU/CUDA · 算法  
 
----
-
-## 关于作者
-
-👤 **张子健 (Zijian Zhang)**  
-- RWTH Aachen University 计算机工程硕士在读  
-- 电子信息工程与人工智能架构复合背景  
-- 扎实的嵌入式系统开发能力与 AI 算法基础  
-- 曾参与 Intel MCU 驱动、KaihongOS 驱动与多体动力学求解器项目  
-- 致力于智能系统在实际工程场景中的落地与性能优化  
-
 
 ---
 

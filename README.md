@@ -44,6 +44,8 @@ git add .
 git commit -m ""
 git push
 
+# 安装依赖（仅第一次或有更新时）
+bundle install
 # 本地部署
 bundle exec jekyll build
 

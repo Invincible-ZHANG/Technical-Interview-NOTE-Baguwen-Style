@@ -1,9 +1,10 @@
 ﻿body {
     /* 使用背景图，居中不平铺并覆盖整个窗口 */
-    background: url('https://blog.k1n.asia/assets/images/background5.jpg') no-repeat center center fixed;
+    background: url('../images/Cologne.jpg') no-repeat center center fixed;
     background-size: cover;
     /* 如果图片加载慢，先给个渐变色做占位 */
-    background-color: #f0f0f0;=
+    background-color: #f0f0f0;
+    =
 }
 
 /* ─── 主容器：居中 + 限宽 + 自动分行 ─── */
