@@ -1,5 +1,5 @@
 ﻿---
-layout: default
+layout: note
 title: "图论"
 date: 2025-07-11
 excerpt: "图是一种非常重要的数据结构，图论是算法当中一个非常大的专题。"

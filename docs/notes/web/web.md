@@ -1,4 +1,13 @@
-﻿在 Jekyll（以及很多静态博客系统）里：
+﻿---
+title: "Jekyll"
+date: 2025-07-08
+categories: web
+layout: note
+---
+
+
+
+在 Jekyll（以及很多静态博客系统）里：
 
 _layouts/default.html
 通常是所有页面的通用基础模板。

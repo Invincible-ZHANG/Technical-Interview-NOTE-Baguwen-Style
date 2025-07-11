@@ -1,5 +1,5 @@
 ﻿---
-layout: default
+layout: note
 title: GPU/CUDA 系列
 ---
 
