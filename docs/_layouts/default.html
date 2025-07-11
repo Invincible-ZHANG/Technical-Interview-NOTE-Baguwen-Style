@@ -9,7 +9,7 @@
     {{ content_for_header }}
     <style>
         /* ——— 导航栏样式基础设置 ——— */
-        .main-nav {
+        /*.main-nav {
             display: flex;
             gap: 1.5rem;
             margin: 1.5rem 0 1rem 0;
@@ -19,15 +19,40 @@
             border-radius: 22px;
             box-shadow: 0 10px 32px 0 #b1c4ff88, 0 2px 16px #d1d6ee;
             justify-content: center;
-            border: 1.5px solid rgba(255,255,255,0.16);
+            border: 1.5px solid rgba(255,255,255,0.16);*/
             /* 关闭导航栏的悬浮动画和变形效果，避免“抖动” */
-            transition: none !important;
+            /*transition: none !important;
+            transform: none !important;
+        }*/
+
+            /* 关闭导航栏悬浮时的阴影和位移效果 */
+            /*.main-nav:hover {
+                box-shadow: none !important;
+                transform: none !important;
+            }*/
+        .main-nav {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+            padding: 0.5rem 1.5rem;
+            /* 默认暗色背景渐变 */
+            background: linear-gradient(90deg, #5470c2cc 0%, #7a6ccaee 100%);
+            backdrop-filter: blur(16px) saturate(1.2);
+            border-radius: 22px;
+            /* 默认较小阴影，暗灯效果 */
+            box-shadow: 0 4px 15px 0 #5270a499, 0 2px 8px #415587aa;
+            justify-content: center;
+            border: 1.5px solid rgba(255,255,255,0.16);
+            /* 平滑过渡背景和阴影变化 */
+            transition: box-shadow 0.3s ease, background 0.3s ease;
+            /* 关闭默认变换 */
             transform: none !important;
         }
 
-            /* 关闭导航栏悬浮时的阴影和位移效果 */
+            /* 鼠标悬停时变亮，灯光增强 */
             .main-nav:hover {
-                box-shadow: none !important;
+                background: linear-gradient(90deg, #74b8ffe8 0%, #a885ffe8 100%);
+                box-shadow: 0 16px 50px 0 #8ec9fa88, 0 4px 20px #d1d6ee;
                 transform: none !important;
             }
 
