@@ -2,6 +2,8 @@
 description: "嵌入式 / CUDA / 多体动力学 / 面试记录"
 url: "https://blog.k1n.asia"
 baseurl: ""
+author: kin
+
 
 markdown: kramdown
 kramdown:
@@ -23,6 +25,10 @@ include:
   - CODE_OF_CONDUCT.md
   - ISSUE_TEMPLATE.md
   - PULL_REQUEST_TEMPLATE.md
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
 
 collections:
   embedded:
