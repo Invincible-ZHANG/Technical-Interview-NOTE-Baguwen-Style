@@ -1,7 +1,7 @@
 ﻿---
 title: MA周工作记录
 date: 2025-07-09
-layout: default
+layout: note
 excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法与设计思路，方便之后的追溯和毕业论文的编写。:)
 ---
 
