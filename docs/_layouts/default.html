@@ -8,61 +8,121 @@
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     {{ content_for_header }}
     <style>
-        /* —— 导航栏渐变美化 —— */
+        /* ——— 导航栏样式基础设置 ——— */
         .main-nav {
             display: flex;
             gap: 1.5rem;
             margin: 1.5rem 0 1rem 0;
             padding: 0.5rem 1.5rem;
-            background: linear-gradient(90deg, #6eaaffcc 0%, #a885ffcc 100%);
-            backdrop-filter: blur(8px);
-            border-radius: 16px;
-            box-shadow: 0 2px 8px #d1d6ee;
+            background: linear-gradient(90deg, #74b8ffe8 0%, #a885ffe8 100%);
+            backdrop-filter: blur(16px) saturate(1.2);
+            border-radius: 22px;
+            box-shadow: 0 10px 32px 0 #b1c4ff88, 0 2px 16px #d1d6ee;
             justify-content: center;
+            border: 1.5px solid rgba(255,255,255,0.16);
+            /* 关闭导航栏的悬浮动画和变形效果，避免“抖动” */
+            transition: none !important;
+            transform: none !important;
         }
 
+            /* 关闭导航栏悬浮时的阴影和位移效果 */
+            .main-nav:hover {
+                box-shadow: none !important;
+                transform: none !important;
+            }
+
+            /* 导航链接基础样式 */
             .main-nav a {
                 color: #233c7b;
                 font-weight: 600;
                 text-shadow: 0 1px 2px #e0eaff44;
                 text-decoration: none;
                 padding: 0.45rem 1.5rem;
-                border-radius: 8px;
-                font-size: 1.13rem;
+                border-radius: 12px;
+                font-size: 1.16rem;
                 letter-spacing: 0.02em;
-                transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+                /* 关闭链接的悬浮动画，避免放大和阴影变化 */
+                transition: none !important;
+                transform: none !important;
+                box-shadow: none !important;
             }
 
+                /* 取消导航链接被激活或鼠标悬浮时的动画和视觉变化 */
                 .main-nav a.active,
                 .main-nav a:hover {
                     background: linear-gradient(90deg, #267aff 40%, #a885ff 100%);
                     color: #fff;
-                    box-shadow: 0 2px 16px #b2c6ff66;
-                    text-shadow: 0 2px 10px #267aff77, 0 1px 3px #fff9;
+                    /* 关闭阴影和放大效果，保持稳定 */
+                    box-shadow: none !important;
+                    text-shadow: none !important;
+                    transform: none !important;
                 }
 
+                /* 点击导航链接时略微降低亮度效果，保持细微反馈 */
+                .main-nav a:active {
+                    filter: brightness(0.98);
+                }
+            .main-nav a {
+                color: #233c7b;
+                font-weight: 600;
+                text-shadow: 0 1px 2px #e0eaff44;
+                text-decoration: none;
+                padding: 0.45rem 1.5rem;
+                border-radius: 12px;
+                font-size: 1.16rem;
+                letter-spacing: 0.02em;
+                /* 关闭链接的悬浮动画，避免放大和阴影变化 */
+                transition: none !important;
+                transform: none !important;
+                box-shadow: none !important;
+            }
+
+                /* 取消导航链接被激活或鼠标悬浮时的动画和视觉变化 */
+                .main-nav a.active,
+                .main-nav a:hover {
+                    background: linear-gradient(90deg, #267aff 40%, #a885ff 100%);
+                    color: #fff;
+                    /* 关闭阴影和放大效果，保持稳定 */
+                    box-shadow: none !important;
+                    text-shadow: none !important;
+                    transform: none !important;
+                }
+
+                /* 点击导航链接时略微降低亮度效果，保持细微反馈 */
                 .main-nav a:active {
                     filter: brightness(0.98);
                 }
 
-        /* —— 内容区美化 —— */
+        /* ——— 内容区样式基础设置 ——— */
         .subpage-container {
             max-width: 880px;
             margin: 2rem auto 3rem auto;
-            background: rgba(255,255,255,0.88);
-            border-radius: 14px;
-            box-shadow: 0 2px 16px 2px #e1eaff;
-            padding: 2.2rem 2rem 2rem 2rem;
+            background: rgba(255,255,255,0.12); /* 半透明磨砂效果 */
+            backdrop-filter: blur(22px) saturate(1.7); /* 加强磨砂模糊 */
+            border-radius: 26px;
+            box-shadow: 0 10px 50px 0 rgba(60,60,100,0.19), 0 2px 16px #e1eaff;
+            padding: 2.6rem 2.2rem 2.2rem 2.2rem;
+            border: 1.8px solid rgba(255,255,255,0.17); /* 边框高光 */
+            /* 关闭之前的呼吸悬浮动画，避免上下抖动 */
+            animation: none !important;
         }
 
+        /* 响应式设计：屏幕宽度小于600px时的样式调整 */
         @media (max-width: 600px) {
+            /* 导航栏换行和缩小间距字体 */
             .main-nav {
                 flex-wrap: wrap;
                 gap: 0.8rem;
+                font-size: 0.93rem;
+                border-radius: 12px;
+                margin: 0.5rem 0 1rem 0;
+                padding: 0.2rem 0.6rem;
             }
 
+            /* 内容区边距和圆角缩小 */
             .subpage-container {
                 padding: 1.1rem 0.5rem;
+                border-radius: 10px;
             }
         }
     </style>

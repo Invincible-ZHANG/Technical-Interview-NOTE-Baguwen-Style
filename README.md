@@ -43,6 +43,12 @@ bundle exec jekyll serve --port 4000
 git add .
 git commit -m ""
 git push
+
+# 本地部署
+bundle exec jekyll build
+
+bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
+
 ```
 
 ---
