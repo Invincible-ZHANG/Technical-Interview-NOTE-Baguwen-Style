@@ -5,7 +5,7 @@ title: 嵌入式 系列
 
 <!-- 标题区域：半透明磨砂背景 -->
 <header class="section-header">
-  <h1>GPU/嵌入式 系列</h1>
+  <h1>嵌入式 系列</h1>
 </header>
 
 <div class="post-grid">

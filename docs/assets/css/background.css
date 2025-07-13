@@ -21,6 +21,33 @@
             max-width: 1400px;
             margin: 0 auto;
         }
+        .personal-logo-container {
+            position: absolute; /* 绝对定位，放到父容器内合适位置 */
+            top: 230px; /* 根据实际页面微调到红框区 */
+            left: 10px; /* 同上，保证落在红框内 */
+            width: 100px; /* 可以根据你的 logo 大小和红框大小微调 */
+            height: 100px;
+            z-index: 10; /* 保证在其它元素之上 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 可选的磨砂/半透明背景效果
+            background: rgba(30, 30, 30, 0.35);
+            border-radius: 26px;
+            box-shadow: 0 4px 24px #0006;
+            */
+        }
+
+        .personal-logo {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 22px; /* logo 四角圆润 */
+            box-shadow: 0 4px 14px #0003;
+            /* 可加边框
+            border: 2.5px solid #fcf6d5bb;
+            */
+        }
+
         /* ---- 吸顶导航栏 ---- */
         .sticky-nav {
             position: sticky;
