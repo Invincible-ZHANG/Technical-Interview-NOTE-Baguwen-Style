@@ -4,7 +4,7 @@ date: 2025-07-13
 categories: Fall_Reviews
 tags: [面经, 海信, 嵌入式软件]
 layout: note
-excerpt:两部分，15题选择+2道编程，100分钟。
+excerpt: 两部分，15题选择+2道编程，100分钟。
 ---
 
 
