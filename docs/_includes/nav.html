@@ -1,0 +1,21 @@
+<!-- _includes/nav.html  Multi-level navigation bar, supports dropdown menu, last updated 2024-07-13 -->
+<nav class="sticky-nav">
+    <div class="sticky-nav-inner">
+        {% for item in site.data.navigation %}
+        {% if item.children %}
+        <div class="nav-dropdown">
+            <!-- Main menu item with dropdown -->
+            <span class="sticky-nav-link">{{ item.title }}</span>
+            <div class="dropdown-menu">
+                {% for sub in item.children %}
+                <a class="dropdown-link" href="{{ sub.url | relative_url }}">{{ sub.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <!-- Regular menu item -->
+        <a class="sticky-nav-link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</nav>

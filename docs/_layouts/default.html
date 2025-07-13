@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
 <head>
     {%- include head.html -%}
     <meta charset="utf-8">
@@ -18,169 +18,14 @@
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-
-    <style>
-        /* ========== 吸顶导航栏样式 ========== */
-        .sticky-nav {
-            position: sticky;
-            position: -webkit-sticky;
-            top: 0;
-            z-index: 99;
-            background: rgba(38,38,38,0.80);
-            box-shadow: 0 2px 18px #0002;
-            backdrop-filter: blur(4px);
-            width: 100%;
-            border-bottom: 1.5px solid #eed36e30;
-        }
-
-        .sticky-nav-inner {
-            display: flex;
-            justify-content: center;
-            gap: 2.1rem;
-            padding: 0.72em 0;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .sticky-nav-link {
-            color: #ffedb2;
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.08em;
-            text-decoration: none;
-            padding: 0.48em 2.1em;
-            border-radius: 0.9em;
-            background: transparent;
-            transition: background .18s, color .18s, box-shadow .15s;
-            box-shadow: 0 1.5px 7px #fff3, 0 1.5px 6px #d9ba4422;
-        }
-
-            .sticky-nav-link:hover, .sticky-nav-link:focus {
-                background: #ffe6a6ea;
-                color: #684c00;
-                box-shadow: 0 2px 16px #ffe19e67, 0 2px 8px #bcb04c26;
-            }
-
-        @media (max-width: 800px) {
-            .sticky-nav-inner {
-                gap: 1em;
-                padding: 0.46em 0;
-            }
-
-            .sticky-nav-link {
-                font-size: 0.98rem;
-                padding: 0.38em 1.1em;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .sticky-nav-inner {
-                flex-wrap: wrap;
-                gap: 0.5em;
-                padding: 0.3em 0.2em;
-            }
-
-            .sticky-nav-link {
-                padding: 0.3em 0.7em;
-                font-size: 0.95rem;
-            }
-        }
-
-        /* ========== 内容区卡片样式 ========== */
-        .subpage-container {
-            max-width: 880px;
-            margin: 2rem auto 3rem auto;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(22px) saturate(1.7);
-            border-radius: 26px;
-            box-shadow: 0 10px 50px 0 rgba(60,60,100,0.19), 0 2px 16px #e1eaff;
-            padding: 2.6rem 2.2rem 2.2rem 2.2rem;
-            border: 1.8px solid rgba(255,255,255,0.17);
-            animation: none !important;
-        }
-
-        /* ========== 响应式内容卡片 ========== */
-        @media (max-width: 600px) {
-            .subpage-container {
-                padding: 1.1rem 0.5rem;
-                border-radius: 10px;
-            }
-        }
-
-        /* ========= 下面为你原本的 main-nav 样式 已被注释 ========= */
-        /*
-        .main-nav {
-            display: flex;
-            gap: 1.5rem;
-            margin: 1.5rem 0 1rem 0;
-            padding: 0.5rem 1.5rem;
-            background: linear-gradient(90deg, #74b8ffe8 0%, #a885ffe8 100%);
-            backdrop-filter: blur(16px) saturate(1.2);
-            border-radius: 22px;
-            box-shadow: 0 10px 32px 0 #b1c4ff88, 0 2px 16px #d1d6ee;
-            justify-content: center;
-            border: 1.5px solid rgba(255,255,255,0.16);
-            transition: none !important;
-            transform: none !important;
-        }
-        .main-nav:hover {
-            box-shadow: none !important;
-            transform: none !important;
-        }
-        .main-nav a {
-            color: #233c7b;
-            font-weight: 600;
-            text-shadow: 0 1px 2px #e0eaff44;
-            text-decoration: none;
-            padding: 0.45rem 1.5rem;
-            border-radius: 12px;
-            font-size: 1.16rem;
-            letter-spacing: 0.02em;
-            transition: none !important;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        .main-nav a.active,
-        .main-nav a:hover {
-            background: linear-gradient(90deg, #267aff 40%, #a885ff 100%);
-            color: #fff;
-            box-shadow: none !important;
-            text-shadow: none !important;
-            transform: none !important;
-        }
-        .main-nav a:active {
-            filter: brightness(0.98);
-        }
-        */
-    </style>
 </head>
 <body>
-    <!-- ========== 新版吸顶导航 ========== -->
-    <nav class="sticky-nav">
-        <div class="sticky-nav-inner">
-            {% for item in site.data.navigation %}
-            <a class="sticky-nav-link{% if page.url == item.url %} active{% endif %}" href="{{ item.url | relative_url }}">
-                {{ item.title }}
-            </a>
-            {% endfor %}
-        </div>
-    </nav>
-    <!-- ========== 内容主体区 ========== -->
+    <!-- 全站公用导航栏 -->
+    {% include nav.html %}
+    <!-- 主内容区 -->
     <main class="subpage-container">
         {{ content }}
     </main>
     {{ content_for_footer }}
-
-    <!-- ========== 保留你原来的非吸顶导航区，已注释，可随时还原 ========== -->
-    <!--
-    <nav class="main-nav">
-        {% for item in site.data.navigation %}
-        <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
-            {{ item.title }}
-        </a>
-        {% endfor %}
-    </nav>
-    -->
 </body>
 </html>

@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
 <head>
     {%- include head.html -%}
     <meta charset="utf-8">
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     {{ content_for_header }}
 
-    <!-- 引入 MathJax -->
+    <!-- 引入 MathJax（可选） -->
     <script>
         window.MathJax = {
             tex: {
@@ -22,267 +22,22 @@
 
     <!-- Tocbot 自动目录 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.25.0/dist/tocbot.css">
-
-    <style>
-        /* ======= 新吸顶导航条样式 ======= */
-        .sticky-nav {
-            position: sticky;
-            position: -webkit-sticky;
-            top: 0;
-            z-index: 99;
-            background: rgba(38,38,38,0.80);
-            box-shadow: 0 2px 18px #0002;
-            backdrop-filter: blur(4px);
-            width: 100%;
-            border-bottom: 1.5px solid #eed36e30;
-        }
-
-        .sticky-nav-inner {
-            display: flex;
-            justify-content: center;
-            gap: 2.1rem;
-            padding: 0.72em 0;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .sticky-nav-link {
-            color: #ffedb2;
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.08em;
-            text-decoration: none;
-            padding: 0.48em 2.1em;
-            border-radius: 0.9em;
-            background: transparent;
-            transition: background .18s, color .18s, box-shadow .15s;
-            box-shadow: 0 1.5px 7px #fff3, 0 1.5px 6px #d9ba4422;
-        }
-
-            .sticky-nav-link:hover, .sticky-nav-link:focus {
-                background: #ffe6a6ea;
-                color: #684c00;
-                box-shadow: 0 2px 16px #ffe19e67, 0 2px 8px #bcb04c26;
-            }
-
-        @media (max-width: 800px) {
-            .sticky-nav-inner {
-                gap: 1em;
-                padding: 0.46em 0;
-            }
-
-            .sticky-nav-link {
-                font-size: 0.98rem;
-                padding: 0.38em 1.1em;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .sticky-nav-inner {
-                flex-wrap: wrap;
-                gap: 0.5em;
-                padding: 0.3em 0.2em;
-            }
-
-            .sticky-nav-link {
-                padding: 0.3em 0.7em;
-                font-size: 0.95rem;
-            }
-        }
-
-        /* ======= 保留你原有内容区和 TOC 样式 ======= */
-        .subpage-container {
-            max-width: 880px;
-            margin: 2rem auto 3rem auto;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(22px) saturate(1.7);
-            border-radius: 26px;
-            box-shadow: 0 10px 50px 0 rgba(60,60,100,0.19), 0 2px 16px #e1eaff;
-            padding: 2.6rem 2.2rem 2.2rem 2.2rem;
-            border: 1.8px solid rgba(255,255,255,0.17);
-            animation: none !important;
-            /* ...原有样式保持... */
-            color: #fffbe7; /* 更明亮的正文主色，接近白但不刺眼 */
-            text-shadow: 0 2px 10px #2228, 0 1px 0 #fff3; /* 适当柔和亮色阴影提亮文字 */
-            font-size: 1.14rem; /* 稍微大一点 */
-            line-height: 1.92; /* 行距更舒服 */
-            /* 其余原有属性不动 */
-        }
-
-            /* 让正文内的链接、粗体、列表更有层次 */
-            .subpage-container a {
-                color: #ffd970;
-                text-decoration: underline;
-            }
-
-            .subpage-container strong,
-            .subpage-container b {
-                color: #fffbe7;
-                background: #f6e28a33;
-                padding: 0 .2em;
-                border-radius: 3px;
-            }
-
-            .subpage-container h1, .subpage-container h2, .subpage-container h3, .subpage-container h4 {
-                color: #ffeebd;
-                text-shadow: 0 2px 8px #2223, 0 1px 0 #fff5;
-            }
-
-            /*.subpage-container code, .subpage-container pre {
-                background: rgba(60,45,10,0.25);
-                color: #ffee9e;
-            }*/
-            /*.subpage-container pre, .subpage-container code {
-                background: rgba(60,45,10,0.87);*/ /* 明显提高透明度 */
-                /*color: #ffeead;
-                border-radius: 7px;
-                padding: 0.85em 1.2em;
-                box-shadow: 0 4px 16px #2219*/ /* 微阴影 *//*;
-                font-family: 'Fira Mono', 'Consolas', 'monospace';
-            }*/
-            .subpage-container pre, .subpage-container code {
-                background: rgba(255, 245, 210, 0.14); /* 亮色半透明，几乎不影响背景 */
-                color: #ffeead;
-                border-radius: 7px;
-                padding: 0.85em 1.2em;
-                box-shadow: 0 4px 16px #2219;
-                font-family: 'Fira Mono', 'Consolas', 'monospace';
-            }
-
-
-
-            .subpage-container code {
-                padding: 0.15em 0.4em;
-                background: rgba(60,45,10,0.77); /* 行内 code 稍微亮一点 */
-            }
-
-
-            .subpage-container ul, .subpage-container ol {
-                color: #fffbe7;
-            }
-
-        .sidebar-toc {
-            position: fixed;
-            top: 96px;
-            left: 22px;
-            width: 205px;
-            max-height: 80vh;
-            overflow-y: auto;
-            background: rgba(250,252,255,0.80);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(60,80,120,0.08), 2px 0 14px rgba(120,130,180,0.08);
-            z-index: 1000;
-            padding: 16px 10px 16px 16px;
-            font-size: 0.97rem;
-            line-height: 1.5;
-            transition: all 0.2s cubic-bezier(.25,.8,.25,1);
-            backdrop-filter: blur(6px) saturate(1.1);
-            opacity: 0.97;
-        }
-
-            .sidebar-toc:hover {
-                box-shadow: 0 16px 48px 0 rgba(90,120,180,0.16);
-                background: rgba(250,250,255,0.98);
-                width: 235px;
-            }
-
-        .toc-list {
-            list-style: none;
-            margin: 0;
-            padding: 0 0 0 8px;
-        }
-
-        .toc-list-item {
-            margin: 0.26em 0;
-        }
-
-        .toc-link {
-            color: #5470c2;
-            text-decoration: none;
-            border-radius: 16px;
-            padding: 2px 6px;
-            display: inline-block;
-            font-size: 0.99em;
-        }
-
-            .toc-link.is-active-link {
-                background: #e8f0fe;
-                color: #2340a1;
-                font-weight: bold;
-            }
-
-        @media (max-width: 900px) {
-            .sidebar-toc {
-                display: none;
-            }
-
-            .subpage-container {
-                margin-left: auto;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .subpage-container {
-                padding: 1.1rem 0.5rem;
-                border-radius: 10px;
-            }
-        }
-
-        /* ========== 下面为你原本的 main-nav 样式，已注释 ========== */
-        /*
-        .main-nav {
-            display: flex;
-            gap: 1.5rem;
-            margin: 1.5rem 0 1rem 0;
-            padding: 0.5rem 1.5rem;
-            background: linear-gradient(90deg, #5470c2cc 0%, #7a6ccaee 100%);
-            backdrop-filter: blur(16px) saturate(1.2);
-            border-radius: 22px;
-            box-shadow: 0 4px 15px 0 #5270a499, 0 2px 8px #415587aa;
-            justify-content: center;
-            border: 1.5px solid rgba(255,255,255,0.16);
-            transition: box-shadow 0.3s ease, background 0.3s ease;
-            transform: none !important;
-        }
-        .main-nav:hover { ... }
-        .main-nav a { ... }
-        .main-nav a.active, .main-nav a:hover { ... }
-        .main-nav a:active { ... }
-        */
-    </style>
 </head>
 <body>
+    <!-- 左侧目录栏 -->
     <div class="sidebar-toc">
         <div id="js-toc"></div>
     </div>
 
-    <!-- ========== 新吸顶导航栏 ========== -->
-    <nav class="sticky-nav">
-        <div class="sticky-nav-inner">
-            {% for item in site.data.navigation %}
-            <a class="sticky-nav-link{% if page.url == item.url %} active{% endif %}" href="{{ item.url | relative_url }}">
-                {{ item.title }}
-            </a>
-            {% endfor %}
-        </div>
-    </nav>
-    <!-- ========== 内容主体区 ========== -->
+    <!-- 公用导航栏（支持多级下拉） -->
+    {% include nav.html %}
+
+    <!-- 内容主体区 -->
     <main class="subpage-container">
         {{ content }}
     </main>
     {{ content_for_footer }}
 
-    <!-- ========== 保留你原来的非吸顶导航区，已注释，可随时还原 ========== -->
-    <!--
-    <nav class="main-nav">
-        {% for item in site.data.navigation %}
-        <a href="{{ item.url | relative_url }}"
-           {% if page.url == item.url %}class="active" {% endif %}>
-            {{ item.title }}
-        </a>
-        {% endfor %}
-    </nav>
-    -->
     <!-- Tocbot JS 自动目录初始化 -->
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.25.0/dist/tocbot.min.js"></script>
     <script>

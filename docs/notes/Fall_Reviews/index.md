@@ -1,15 +1,15 @@
 ﻿---
 layout: default
-title: 嵌入式 系列
+title: 秋招面经 
 ---
 
 <!-- 标题区域：半透明磨砂背景 -->
 <header class="section-header">
-  <h1>GPU/嵌入式 系列</h1>
+  <h1>秋招面经</h1>
 </header>
 
 <div class="post-grid">
-  {% assign mbd_notes = site.pages | where_exp: "page", "page.path contains 'embedded/'" %}
+  {% assign mbd_notes = site.pages | where_exp: "page", "page.path contains 'Fall_Reviews/'" %}
   {% assign sorted_mbd_notes = mbd_notes | sort: "date" | reverse %}
   {% for note in sorted_mbd_notes %}
     {% assign filename = note.path | split:'/' | last %}
