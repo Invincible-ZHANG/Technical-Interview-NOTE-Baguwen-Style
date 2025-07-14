@@ -49,8 +49,8 @@
 .personal-logo {
     max-width: 100%;
     max-height: 100%;
-    border-radius: 22px;
-    box-shadow: 0 4px 14px #0003;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 /* ---- 吸顶导航栏 ---- */
@@ -436,6 +436,7 @@
         box-sizing: border-box;
         word-break: break-all;
         overflow-x: auto;
+        display: inline-block;
     }
 
     .subpage-container ul, .subpage-container ol {
