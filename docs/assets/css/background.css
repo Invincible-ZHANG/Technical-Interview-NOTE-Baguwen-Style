@@ -384,7 +384,7 @@
 
 /* ───────────── 内容区卡片（note, default等复用）───────────── */
 .subpage-container {
-    max-width: 880px;
+    max-width: 1000px;
     margin: 2rem auto 3rem auto;
     background: rgba(255,255,255,0.12);
     backdrop-filter: blur(22px) saturate(1.7);
@@ -397,6 +397,14 @@
     font-size: 1.14rem;
     line-height: 1.92;
 }
+
+    .subpage-container img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 1.2em auto;
+    }
+
 
     .subpage-container a {
         color: #ffd970;
@@ -428,11 +436,56 @@
     .subpage-container code {
         padding: 0.15em 0.4em;
         background: rgba(60,45,10,0.77);
+        max-width: 100%;
+        box-sizing: border-box;
+        word-break: break-all;
+        overflow-x: auto;
     }
 
     .subpage-container ul, .subpage-container ol {
         color: #fffbe7;
     }
+
+
+/*DAYMATTER*/
+
+#daymatter-card {
+    width: 250px;
+    max-width: 96vw;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(40,40,40,0.42);
+    border-radius: 20px;
+    box-shadow: 0 4px 18px #0005;
+    z-index: 15;
+    font-family: 'JetBrains Mono', '微软雅黑', monospace;
+    margin: 2em auto 2em auto;
+    /* 建议不要用绝对定位，更容易响应式 */
+}
+
+.daymatter-title {
+    font-size: 1.1rem;
+    color: #ece2bb;
+    margin-bottom: 0.3em;
+}
+
+.daymatter-num {
+    font-size: 2.6rem;
+    font-weight: bold;
+    color: #7de5cb;
+    line-height: 1;
+}
+
+.daymatter-unit {
+    font-size: 1rem;
+    color: #ece2bb;
+    margin-top: 0.2em;
+    letter-spacing: 2px;
+}
+
 
 
 /* ------ 通用标题区（Section Header）------ */

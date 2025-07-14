@@ -70,32 +70,17 @@
         }
         document.addEventListener('DOMContentLoaded', fetchHitokotoLiterature);
     </script>
-    <div id="daymatter-card" style="
-      position: absolute;
-      top: 350px;   /* 根据实际红框调整 */
-      left: 160px;
-      width: 250px;
-      height: 100px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(40,40,40,0.42);
-      border-radius: 20px;
-      box-shadow: 0 4px 18px #0005;
-      z-index: 15;
-      font-family: 'JetBrains Mono', '微软雅黑', monospace;
-      ">
-        <div style="font-size:1.1rem;color:#ece2bb;margin-bottom:0.3em;">我在德国的第</div>
-            <div id="daymatter-num" style="font-size:2.6rem;font-weight:bold;color:#7de5cb;line-height:1;">000</div>
-            <div style="font-size:1rem;color:#ece2bb;margin-top:0.2em;letter-spacing:2px;">天</div>
-        </div>
-        <script>
-            var startDate = new Date('2023-03-29'); // 替换为你实际到达德国的日期
-            var today = new Date();
-            var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
-            document.getElementById('daymatter-num').innerText = diffDays;
-        </script>
+    <div id="daymatter-card">
+        <div class="daymatter-title">我在德国的第</div>
+        <div id="daymatter-num" class="daymatter-num">000</div>
+        <div class="daymatter-unit">天</div>
+    </div>
+    <script>
+        var startDate = new Date('2023-03-29');
+        var today = new Date();
+        var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        document.getElementById('daymatter-num').innerText = diffDays;
+    </script>
 
 </body>
 </html>
