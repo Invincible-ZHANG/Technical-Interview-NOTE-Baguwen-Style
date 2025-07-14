@@ -5,6 +5,15 @@
     /* 如果图片加载慢，先给个渐变色做占位 */
     background-color: #f0f0f0;
 }
+/* 全局限制所有 img 不超过父容器 */
+.post-content img,
+.markdown-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 1em auto;
+}
+
 
         /*.dashboard-bg {*/
             /* 可选的背景图片方案，可直接替换 url  */
@@ -194,7 +203,7 @@
             box-shadow: 0 6px 40px #2223, 0 2px 8px #fff3;
         }
 
-        @media (max-width: 900px) {
+       /* @media (max-width: 900px) {
             .header-flex {
                 flex-direction: column;
                 align-items: stretch;
@@ -238,9 +247,9 @@
             .card {
                 padding: 1em 0.5em;
                 max-width: 95vw;
-            }
-        }
-    </style>
+            }*/
+        /*}*/
+    /*</style>*/
 
 /* ───────────── 简介&链接 ───────────── */
 .dashboard-middle {
@@ -578,7 +587,7 @@
     }
 
 /* ───────────── 响应式调整 ───────────── */
-@media (max-width: 900px) {
+/*@media (max-width: 900px) {
     .dashboard-top,
     .dashboard-middle {
         grid-template-columns: 1fr !important;
@@ -652,7 +661,7 @@
 @media (min-width:768px) and (max-width:1023px) {
     .dashboard-middle, .dashboard-top {
         grid-template-columns: 1fr 1fr !important;
-    }
+    }*/
 
     .dashboard-links {
         grid-template-columns: repeat(2,1fr);
