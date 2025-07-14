@@ -312,3 +312,47 @@ APGD 在第 30、60、90 步才慢慢把 λ₀ 迭代到 90、130、132 这样�
  - 步长 α 或迭代次数不足：APGD 在几次迭代里根本没法把 λ₀ 
  - 误差阈值 tol 太大：当 err < tol 时你就提前退出了，可能这时 λ 还远没到正确值
 
+
+问题确定，开始求解
+#### 方法1. 开启 Warm-start：
+所析，第一步迭代时 λ₀ 被投影回 0，完全没有初始张力。
+在 APGD 创建后调用：
+```
+solver.EnableWarmStart(true);
+```
+这样会使用上一步结束时的 λ 值作为新步的初始猜测，从而在刚开始迭代时就能提供一定的张力缓冲。\
+我需要重新添加一个函数，使他满足这个功能
+
+完成了这个函数后需要在RBDClusterLagrangeMultipliers.cpp启动
+```
+	case (RBDScene::CST_LAGRANGEAPGD):
+		{
+			// APGD 求解器
+			myLcp = new RBDLcpAPGD(
+				matA.rows(),                   // LCP 维度
+				numberEqualityConstraints,     // 均等约束数量 nub
+				myScene->numberIterations(),   // 最大迭代次数
+				1e-6,                          // 收敛容忍度 tol
+				0.9                            // Nesterov 加速系数 accel
+			);
+			// **这里启用 warm-start**
+			myLcp->EnableWarmStart(true);
+			break;
+		}
+		default:
+```
+
+很复杂！！！！！！！
+
+完成，但是结果并不理想。
+<video width="640" height="360" controls>
+  <source src="./MA_weeklyplan_image/warmstart.mp4" type="video/mp4">
+  你的浏览器不支持 Video 标签。
+</video>
+
+>*这个把上一个时间步计算的最优结果带入并不违背APGD算法，伪码里的 γ₀ 本来就是一个“外部给定”的初始猜测（Algorithm 1 的输入里就写了 γ₀）。
+它并没有硬性要求把 γ₀ 设为 0，零向量只是最常见也最简单的 choice。*
+
+所以第一种方法暂时失败，可以作为之后优化的一种尝试。
+
+
