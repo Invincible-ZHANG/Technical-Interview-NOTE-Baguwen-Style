@@ -81,3 +81,16 @@ git clean -fd
 * 用前一定要确认不需要本地的内容，**不可逆**！
 
 
+## 一条命令批量给所有子目录加.gitkeep
+假设你已经有了src/ tests/ docs/ examples/这些目录，
+在项目根目录下，直接执行下面这条 Bash 命令即可：
+
+```bash
+
+find . -type d ! -path './.git*' -exec touch {}/.gitkeep \;
+```
+> 解释：
+>  - find . -type d：查找所有子目录
+>  - ! -path './.git*'：跳过.git相关目录
+>  - -exec touch {}/.gitkeep \;：每个目录下创建.gitkeep空文件
+
