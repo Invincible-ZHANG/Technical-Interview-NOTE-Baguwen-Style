@@ -19,6 +19,12 @@
             <div class="main-title-block">
                 <h1 class="main-title">K1n随意写点东西的地方</h1>
                 <p class="main-title-desc">“天行健，君子以自强不息。”</p>
+                <!--daymatter-->
+                <div id="daymatter-card">
+                    <div class="daymatter-title">我在德国的第</div>
+                    <div id="daymatter-num" class="daymatter-num">000</div>
+                    <div class="daymatter-unit">天</div>
+                </div>
             </div>
             <!-- 在这里添加你的 logo -->
             <div class="personal-logo-container">
@@ -36,6 +42,7 @@
             </div>
         </header>
         <!-- 中间：正文区域（index.md 内容） -->
+        <!--正文-->
         <main class="main-content">
             {{ content }}
         </main>
@@ -71,11 +78,7 @@
         document.addEventListener('DOMContentLoaded', fetchHitokotoLiterature);
     </script>
 
-    <div id="daymatter-card">
-        <div class="daymatter-title">我在德国的第</div>
-        <div id="daymatter-num" class="daymatter-num">000</div>
-        <div class="daymatter-unit">天</div>
-    </div>
+    
     <script>
         var startDate = new Date('2023-03-29');
         var today = new Date();

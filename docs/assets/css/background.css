@@ -453,7 +453,7 @@
     width: 280px;
     max-width: 94vw;
     height: auto; /* 高度自适应 */
-    margin: 2.5em auto 2.1em auto; /* 上下留白，并居中显示 */
+    margin: 1.1em 0 0.8em 0; /* 跟副标题有距离，左对齐 */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -817,10 +817,10 @@
 
     #daymatter-card {
         width: 98vw;
-        min-width: 120px;
-        font-size: 0.95em;
-        padding: 0.7em 0.1em;
-        margin: 1.2em auto 0.8em auto;
+        min-width: 130px;
+        font-size: 0.98em;
+        margin: 0.6em 0 0.6em 0;
+        padding: 0.7em 0.2em;
     }
 
     .dashboard-middle,
