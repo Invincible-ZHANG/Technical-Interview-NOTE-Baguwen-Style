@@ -15,195 +15,191 @@
 }
 
 
-        /*.dashboard-bg {*/
-            /* 可选的背景图片方案，可直接替换 url  */
-            /*background: url('/assets/bg-night-achen.jpg') center/cover no-repeat;
+/*.dashboard-bg {*/
+/* 可选的背景图片方案，可直接替换 url  */
+/*background: url('/assets/bg-night-achen.jpg') center/cover no-repeat;
             position: fixed;
             inset: 0;
             z-index: -1;
             opacity: 0.85;
         }*/
 
-        .dashboard-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .personal-logo-container {
-            position: absolute; /* 绝对定位，放到父容器内合适位置 */
-            top: 230px; /* 根据实际页面微调到红框区 */
-            left: 10px; /* 同上，保证落在红框内 */
-            width: 100px; /* 可以根据你的 logo 大小和红框大小微调 */
-            height: 100px;
-            z-index: 10; /* 保证在其它元素之上 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* 可选的磨砂/半透明背景效果
-            background: rgba(30, 30, 30, 0.35);
-            border-radius: 26px;
-            box-shadow: 0 4px 24px #0006;
-            */
-        }
+.dashboard-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+}
 
-        .personal-logo {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 22px; /* logo 四角圆润 */
-            box-shadow: 0 4px 14px #0003;
-            /* 可加边框
-            border: 2.5px solid #fcf6d5bb;
-            */
-        }
+.personal-logo-container {
+    position: static; /* 不要绝对定位，跟随文档流 */
+    width: 90px; /* 你可以自调宽度 */
+    height: 90px;
+    margin: 1.1em 0 0.3em 0; /* 与副标题和下方间距 */
+    display: flex;
+    align-items: flex-start; /* 靠左对齐 */
+    justify-content: flex-start;
+    /* 可选装饰 */
+    /* background: rgba(30, 30, 30, 0.15);
+    border-radius: 18px;
+    box-shadow: 0 4px 14px #0003;
+    */
+}
 
-        /* ---- 吸顶导航栏 ---- */
-        .sticky-nav {
-            position: sticky;
-            top: 0;
-            z-index: 99;
-            background: rgba(38,38,38,0.80);
-            box-shadow: 0 2px 18px #0002;
-            backdrop-filter: blur(4px);
-            width: 100%;
-            border-bottom: 1.5px solid #eed36e30;
-        }
+.personal-logo {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 22px;
+    box-shadow: 0 4px 14px #0003;
+}
 
-        .sticky-nav-inner {
-            display: flex;
-            justify-content: center;
-            gap: 2.1rem;
-            padding: 0.72em 0;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+/* ---- 吸顶导航栏 ---- */
+.sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: rgba(38,38,38,0.80);
+    box-shadow: 0 2px 18px #0002;
+    backdrop-filter: blur(4px);
+    width: 100%;
+    border-bottom: 1.5px solid #eed36e30;
+}
 
-        .sticky-nav-link {
-            color: #ffedb2;
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.08em;
-            text-decoration: none;
-            padding: 0.48em 2.1em;
-            border-radius: 0.9em;
-            background: transparent;
-            transition: background .18s, color .18s, box-shadow .15s;
-            box-shadow: 0 1.5px 7px #fff3, 0 1.5px 6px #d9ba4422;
-        }
+.sticky-nav-inner {
+    display: flex;
+    justify-content: center;
+    gap: 2.1rem;
+    padding: 0.72em 0;
+    max-width: 1100px;
+    margin: 0 auto;
+}
 
-            .sticky-nav-link:hover, .sticky-nav-link:focus {
-                background: #ffe6a6ea;
-                color: #684c00;
-                box-shadow: 0 2px 16px #ffe19e67, 0 2px 8px #bcb04c26;
-            }
+.sticky-nav-link {
+    color: #ffedb2;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    padding: 0.48em 2.1em;
+    border-radius: 0.9em;
+    background: transparent;
+    transition: background .18s, color .18s, box-shadow .15s;
+    box-shadow: 0 1.5px 7px #fff3, 0 1.5px 6px #d9ba4422;
+}
 
-        /* 主标题+副标题+卡片区 */
-        .header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 2.7em;
-            margin-bottom: 2.1em;
-            gap: 1.7em;
-        }
+    .sticky-nav-link:hover, .sticky-nav-link:focus {
+        background: #ffe6a6ea;
+        color: #684c00;
+        box-shadow: 0 2px 16px #ffe19e67, 0 2px 8px #bcb04c26;
+    }
 
-        .main-title-block {
-            margin-left: 1.5em;
-        }
+/* 主标题+副标题+卡片区 */
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 2.7em;
+    margin-bottom: 2.1em;
+    gap: 1.7em;
+}
 
-        .main-title {
-            font-size: 3.6rem;
-            font-weight: 900;
-            letter-spacing: 0.18em;
-            margin: 0;
-            line-height: 1.13;
-            font-family: 'Kaiti', 'STKaiti', 'FZKai-Z03', 'SimHei', sans-serif;
-            background: linear-gradient(95deg, #ffe9b1 24%, #fff7d1 70%, #e0bc6b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 24px #fff9, 0 2px 6px #a58c3e36, 0 6px 30px #eac16944;
-            transition: text-shadow .2s;
-        }
+.main-title-block {
+    margin-left: 1.5em;
+}
 
-        .main-title-block:hover .main-title {
-            text-shadow: 0 8px 36px #ffe18faa, 0 3px 11px #b19a3a40;
-        }
+.main-title {
+    font-size: 3.6rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    margin: 0;
+    line-height: 1.13;
+    font-family: 'Kaiti', 'STKaiti', 'FZKai-Z03', 'SimHei', sans-serif;
+    background: linear-gradient(95deg, #ffe9b1 24%, #fff7d1 70%, #e0bc6b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 24px #fff9, 0 2px 6px #a58c3e36, 0 6px 30px #eac16944;
+    transition: text-shadow .2s;
+}
 
-        .main-title-desc {
-            font-size: 1.29rem;
-            color: #dec282;
-            font-style: italic;
-            opacity: 0.82;
-            margin-top: 0.89em;
-            letter-spacing: 0.10em;
-            text-shadow: 0 2px 14px #fff5, 0 1px 6px #b3984d26;
-            font-family: 'Kaiti','STKaiti','FZKai-Z03','SimHei',sans-serif;
-        }
+.main-title-block:hover .main-title {
+    text-shadow: 0 8px 36px #ffe18faa, 0 3px 11px #b19a3a40;
+}
 
-        .right-top-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 1.1em;
-            align-items: flex-end;
-            min-width: 310px;
-        }
+.main-title-desc {
+    font-size: 1.29rem;
+    color: #dec282;
+    font-style: italic;
+    opacity: 0.82;
+    margin-top: 0.89em;
+    letter-spacing: 0.10em;
+    text-shadow: 0 2px 14px #fff5, 0 1px 6px #b3984d26;
+    font-family: 'Kaiti','STKaiti','FZKai-Z03','SimHei',sans-serif;
+}
 
-        .card {
-            border-radius: 1.3em;
-            background: rgba(50, 50, 50, 0.34);
-            box-shadow: 0 4px 18px #4442, 0 2px 7px #fff1;
-            padding: 1.35em 1.8em;
-            margin-bottom: 0.6em;
-            max-width: 410px;
-        }
+.right-top-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1em;
+    align-items: flex-end;
+    min-width: 310px;
+}
 
-        .quote-card blockquote {
-            margin: 0 0 .25em 0;
-            font-size: 1.18em;
-            color: #ffeab5;
-            font-style: italic;
-            text-shadow: 0 1.5px 7px #e7b00070;
-        }
+.card {
+    border-radius: 1.3em;
+    background: rgba(50, 50, 50, 0.34);
+    box-shadow: 0 4px 18px #4442, 0 2px 7px #fff1;
+    padding: 1.35em 1.8em;
+    margin-bottom: 0.6em;
+    max-width: 410px;
+}
 
-        .quote-card cite {
-            color: #f0e0ab;
-            font-size: 1.03em;
-            letter-spacing: 0.05em;
-        }
+.quote-card blockquote {
+    margin: 0 0 .25em 0;
+    font-size: 1.18em;
+    color: #ffeab5;
+    font-style: italic;
+    text-shadow: 0 1.5px 7px #e7b00070;
+}
 
-        .clock-card {
-            text-align: center;
-            font-size: 2.23rem;
-            color: #ffe07a;
-            font-family: 'Consolas','Fira Mono','monospace';
-            font-weight: bold;
-            letter-spacing: 0.13em;
-            margin-bottom: 0.6em;
-        }
+.quote-card cite {
+    color: #f0e0ab;
+    font-size: 1.03em;
+    letter-spacing: 0.05em;
+}
 
-            .clock-card #date {
-                font-size: 1.09rem;
-                color: #fff9;
-                margin-top: 0.2em;
-                font-family: inherit;
-                letter-spacing: 0.12em;
-            }
-        /* 主页内容 */
-        .main-content {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1.8em 2.5em 2.5em 2.5em;
-            font-size: 1.20rem; /* 字号更大 */
-            line-height: 1.82;
-            color: #fcf7e4; /* 更亮的正文色 */
-            text-shadow: 0 2px 10px #19191944, 0 1px 0 #fff2;
-            font-family: 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
-            border-radius: 1.3em;
-            background: rgba(44,44,44,0.14);
-            box-shadow: 0 6px 40px #2223, 0 2px 8px #fff3;
-        }
+.clock-card {
+    text-align: center;
+    font-size: 2.23rem;
+    color: #ffe07a;
+    font-family: 'Consolas','Fira Mono','monospace';
+    font-weight: bold;
+    letter-spacing: 0.13em;
+    margin-bottom: 0.6em;
+}
 
-       /* @media (max-width: 900px) {
+    .clock-card #date {
+        font-size: 1.09rem;
+        color: #fff9;
+        margin-top: 0.2em;
+        font-family: inherit;
+        letter-spacing: 0.12em;
+    }
+/* 主页内容 */
+.main-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.8em 2.5em 2.5em 2.5em;
+    font-size: 1.20rem; /* 字号更大 */
+    line-height: 1.82;
+    color: #fcf7e4; /* 更亮的正文色 */
+    text-shadow: 0 2px 10px #19191944, 0 1px 0 #fff2;
+    font-family: 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+    border-radius: 1.3em;
+    background: rgba(44,44,44,0.14);
+    box-shadow: 0 6px 40px #2223, 0 2px 8px #fff3;
+}
+
+/* @media (max-width: 900px) {
             .header-flex {
                 flex-direction: column;
                 align-items: stretch;
@@ -248,8 +244,8 @@
                 padding: 1em 0.5em;
                 max-width: 95vw;
             }*/
-        /*}*/
-    /*</style>*/
+/*}*/
+/*</style>*/
 
 /* ───────────── 简介&链接 ───────────── */
 .dashboard-middle {
@@ -450,10 +446,10 @@
 /*DAYMATTER*/
 
 #daymatter-card {
-    width: 280px;
+    width: 250px;
     max-width: 94vw;
     height: auto; /* 高度自适应 */
-    margin: 1.1em 0 0.8em 0; /* 跟副标题有距离，左对齐 */
+    margin: 0.8em 0 0 0; /* 跟logo间距 */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -715,9 +711,9 @@
         grid-template-columns: 1fr 1fr !important;
     }*/
 
-    .dashboard-links {
-        grid-template-columns: repeat(2,1fr);
-    }
+.dashboard-links {
+    grid-template-columns: repeat(2,1fr);
+}
 
 
 
@@ -813,6 +809,12 @@
         min-width: 0;
         gap: 0.3em;
         flex-direction: row;
+    }
+
+    .personal-logo-container {
+        width: 54px;
+        height: 54px;
+        margin: 0.7em 0 0.25em 0;
     }
 
     #daymatter-card {
