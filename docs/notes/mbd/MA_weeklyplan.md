@@ -442,7 +442,68 @@ else {
 效果没有变化，虽然初始值是1，但是在第一个时间不长中，计算出来的最优解还是很小，所以导致没有约束力？？
 
 
+既然方法2失败，我们继续使用方法3
 
 #### 方法3. 缩小时间步长
+即便 λ 再准，一步积分时间太大也会把摆球拉得太远，约束一时跟不上，
+
+### 修改源代码，加入double Lk, tk, theta;
+**在修改这个的时候我发现，我之前的步长设置和加速因子的设置是个定值，并不符合原来的算法设计，
+所以我选择去重新完善cpp源代码查看效果。**
+设置还是基于尝试3：开启warmStart，调整迭代次数从100到500，并tol = 1e-10 ，
+这次速度快很多，但是不断重试 CFM 并打印 “solveMsg”。
+
+>这是一种「边调参边重试」的鲁棒性增强策略——如果 APGD（或其它 LCP 求解器）第一次没解出来，就不断往矩阵对角线上加大 CFM（相当于松弛约束），直到能得到一个可行解；如果 CFM 太大还不行，就直接用零力近似，保证仿真继续跑下去。
+![Add New Para](MA_weeklyplan_image/addNewPara.png)
+
+从日志看，APGD 在第 0 步时用 γ₀＝1 开始，err＝1 正常；到了第 30 步，它竟然把 LA[0] 跑到 −0.07，err 一下子飙到 6.9e7，然后更后面直接爆到 1e174 这种天文数字，最后落到你的那段 solveMsg 循环里不停重试 CFM 并打印 “solveMsg”。
+##### 根本原因
+你在 solve() 里把伪码中的 back-tracking line-search 那一块暂时用
+```
+bool cond = true;
+if (cond) break;
+
+```
+给“短路”掉了，导致：\
+1.永远只做一次投影:\
+不管当前步长 t=1/Lk 到底是否合适，代码都“认为”下降条件满足，马上就跳出 while(true)。\
+2.步长没收敛调整:\
+因为从没进入那段 L_temp *=2; t=1/L_temp; 的循环，t 一直保持初始的 1/L₀——而这个 t 可能对你的 A 矩阵根本不适合，第一次迭代就可能一步跨得太大，造成 xnew 远远偏离可行区间，再往后每步都在“极度震荡”或指数爆炸。\
+3.最终 solve() 失败:\
+当 err 无限放大之后，solve() 返回 false，控制流就跑到 while (!myLcp->solve() || !myLcp->validSolution()) 里，不停加 CFM（也没用），最终就退化到零解或卡在“solveMsg”里。
+
+**解决办法 ：你需要把那段 cond = true; if (cond) break; 换成真正的能量下降检测**
+
+
+fine，改完直接卡死，真是个天才！！！
+应该是走进了一个死循环，得不出结果就一直在尝试。现在给这个循环最大的尝试次数，让他20次后跳出。
+
+不卡死了，但是效果还是不行，所以我在想，是不是摩擦力的原因，而且他一直报错： **“APGD backtrack reached BT_MAX, force accept”**
+就说明 Armijo 条件始终不满足，所以每次都翻倍 L_temp 到上限才强制跳出。
+
+所以我需要重新看一下它整个的LCP的建模过程，加一下debug
+```
+	// —— 上面已经填充好了 frictionNormalIndices 和 addFriction ——
+
+		// ===== 在这里插入调试打印 =====
+		qDebug() << ">>> frictionNormalIndices:";
+		for (int i = 0; i < frictionNormalIndices.size(); ++i)
+			qDebug() << i << ":" << frictionNormalIndices[i];
+
+		qDebug() << ">>> addFriction:";
+		for (int i = 0; i < addFriction.size(); ++i)
+			qDebug() << i << ":" << addFriction[i];
+		// ===== 调试打印结束 =====
+```
+![Friction Debug](MA_weeklyplan_image/frictionDebug.png)
+这两个容器的 .size() 根本是 0，摩擦相关的数组根本没分配过长度（它们的 size() 一直是 0），
+那我暂时不想更改它的这个建模方式，我想先不用摩擦力，我的apgd文件需要更改。\
+专门为APGD写一个函数关闭所有的摩擦建模投影。
+
+```
+apgd->EnableFriction(false);    // <— 这一行，关闭摩擦
+```
+
+
 #### 方法4. 优化步长（α）与预调度因子
 #### 方法5. 使用 Baumgarte 或 约束柔性化
