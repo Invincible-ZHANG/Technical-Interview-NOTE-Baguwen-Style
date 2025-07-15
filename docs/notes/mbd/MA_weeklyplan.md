@@ -394,7 +394,7 @@ solver.EnableWarmStart(false);
 
 1.关闭warmStart，调整迭代次数从100到500：
 <video width="640" height="360" controls>
-  <source src="./MA_weeklyplan_image/warmstart.mp4" type="video/mp4">
+  <source src="./MA_weeklyplan_image/only500iters.mp4" type="video/mp4">
   你的浏览器不支持 Video 标签。
 </video>
 
@@ -403,11 +403,43 @@ solver.EnableWarmStart(false);
 发现最初的迭代次数并不满足500次，所以判断时过早满足了容忍值，所以提前结束了迭代，所以，我们选择更新他的精度
 为1e-10
 
-2.关闭warmStart，调整迭代次数从100到500，并tol = 1e-10 .
+2.关闭warmStart，调整迭代次数从100到500，并tol = 1e-10 :
+<video width="640" height="360" controls>
+  <source src="./MA_weeklyplan_image/iters500+1e-10tol.mp4" type="video/mp4">
+  你的浏览器不支持 Video 标签。
+</video>
 
 
+可以发现效果好一些，没有出现上面的视频的左端受力的自由落体，贴近一点实际情况，但是因为精度很高，
+所以仿真速度会慢很多。
+观察Qdegug的值可以看到：
+![Iters500+Tol1e 10](MA_weeklyplan_image/iters500+tol1e-10.png)
 
-通过调整迭代次数，并没有优化刚才的效果，所以
+>通过对上面的对比，我觉得最最开始第一时间步长的计算值很重要。
+
+所以我猜测初始值不应该从零开始，是所以我在第三次尝试打开warmstart来进行初始值的优化
+
+3.开启warmStart，调整迭代次数从100到500，并tol = 1e-10 :
+发现效果和关闭warmStart，调整迭代次数从100到500一摸一样，所以我这边个人的判断是应该把LA[O]的值设置为1开始，
+就像伪代码中所写的，所以我进行更改初始值为1.
+```cpp
+// warm-start 相关
+if (!first_step) {
+    if (auto* apgd = dynamic_cast<RBDLcpAPGD*>(myLcp)) {
+        apgd->SetLambda(prev_lambda);
+    }
+}
+else {
+    // 第一次也要初始化，改成全 1 向量
+    if (auto* apgd = dynamic_cast<RBDLcpAPGD*>(myLcp)) {
+        prev_lambda.assign(matA.rows(), 1.0);  // ← 由 0.0 改成 1.0
+        apgd->SetLambda(prev_lambda);
+    }
+    first_step = false;
+}
+
+```
+效果没有变化，虽然初始值是1，但是在第一个时间不长中，计算出来的最优解还是很小，所以导致没有约束力？？
 
 
 
