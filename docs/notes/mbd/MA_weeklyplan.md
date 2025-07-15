@@ -208,6 +208,13 @@ else if (solverName.toLower() == "apgd")
 
 同一个单摆模型，用默认的 Lagrange‐multiplier+Dantzig/GS 求解器能正常振动，
 但用你接进去的 APGD 解算器就直接自由落体”，
+
+**APGD效果视频：**
+<video width="640" height="360" controls>
+  <source src="./MA_weeklyplan_image/APGD_LCP_SOLVER.mp4" type="video/mp4">
+  你的浏览器不支持 Video 标签。
+</video>
+
 **基本上说明你的 APGD 分支在求解约束力的时候返回了全零（或者极小）的 λ**，
 导致根本**没把摆杆的杆约束力施加上去**，物体直接受重力加速度下落。
 
@@ -233,7 +240,7 @@ $$
 - [ ] Debug APGD求解器的自由落体问题
 - [ ] 完成CCP建模，去名字为RBDClusterLagrangeMultipliersQP
 
-### 2025.0714
+### 2025.07.14
 
 
 ### TASK
@@ -356,3 +363,54 @@ solver.EnableWarmStart(true);
 所以第一种方法暂时失败，可以作为之后优化的一种尝试。
 
 
+> 控制变量，在进行第二个方法前关掉第一个方法
+
+
+
+### 2025.07.14
+
+#### 方法2. 调整最大迭代次数和容忍误差
+```cpp
+// 先关闭 warm-start
+solver.EnableWarmStart(false);
+
+// 再设置迭代次数和容忍度
+
+// 在这VSPluginRBDynamXMainSimStateExtension.cpp更改
+// 所以我直接选择快速暴力的解法，直接写死
+
+// 1) 用派生类指针接收 new 出来的对象
+			RBDLcpAPGD* apgd = new RBDLcpAPGD(
+				matA.rows(),                 // LCP 维度
+				numberEqualityConstraints,   // nub
+				500, // maxIters
+				1e-10,                        // tol
+				0.9                          // accel
+			);
+```
+暂时暴力求解，直接写死。
+
+**效果**
+
+1.关闭warmStart，调整迭代次数从100到500：
+<video width="640" height="360" controls>
+  <source src="./MA_weeklyplan_image/warmstart.mp4" type="video/mp4">
+  你的浏览器不支持 Video 标签。
+</video>
+
+通过观察debug的值：
+![Only500iters](MA_weeklyplan_image/only500iters.png)
+发现最初的迭代次数并不满足500次，所以判断时过早满足了容忍值，所以提前结束了迭代，所以，我们选择更新他的精度
+为1e-10
+
+2.关闭warmStart，调整迭代次数从100到500，并tol = 1e-10 .
+
+
+
+通过调整迭代次数，并没有优化刚才的效果，所以
+
+
+
+#### 方法3. 缩小时间步长
+#### 方法4. 优化步长（α）与预调度因子
+#### 方法5. 使用 Baumgarte 或 约束柔性化
