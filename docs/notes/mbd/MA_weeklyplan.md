@@ -628,9 +628,10 @@ qDebug() << "[RBDLcpDantzig] Current working directory:"
 
 
 ### 2025.07.17
-#### TASK:
+
+#### TASK:如下表。
  - [x] 解决初始全是0的问题
- - [ ]解决杆子脱离的情况   
+ - [x] 解决杆子脱离的情况   
 
 
 现在遇到的问题计算得到的力为0，排除一切后去debug是不是步长计算的错误：
@@ -650,3 +651,28 @@ qDebug() << "[RBDLcpDantzig] Current working directory:"
 猜测：约束力算歪了，导致球体被“甩”出铰链。
  - 缺少约束漂移修正（Baumgarte 稳定化）
  - 迭代不够 & 容差太松
+
+| Index |  APGD λ |    Dantzig λ    |
+| :---: | :-----: | :-------------: |
+|   0   | −7.6286 |     −0.1942     |
+|   1   |  8.9401 |      0.0823     |
+|  2–5  |   \~0   | 0, 0, 0, −0.001 |
+
+
+APGD 算出的 λ 过大，导致“铰链”瞬间被“甩”开——约束力根本把摆杆拉偏离了长度约束。
+
+
+我在想，我是不把RHS 符号用反了（梯度公式写错），因为可能是和chrono的建模设计是相反的，修改一下试试。
+
+排除这个问题，没错，但是代码跑飞了，可能是迭代？？
+
+ok，成功解决！！！
+
+
+**将杆子的迭代次数增加后，可以计算得到正确的结果，所以现在APGD基于LCP无摩擦力的建模下已经成功运行**
+
+效果如下视频：
+<video width="640" height="360" controls>
+  <source src="./MA_weeklyplan_image/APGD_LCP_SUSS_NO_FIRC.mp4" type="video/mp4">
+  你的浏览器不支持 Video 标签。
+</video>
