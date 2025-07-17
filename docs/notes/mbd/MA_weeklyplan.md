@@ -671,6 +671,8 @@ ok，成功解决！！！
 
 **将杆子的迭代次数增加后，可以计算得到正确的结果，所以现在APGD基于LCP无摩擦力的建模下已经成功运行**
 
+从100次提高到500次
+
 效果如下视频：
 <video width="640" height="360" controls>
   <source src="./MA_weeklyplan_image/APGD_LCP_SUSS_NO_FIRC.mp4" type="video/mp4">
