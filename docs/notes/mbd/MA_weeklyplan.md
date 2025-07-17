@@ -367,7 +367,7 @@ solver.EnableWarmStart(true);
 
 
 
-### 2025.07.14
+### 2025.07.15
 
 #### 方法2. 调整最大迭代次数和容忍误差
 ```cpp
@@ -508,3 +508,107 @@ apgd->EnableFriction(false);    // <— 这一行，关闭摩擦
 
 #### 方法4. 优化步长（α）与预调度因子
 #### 方法5. 使用 Baumgarte 或 约束柔性化
+
+
+### 2025.07.16
+
+按照昨天预设的实验思路，今天首先去看被的正常运行的求解器所得到的正确结果是怎样的。\
+所以对Dantzig求解器进行调试。
+
+```cpp
+ #endif
+	delete[] schlupf;
+	//delete[] rightSide;
+
+
+// 1) Print out the current working directory (where the file will land)
+qDebug() << "[RBDLcpDantzig] Current working directory:" 
+         << QDir::currentPath();
+
+// 2) Dump λ (x vector) to “dantzig_lambda.dat”
+{
+    QFile file("dantzig_lambda.dat");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() 
+          << "[RBDLcpDantzig] ERROR: could not open " 
+          << "dantzig_lambda.dat" 
+          << " for writing";
+    }
+    else {
+        QTextStream out(&file);
+        out.setRealNumberPrecision(6);
+        out.setRealNumberNotation(QTextStream::FixedNotation);
+        for (int i = 0; i < x->size(); ++i) {
+            out << (*x)[i] << "\n";
+        }
+        file.close();
+        qDebug() 
+          << "[RBDLcpDantzig] Successfully wrote" 
+          << x->size() 
+          << "lambda values to dantzig_lambda.dat";
+    }
+}
+
+// 3) (Optional) Still print them in the debug console
+{
+    QString xs; xs.reserve(x->size()*16);
+    for (int i = 0; i < x->size(); ++i)
+        xs += QString(" %1").arg((*x)[i], 0, 'f', 6);
+    qDebug() << "[RBDLcpDantzig] Final x:" << xs;
+}
+
+
+	delete[] myLo;
+	myLo = 0;
+```
+
+把APGD和Dantzig都存下来做对比
+
+| Run |   约束分量  | Dantzig λ |   APGD λ  | 差值 (APGD–Dantzig) |
+| --: | :-----: | :-------: | :-------: | :---------------: |
+|   0 | λ₀ (下界) | –0.028331 |  0.028331 |      0.056662     |
+|   1 | λ₁ (上界) | –0.000000 | –0.000000 |      0.000000     |
+
+
+
+从刚才贴出的两组数据看，APGD 和 Dantzig 对同一约束（单摆长度约束上下界）算出的 λ₀／λ₁ 是完全相反的：
+
+
+**为什么会有上下界？**
+
+物理上，你的单摆杆长必须 刚好等于 某个长度 L。把这个 “
+𝑔(𝑞)=0和-g(q)=0”（等式）转成互补格式时，通常写成：这两条分别保证“不短于”和“不长于”。
+
+如何修正：
+
+1.保证初始可行：
+ - 把 useWarmStart=false 时，明确把 xprev[0]=xprev[1]=0，确保起始时 λ₀=λ₁=0。
+ - 检查 projectBounds：对第 0、1 分量都用 max(val, 0)，不要给第 1 个分量用上界错误的负值。（未启用）
+
+
+“每次新开一次仿真，就删掉上一次仿真产生的日志文件；但在同一次仿真内部的多个步长调用中，不重复删除”：使用flag：
+
+```
+	static bool first = true;
+	if (first) {
+		first = false;
+		QFile::remove("dantzig_lambda.dat");
+	}
+```
+
+你的物理模型里，Dantzig 那边的 b 实际上是 
+−b APGD
+​
+ ，或者你在 APGD 里不小心把符号搞反了，那么肯定会出现一模一样大小但符号相反的 λ。
+
+
+```
+ grad[i] = sum - b[i];       // ← 改成 sum - b[i]
+    f_y += 0.5 * yk[i] * rowSum - yk[i] * b[i];
+    …
+    f_x += 0.5 * xnew[i] * rowSum - xnew[i] * b[i];
+
+```
+
+
+### 2025.07.17
