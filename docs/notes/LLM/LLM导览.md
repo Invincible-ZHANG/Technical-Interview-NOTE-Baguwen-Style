@@ -19,9 +19,9 @@ excerpt: 本笔记主要来源于GITHUB的开源博主的笔记，在此基础�
 
 > 特别鸣谢： 感谢 GitHub 开源项目[so-large-lm](https://github.com/datawhalechina/so-large-lm.git)精彩分享，为本笔记提供了宝贵的参考和启发。
 
-## 项目意义
 
-> 实战的部分Datawhale出品的[self-llm开源课程](https://github.com/datawhalechina/self-llm)，该课程提供了一个全面实战指南，旨在通过AutoDL平台简化开源大模型的部署、使用和应用流程。从而使学生和研究者能够更高效地掌握环境配置、本地部署和模型微调等技能。在学习完大模型基础以及大模型部署后，关于Datawhale的大模型开发课程[llm-universe](https://github.com/datawhalechina/llm-universe)旨在帮助初学者最快、最便捷地入门 LLM 开发，理解 LLM 开发的一般流程，可以搭建出一个简单的 Demo。
+## 笔记来源
+大部分基于别人已经开源的笔记进行学习，并且适当的增加了个人的想法，以及笔记的补充，如涉及侵权问题，请联系本人。
 
 ## 项目规划
 
@@ -67,21 +67,3 @@ excerpt: 本笔记主要来源于GITHUB的开源博主的笔记，在此基础�
     - Agent的挑战与机遇
 14. [Llama开源家族：从Llama-1到Llama-3](https://github.com/datawhalechina/so-large-lm/blob/main/docs/content/ch14.md)
     - Llama进化史（第1节）/ 模型架构（第2节）/训练数据（第3节）/训练方法（第4节）/效果对比（第5节）/社区生态（第6节）
-
-
-## 核心贡献者
-
-- [陈安东](https://scholar.google.com/citations?user=tcb9VT8AAAAJ&hl=zh-CN)：哈尔滨工业大学自然语言处理方向博士在读(发起人，项目负责人，项目内容构建)
-- [张帆](https://github.com/zhangfanTJU)：天津大学自然语言处理方法硕士（项目内容构建）
-  
-### 参与者
-- [王茂霖](https://github.com/mlw67)：华中科技大学博士在读 （解决issues问题）
-
-## 项目负责人
-
-陈安东 
-联系方式: ands691119@gmail.com
-
-
-## 感谢支持
-[![Stargazers over time](https://starchart.cc/datawhalechina/so-large-lm.svg?variant=adaptive)](https://starchart.cc/datawhalechina/so-large-lm)
