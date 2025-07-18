@@ -1,11 +1,11 @@
 ﻿---
 layout: default
-title: 多体动力学 系列
+title: LLM 系列
 ---
 
 <!-- 标题区域：半透明磨砂背景 -->
 <header class="section-header">
-  <h1>大模型 系列</h1>
+  <h1>LLM 系列</h1>
 </header>
 
 <div class="post-grid">

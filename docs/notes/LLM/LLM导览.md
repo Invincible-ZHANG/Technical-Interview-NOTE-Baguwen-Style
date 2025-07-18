@@ -1,5 +1,5 @@
 ---
-title: 大模型学习笔记
+title: 大模型学习笔记导览
 date: 2025-07-18
 layout: note
 excerpt: 本笔记主要来源于GITHUB的开源博主的笔记，在此基础上添加自己的见解和想法。:)
