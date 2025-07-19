@@ -8,9 +8,12 @@
       url: /notes/algorithms/
     - title: 多体动力学
       url: /notes/mbd/
+    - title: 大模型
+      url: /notes/LLM/
+    - title: ENG
+      url: /notes/English/
 - title: 面经
-  url: /notes/Fall_Reviews
-- title: ENG
-  url: /notes/English/
-- title: 大模型
-  url: /notes/LLM/
+  url: /notes/Fall_Reviews/
+- title: 旅行
+  url: /notes/travel/
+
