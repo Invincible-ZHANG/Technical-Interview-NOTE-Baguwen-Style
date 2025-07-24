@@ -265,3 +265,147 @@ typedef int INTEGER ，这以后就可⽤ INTEGER来代替int作整型变量的�
 序书写简单⽽且使意义更为明确，因⽽增强了可读性。例如： typedef int a[10]; 表⽰a是整
 型数组类型，数组⻓度为10。然后就可⽤a说明变量，例如:语句a s1,s2；完全等效于语句
 int s1[10],s2[10].同理， typedef void（*p）（void)表⽰p是⼀种指向void型的指针类型。
+
+
+~~~
+#include <iostream>
+
+// 1. 定义 typedef
+typedef void (*p)(void);
+
+// 2. 一个符合签名的函数
+void hello(void) {
+    std::cout << "Hello, world!\n";
+}
+
+int main() {
+    // 3. 用 p 来声明函数指针变量 fp
+    p fp = &hello;   // 也可写成 p fp = hello;
+
+    // 4. 调用函数指针
+    fp();            // 等同于 hello();
+    return 0;
+}
+~~~
+
+
+（b）功能不同
+
+typedef⽤来定义类型的别名，这些类型不仅包含内部类型（int、char等），还包括⾃
+定义类型（如 struct），可以起到使类型易于记忆的功能。
+
+例如： typedef int (*PF)(const char *， const char*) 定义⼀个指向函数的指针的数据
+类型PF，其中函数返回值为int，参数为 const char*。typedef还有另外⼀个重要的⽤途，
+那就是定义机器⽆关的类型。例如，可以定义⼀个叫REAL的浮点类型，在⽬标机器上它可
+以获得最⾼的精度： typedef long double REAL ，在不⽀持 long double的机器上，该
+typedef 看起来会是下⾯这样： typedef double real ，在 double都不⽀持的机器上，该
+typedef看起来会是这样： typedef float REAL 。 #define不只是可以为类型取别名，还可
+以定义常量、变量、编译开关等。
+
+~~~
+// 在支持 long double 的平台上：
+typedef long double REAL;
+
+// 如果平台不支持 long double，就改成：
+// typedef double REAL;
+
+// 如果还连 double 都不支持，就退到：
+// typedef float REAL;
+~~~
+
+（c）作⽤域不同
+
+#define没有作⽤域的限制，只要是之前预定义过的宏，在以后的程序中都可以使⽤，
+⽽ typedef有⾃⼰的作⽤域。
+
+下面这段代码演示了 #define 和 typedef 在作用域（可见性）上的差别：
+
+~~~
+void fun()
+{
+    #define A int    // 宏定义：在整个后续代码里都有效，直到被 #undef
+}
+
+void gun()
+{
+    A x = 123;       // OK：因为宏替换没有 C++ 作用域限制，A 会被替换成 int
+}
+~~~
+
+~~~
+void fun()
+{
+    typedef int A;  // typedef 只在其所在的作用域（这里是 fun 函数体内）有效
+}
+
+void gun()
+{
+    A x = 123;       // 错误：A 在 gun 函数里并不存在
+}
+~~~
+
+
+（d）对指针的操作不同
+~~~
+#define INTPTR1 int*;
+typedef int* INTPTR2;
+INTPTR1 p1, p2;
+INTPTR2 p3, p4;
+~~~
+
+ - INTPTR1 pl, p2和INTPTR2 p3，p4的效果截然不同。 INTPTR1 pl, p2进⾏字符串替换
+后变成 int*p1,p2 ，要**表达的意义是声明⼀个指针变量p1和⼀个整型变量p2。**
+
+ - INTPTR2 p3，p4，由于 INTPTR2是具有含义的，告诉我们是⼀个指向整型数据的指
+针，那么p3和p4都为指针变量，这句相当于 int*pl，*p2 .从这⾥可以看出，进⾏宏替换是
+不含任何意义的替换，仅仅为字符串替换；⽽⽤ typedef 为⼀种数据类型起的别名是带有⼀
+定含义的。
+
+
+
+~~~
+#define INTPTR1 int*
+typedef int* INTPTR2;
+
+int a = 1, b = 2, c = 3;
+
+// 情况 1：const 加在宏替换上
+const INTPTR1 p1 = &a;
+
+// 情况 2：const 加在 typedef 别名上
+const INTPTR2 p2 = &b;
+
+// 情况 3：另一种写法，等价于情况 2
+INTPTR2 const p3 = &c;
+~~~
+
+
+**情况 1**：const INTPTR1 p1
+ - 首先做宏替换：
+~~~
+const int* p1 = &a;
+~~~
+- 解释
+   - p1 是 “指向 常量 int 的指针”    **常量指针**
+   - 你不能通过 *p1 = … 去修改 a，但可以写 p1 = &someOtherInt; 把指针指向别处。
+
+**情况 2**：const INTPTR2 p2
+- INTPTR2 本身就是一个完整的指针类型（int*），再加 const，等价于
+~~~
+int * const p2 = &b;
+~~~
+- 解释：
+  - p2 是 “常量 指针，指向可变的 int”
+  - 你可以通过 *p2 = … 去修改 b，但不能写 p2 = &someOtherInt;（指针本身不可再赋值）。
+
+情况 3：INTPTR2 const p3
+- const 修饰 INTPTR2 的写法顺序可以前后互换，效果同“情况 2”：
+
+
+
+
+## 2 变量、数组、指针
+
+### 2.1变量
+
+（a）定义常量谁更好？# define还是 const？
