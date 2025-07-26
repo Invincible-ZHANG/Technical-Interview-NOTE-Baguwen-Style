@@ -9,7 +9,9 @@ title: 多体动力学 系列
 </header>
 
 <div class="post-grid">
-  {% assign mbd_notes = site.pages | where_exp: "page", "page.path contains 'mbd/'" %}
+  {% assign mbd_notes = site.pages
+     | where: "dir", "/notes/mbd/"
+%}
   {% assign sorted_mbd_notes = mbd_notes | sort: "date" | reverse %}
   {% for note in sorted_mbd_notes %}
     {% assign filename = note.path | split:'/' | last %}
