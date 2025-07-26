@@ -14,6 +14,23 @@
     margin: 1em auto;
 }
 
+/*笔记表格*/
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 15px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
 
 /*.dashboard-bg {*/
 /* 可选的背景图片方案，可直接替换 url  */
