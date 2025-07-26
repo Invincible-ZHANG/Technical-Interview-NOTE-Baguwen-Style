@@ -1,5 +1,5 @@
 ---
-title: 放弃本地代码，回到远程仓库
+title: git
 author: 张子健
 date: 2025-07-14
 tags: [Git, 代码管理, 实用技巧]
