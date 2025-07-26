@@ -3,35 +3,60 @@ layout: home
 title: K1n's blog
 ---
 
-# 欢迎来到「K1n's blog」
+# 👋 欢迎来到我的小站
 
-✨ 本站点由 **Jekyll + GitHub Pages** 构建  
-- 嵌入式 · 软件开发 · GPU/CUDA · 算法  
+这里不是技术博客，也不是日更大佬的输出基地，就是一个探索的中的技术菜鸡希望成为大佬的心路历程，所以这是一个「想到啥就写啥」的地方。
 
+你可能会翻到：
 
----
+- 嵌入式开发的实战笔记（ARM、驱动、RTOS、通信协议啥的）
+- 校招八股文大合集（C语言、数据结构、系统编程、网络基础）
+- 项目总结 & 调试踩坑记录 & 工具使用心得
+- 毕业设计全程的记录
+- 还有一些乱七八糟的东西，比如旅行随记、想法碎碎念、工具折腾日志
 
-## 创意邀请
+> 📌 写博客对我来说，就是给未来的自己留点“我当时是怎么想的”证据。
 
-🎨 **你的创意，你的舞台**  
-- 有没有独到的面试经验或实战案例？  
-- 想把你的创新设计、面经心得分享到这里？  
-- ⚡️ 快来 Fork 本仓库，提交你的故事和思路！  
-
-> 🚀 **一起打造最有料的技术笔记库！**  
-
----
-
-## 欢迎贡献
-
-非常感谢你的关注与支持！  
-- 如果笔记对你有帮助，请给仓库点 ⭐  
-- 通过 Issues 或 Pull Requests 分享你的面经与创意  
-
-> ⭐ **点此给仓库加 Star**：[Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style](https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style)  
+> 只是单纯想记录一下来时的路。
 
 ---
 
-## 嵌入式 · 软件开发 · GPU/CUDA · 算法
+## 🧠 关于我
 
-更多内容请点击上方导航或查看 [README](https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style/blob/main/README.md)。  
+- 🎓 本科毕业于@ 西安电子科技大学（Xidian University）  
+- 📚 硕士在读 @ 德国亚琛工业大学 RWTH Aachen，专业是计算机工程  
+- 💻 技术方向在嵌入式开发、系统底层、数值优化、AI Infra 之间反复横跳  
+- 💼 实习经历包括 Intel（MCU / Power Management）、OpenHarmony 驱动开发  
+- 🛠 平时用得比较顺手的工具包括：C / C++ / Python / Git / Markdown / LaTeX
+
+---
+
+## 🌿 最近在探索的爱好：
+
+- 🏎 F1 赛车 —— 嘟→嘟→嘟↘嘟↗ Max Verstappen～  
+- 🎮 电竞游戏 —— FPS / MOBA 都玩，虽然是菜狗，但菜我也玩  
+- 🏋️‍♂️ 健身锻炼 —— 动作做不标准，表情倒挺丰富  
+- 📺 偶尔刷点技术播客、F1 技术解析、或者赛车工程视频当“电子营养”  
+
+> 爱好这东西嘛，贵在真诚，尽管不精，但快乐就完事了。
+
+---
+
+## 🌱 关于本站
+
+- 没有固定更新频率，完全靠灵感和心情驱动
+- 主要记录技术相关的内容，也可能穿插点日常想法
+- 虽然内容略杂，但我会持续整理和优化，让它慢慢变清晰
+
+---
+
+## ⭐ 如果对你有帮助…
+
+欢迎顺手点个 Star，给我这个半路出家的八股文工程师一点点鼓励：
+
+👉 [感谢加星](https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style)
+
+---
+
+> 💬 如果你也在嵌入式、AI Infra 或技术打怪的路上，欢迎随时留言交流。  
+> 🤝 也欢迎纯路过的朋友来点个赞、踩个坑、打个招呼。总之——别太拘着，就当串个门。
