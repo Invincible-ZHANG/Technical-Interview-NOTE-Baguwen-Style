@@ -1,4 +1,4 @@
-﻿- title: 技术博客
+﻿- title: 博客
   children:
     - title: 嵌入式
       url: /notes/embedded/
@@ -6,14 +6,14 @@
       url: /notes/gpu_cuda/
     - title: 算法
       url: /notes/algorithms/
-    - title: 多体动力学
-      url: /notes/mbd/
+    - title: 秋招
+      url: /notes/Fall_Reviews/
     - title: 大模型
       url: /notes/LLM/
     - title: ENG
       url: /notes/English/
-- title: 秋招
-  url: /notes/Fall_Reviews/
+- title: Thesis
+  url: /notes/mbd/
 - title: 旅行
   url: /notes/travel/
 

@@ -9,7 +9,9 @@ title: 秋招面经
 </header>
 
 <div class="post-grid">
-  {% assign mbd_notes = site.pages | where_exp: "page", "page.path contains 'Fall_Reviews/'" %}
+ {% assign mbd_notes = site.pages
+     | where: "dir", "/notes/Fall_Reviews/"
+%}
   {% assign sorted_mbd_notes = mbd_notes | sort: "date" | reverse %}
   {% for note in sorted_mbd_notes %}
     {% assign filename = note.path | split:'/' | last %}
