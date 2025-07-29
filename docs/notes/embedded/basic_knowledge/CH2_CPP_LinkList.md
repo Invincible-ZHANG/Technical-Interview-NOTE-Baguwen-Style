@@ -37,7 +37,7 @@ using namespace std;
 typedef struct listnode
 {
     int data;
-    listpoint *next;
+    listnode *next;
 }listnode;
 ~~~
 
@@ -45,7 +45,7 @@ typedef struct listnode
 
 int data,是一个数字，是我们存在抽屉里的东西
 
-而listpoint *next是一个指向和这个抽屉结构一样的新的抽屉的指针；
+而listnode *next是一个指向和这个抽屉结构一样的新的抽屉的指针；
 
 我们可以在抽屉里放指向下一个抽屉的指针，自然也就可以在抽屉里放指向上一个抽屉的指针
 
@@ -53,8 +53,8 @@ int data,是一个数字，是我们存在抽屉里的东西
 typedef struct listnode
 {
     int data;
-    listpoint *next;
-    listpoint *last;
+    listnode *next;
+    listnode *last;
 }listnode;
 ~~~
 
@@ -72,19 +72,19 @@ typedef struct data
 typedef struct listnode 
 {
     data *information;
-    listpoint *next;
-    listpoint *list;
+    listnode *next;
+    listnode *list;
 }listnode;
 ~~~
 那个叫做information的小收纳盒里，装着一个人的学号，姓名，性别等信息
 
 ---
 
-### 第二部分—创建一个链表
+## 第二部分—创建一个链表
 
 **创建一个基础链表**
 ~~~
-listnode* create_normal_list(int n) /*链表每一个节点都是指向  listpoint结构的指针，所以返回值是listpoint *,n是指创建的链表的节点数目*/
+listnode* create_normal_list(int n) /*链表每一个节点都是指向  listnode结构的指针，所以返回值是listnode *,n是指创建的链表的节点数目*/
 {
     listnode *head, *normal, *end;/*创建头节点，其他节点，和尾节点*/
     /*分配内存*/
@@ -120,7 +120,7 @@ listnode* create_normal_list(int n) /*链表每一个节点都是指向  listpoi
 操作和之前一样，只不过最后一个节点的下一个指向头节点
 
 ~~~
-listnode* create_normal_list(int n) /*链表每一个节点都是指向  listpoint结构的指针，所以返回值是listpoint *,n是指创建的链表的节点数目*/
+listnode* create_normal_list(int n) /*链表每一个节点都是指向  listnode结构的指针，所以返回值是listnode *,n是指创建的链表的节点数目*/
 {
     listnode *head, *normal, *end;/*创建头节点，其他节点，和尾节点*/
     /*分配内存*/
@@ -151,23 +151,107 @@ listnode* create_normal_list(int n) /*链表每一个节点都是指向  listpoi
 }
 ~~~
 
-**创建随机枝杈链表**
+**创建随机枝杈链表** （先不看）
 
-**生成随机排序链表**
+每一个节点都有一个分支指向随机一个节点，这时候我们就要引入ctime库用来使用srand((int)(time(NULL)));以生成随机数，这里还用到了后面的一个函数
+listnode *search_node(listnode *list,int n);是用来搜索节点的。
 
-同可以最后再看
+~~~
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
+
+using namespace std;
+
+typedef struct data
+{
+    int number;
+    string name;
+    string sex;
+}data;
+
+typedef struct listnode
+{
+    data *information;
+    listnode *next;
+    listnode *last;
+    listnode *branch;
+ }listnode;
+
+listnode *create_random_branch_list(int n)
+{
+    listnode *search_node(listnode *list,int n);
+    listnode *head;
+    head=create_normal_list(n);
+    listnode *p,*bp;
+    p=head;
+    srand((int)(time(NULL)));
+    int randnum;
+    while((p=p->next)!=NULL)
+    {
+        randnum=rand()%n+1;
+        bp=search_node(head,randnum);
+        p->branch=bp;
+    }
+    return head;
+}
+~~~
+
+**生成随机排序链表** 
+
+(同可以最后再看)
 
 先生成正常顺序链表，再从最后n个节点中随机选择一个，将其剔除并插入到第一个节点的位置，然后再从最后n-1个节点中随机选择一个，剔除后插入第二个节点位置，以此类推
+
+~~~
+listnode *create_random_sort_list(int n)
+{
+    listnode *head;
+    head=create_normal_list(n);
+    listnode *p1,*p2;
+    int n1=0;
+    int n2=n;
+    srand((int)(time(NULL)));
+    int randnum;
+    while(n2!=1)
+    { 
+        p1=head;
+        p2=head;
+        randnum=rand()%n2+1+n1;
+        for(int i=0;i<randnum;i++)
+        {p2=p2->next;}
+        for(int i=0;i<n1;i++)
+        {p1=p1->next;}
+        if(randnum==n)
+        {
+            p2->last->next=NULL;
+        }
+        else
+        {
+            p2->next->last=p2->last;
+            p2->last->next=p2->next;
+        }
+        p1->next->last=p2;
+        p2->next=p1->next;
+        p1->next=p2;
+        p2->last=p1;
+        n1+=1;
+        n2-=1;
+    
+    }
+    return head;
+}
+~~~
 
 
 
 ---
-### 第三部分—修改链表
+## 第三部分—修改链表
 
 修改数据，因为我们通过指针可以直接修改地址储存的信息，所以函数并不需要返回值
 
 ~~~
-void change_point(listnode* list,int n,data* newInfo)
+void change_node(listnode* list,int n,data* newInfo)
 {
     //为了不破坏表头，需要新建一个节点
     listnode* p;
@@ -185,9 +269,135 @@ void change_point(listnode* list,int n,data* newInfo)
 
 删除节点
 ~~~
+void delete_node(listnode* list,int n)
+{
+    //为了不破坏表头，需要新建一个节点
+    listnode* p;
+    p = list;
+    
+    for(int i=0;i < n; i++)
+    {
+        p = p->next;
+    }
+
+    p->last->next = p->next;
+    p->next->last = p->last;
+    free(p);
+
+}
+~~~
+
+插入节点
+~~~
+void insert_node(listnode* list, int n, data* newInfo)
+{
+    listnode* p;
+    p = list;
+    
+    for(int i=0;i < n; i++)
+    {
+        p = p->next;
+    }
+    
+    listnode* insertNode;
+    insertNode = (listnode*)malloc(sizeof(listnode*));
+    insertNode->information = newInfo;
+    insertNode->next = p->next;
+    insertnode->last = p;
+    p->next->last = insertNode；
+    p->next = insertNode;
+}
+~~~
+
+搜寻节点
+~~~
+listnode* search_node(listnode* list, int n)
+{
+    listnode* p;
+    p = list;
+    
+    for(int i=0;i < n; i++)
+    {
+        p = p->next;
+    }
+    return p;
+}
+~~~
+
+
+---
+
+## 第四部分—输出数据
+输出单个节点数据
 
 ~~~
-https://blog.csdn.net/slandarer/article/details/91863177
+void output_node(listnode *node)
+{
+    cout<<"the number is :"<<node->information->number<<endl;
+    cout<<"the name   is :"<<node->information->name<<endl;
+    cout<<"the sex    is :"<<node->information->sex<<endl;
+    cout<<"----------------------------------"<<endl;
+}
+~~~
+
+输出整个链表数据
+
+~~~
+void output_list(listnode *node)
+{
+    listnode* p;
+    p = node;
+
+    while((p=p->next)!=NULL)
+    {
+        output_node(p);
+    }
+
+}
+~~~
+
+输出部分链表m点到n点
+
+~~~
+void output_list_part(listnode *list,int m,int n)
+{
+    int difference = n - m;
+    listnode *p;
+    p=list;
+    cout<<endl<<endl<<endl;
+    for(int i=0;i<m;i++)
+    {
+        p=p->next; 
+    }
+    for(int i=0;i<difference+1;i++)
+    {
+        output_node(p);
+        p=p->next;
+    }
+}
+~~~
+
+---
+
+## 第五部分—主函数应用
+
+举个例子，生成7个节点的随机顺序链表
+
+并输出
+
+~~~
+int main()
+{
+    listnode *head;
+    head=create_random_sort_list(7);
+    output_list(head);
+    system("pause");
+    return 0;
+}
+~~~
+
+---
 
 
-https://zhuanlan.zhihu.com/p/105749135
+## Reference
+> 参考文章：[c++链表（详解版）](https://blog.csdn.net/slandarer/article/details/91863177) - 作者：slandarer（CSDN）
