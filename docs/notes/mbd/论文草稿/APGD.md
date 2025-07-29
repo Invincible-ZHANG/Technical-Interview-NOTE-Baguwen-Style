@@ -1,8 +1,8 @@
 ﻿---
-title: 硕士毕业论文草稿
+title: APGD部分草稿
 date: 2025-07-28
 layout: note
-excerpt: 毕业论文草稿。:)
+excerpt: 毕业论文APGD部分草稿草稿。:)
 ---
 
 

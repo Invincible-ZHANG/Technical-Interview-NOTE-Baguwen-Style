@@ -6,8 +6,8 @@
       url: /notes/gpu_cuda/
     - title: 算法
       url: /notes/algorithms/
-    - title: 秋招
-      url: /notes/Fall_Reviews/
+   # - title: 秋招
+   #   url: /notes/Fall_Reviews/
     - title: 大模型
       url: /notes/LLM/
     - title: ENG
