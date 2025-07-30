@@ -8,7 +8,10 @@ title: 算法 系列
 </header>
 
 <div class="post-grid">
-  {% assign mbd_notes = site.pages | where_exp: "page", "page.path contains 'algorithms/'" %}
+{% assign mbd_notes = site.pages
+     | where: "dir", "/notes/algorithms/"
+%}
+  
   {% assign sorted_mbd_notes = mbd_notes | sort: "date" | reverse %}
   {% for note in sorted_mbd_notes %}
     {% assign filename = note.path | split:'/' | last %}
