@@ -1,9 +1,9 @@
 中文 | [English](./README_EN.md)
-# 八股文笔记 📚
+# 个人博客 📚
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![GitHub Pages](https://img.shields.io/badge/Pages-📖%20Online-blue)](https://invincible-zhang.github.io/Technical-Interview-NOTE-Baguwen-Style/) [![Languages](https://img.shields.io/badge/Langs-C%2B%2B%20%7C%20Python%20%7C%20CUDA-lightgrey)]()
 
-> 嵌入式 · 软件开发 · GPU/CUDA · 算法
+> 自己的随手写
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## 简介
 
-「八股文笔记」是一个面向嵌入式系统、多体动力学、求解器/优化算法以及 GPU/CUDA 并行计算的技术知识库，采用 **Markdown** 撰写，**Jekyll + GitHub Pages** 自动部署，支持本地预览与 CI/CD。
+「个人Blog」是一个面向嵌入式系统、多体动力学、求解器/优化算法以及 GPU/CUDA 并行计算的技术知识库，采用 **Markdown** 撰写，**Jekyll + GitHub Pages** 自动部署，支持本地预览与 CI/CD。
 
 ---
 
