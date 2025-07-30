@@ -34,6 +34,8 @@ git clone https://github.com/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-S
 cd Technical-Interview-NOTE-Baguwen-Style
 
 # 本地启动（Jekyll）
+'Start Command Prompt with Ruby'
+
 cd docs
 bundle install        # 如果第一次运行需安装依赖
 bundle exec jekyll serve --port 4000

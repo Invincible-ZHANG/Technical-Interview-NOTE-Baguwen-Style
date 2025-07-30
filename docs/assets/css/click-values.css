@@ -1,0 +1,26 @@
+.click-text {
+    --rotate: 0deg;
+    --dx: 0px;
+    position: absolute;
+    white-space: nowrap;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px; /* 默认大小，JS 会覆盖 */
+    color: #ff8c69; /* 默认颜色，JS 会覆盖 */
+    user-select: none;
+    pointer-events: none;
+    /* 先应用初始 transform，然后执行动画 */
+    transform: rotate(var(--rotate)) translateX(var(--dx)) translateY(0);
+    animation: floatUp 2s ease-out forwards;
+}
+
+@keyframes floatUp {
+    from {
+        opacity: 1;
+        transform: rotate(var(--rotate)) translateX(var(--dx)) translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: rotate(var(--rotate)) translateX(var(--dx)) translateY(-80px);
+    }
+}
