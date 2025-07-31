@@ -5,15 +5,7 @@
 
 @import "./click-values.css";
 
-/* —— 阻止所有 inline code 折行 —— */
-.markdown-body code,
-.post-content code,
-.subpage-container code,
-.reveal code {
-    /* 不允许在空格、标点、任何字符处换行 */
-    white-space: nowrap !important;
-    word-break: normal !important;
-}
+
 
 body {
     /* 使用背景图，居中不平铺并覆盖整个窗口 */
@@ -889,3 +881,14 @@ th, td {
         grid-template-columns: repeat(2,1fr);
     }
 }
+
+
+/* —— 让所有 ul li 不在中间折行 —— */
+.markdown-body ul li,
+.post-content ul li {
+    white-space: nowrap !important;
+    word-break: normal !important;
+    /* 如果需要留一点间隔，也可以加个小小的右边距 */
+    /* gap: 0.4em; */
+}
+
