@@ -1,0 +1,50 @@
+﻿/* ───────────── 目录侧栏（note用）───────────── */
+.sidebar-toc {
+    position: fixed;
+    top: 96px;
+    left: 22px;
+    width: 205px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(250,252,255,0.80);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(60,80,120,0.08), 2px 0 14px rgba(120,130,180,0.08);
+    z-index: 1000;
+    padding: 16px 10px 16px 16px;
+    font-size: 0.97rem;
+    line-height: 1.5;
+    transition: all 0.2s cubic-bezier(.25,.8,.25,1);
+    backdrop-filter: blur(6px) saturate(1.1);
+    opacity: 0.97;
+}
+
+    .sidebar-toc:hover {
+        box-shadow: 0 16px 48px 0 rgba(90,120,180,0.16);
+        background: rgba(250,250,255,0.98);
+        width: 235px;
+    }
+
+.toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 8px;
+}
+
+.toc-list-item {
+    margin: 0.26em 0;
+}
+
+.toc-link {
+    color: #5470c2;
+    text-decoration: none;
+    border-radius: 16px;
+    padding: 2px 6px;
+    display: inline-block;
+    font-size: 0.99em;
+}
+
+    .toc-link.is-active-link {
+        background: #e8f0fe;
+        color: #2340a1;
+        font-weight: bold;
+    }
