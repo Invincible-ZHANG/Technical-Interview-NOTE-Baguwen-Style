@@ -45,7 +45,8 @@
             | sort: "date"
             | reverse %}
             {% for note in these %}
-            {% unless note.basename == "index" %}
+            {%- assign filename = note.path | split:'/' | last -%}
+            {% unless filename == "index.html" or filename == "index.md" %}
             <article class="post-card">
                 <h3 class="post-title">
                     <a href="{{ note.url }}"
