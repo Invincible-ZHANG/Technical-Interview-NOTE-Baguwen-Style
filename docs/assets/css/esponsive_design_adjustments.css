@@ -1,0 +1,211 @@
+﻿/* ───────────── 响应式调整 ───────────── */
+/*@media (max-width: 900px) {
+    .dashboard-top,
+    .dashboard-middle {
+        grid-template-columns: 1fr !important;
+    }
+
+    .header-flex {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6em;
+    }
+
+    .main-title-block {
+        margin-left: 0;
+    }
+
+    .sticky-nav-inner {
+        gap: 1.0rem;
+    }
+
+    .right-top-cards {
+        flex-direction: row;
+        min-width: 0;
+        justify-content: flex-start;
+    }
+
+    .main-content {
+        padding: 1em 0.6em 2em 0.6em;
+    }
+
+    .sidebar-toc {
+        display: none;
+    }
+
+    .subpage-container {
+        margin-left: auto;
+    }
+}
+
+@media (max-width:767px) {
+    .dashboard-middle, .dashboard-top {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width:600px) {
+    .sticky-nav-inner {
+        flex-wrap: wrap;
+        gap: 0.5em;
+        padding: 0.3em 0.2em;
+    }
+
+    .main-title {
+        font-size: 2.2rem;
+    }
+
+    .main-content {
+        font-size: 1.05rem;
+    }
+
+    .card {
+        padding: 1em 0.5em;
+        max-width: 95vw;
+    }
+
+    .subpage-container {
+        padding: 1.1rem 0.5rem;
+        border-radius: 10px;
+    }
+}
+
+@media (min-width:768px) and (max-width:1023px) {
+    .dashboard-middle, .dashboard-top {
+        grid-template-columns: 1fr 1fr !important;
+    }*/
+
+.dashboard-links {
+    grid-template-columns: repeat(2,1fr);
+}
+
+
+
+/* Pad及以下屏幕宽度自适应布局 */
+@media (max-width: 900px) {
+    .dashboard-top,
+    .dashboard-middle {
+        grid-template-columns: 1fr !important;
+    }
+
+    .header-flex {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6em;
+    }
+
+    .main-title-block {
+        margin-left: 0;
+        align-items: flex-start;
+    }
+
+    .sticky-nav-inner {
+        gap: 1.0rem;
+        flex-wrap: wrap;
+    }
+
+    .right-top-cards {
+        flex-direction: row;
+        min-width: 0;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0.7em;
+    }
+
+    .main-content {
+        padding: 1em 0.6em 2em 0.6em;
+        font-size: 1.08rem;
+    }
+
+    .sidebar-toc {
+        display: none;
+    }
+
+    .subpage-container {
+        margin-left: auto;
+        max-width: 97vw;
+        padding: 1.2rem 0.7rem;
+    }
+
+    #daymatter-card {
+        width: 96vw;
+        max-width: 99vw;
+        min-width: 170px;
+        padding: 1.1em 0.3em;
+        margin: 1.6em auto 1.2em auto;
+    }
+}
+
+/* 手机端适配 */
+@media (max-width: 600px) {
+    .sticky-nav-inner {
+        flex-wrap: wrap;
+        gap: 0.5em;
+        padding: 0.3em 0.2em;
+    }
+
+    .main-title {
+        font-size: 2.2rem;
+        text-align: left;
+    }
+
+    .main-title-desc {
+        font-size: 1.05rem;
+    }
+
+    .main-content {
+        font-size: 0.99rem;
+        padding: 0.7em 0.3em 1.2em 0.3em;
+    }
+
+    .card {
+        padding: 0.7em 0.2em;
+        max-width: 97vw;
+    }
+
+    .subpage-container {
+        padding: 1.1rem 0.5rem;
+        border-radius: 10px;
+        max-width: 99vw;
+    }
+
+    .right-top-cards {
+        min-width: 0;
+        gap: 0.3em;
+        flex-direction: row;
+    }
+
+    .personal-logo-container {
+        width: 54px;
+        height: 54px;
+        margin: 0.7em 0 0.25em 0;
+    }
+
+    #daymatter-card {
+        width: 98vw;
+        min-width: 130px;
+        font-size: 0.98em;
+        margin: 0.6em 0 0.6em 0;
+        padding: 0.7em 0.2em;
+    }
+
+    .dashboard-middle,
+    .dashboard-top {
+        grid-template-columns: 1fr !important;
+    }
+
+    .post-card {
+        padding: 0.9em 0.4em;
+    }
+}
+
+/* Pad横屏/大屏幕（两列）适配 */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .dashboard-middle, .dashboard-top {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .dashboard-links {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
