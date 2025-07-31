@@ -1,6 +1,6 @@
 ﻿---
 title: "26fall投递记录"
-date: 2025-07-26
+date: 2025-07-31
 categories: Fall_Reviews
 tags: [面经, 秋招, 嵌入式软件]
 layout: note
