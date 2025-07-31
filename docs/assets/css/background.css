@@ -882,17 +882,3 @@ th, td {
     }
 }
 
-
-/* 仅针对行内 code，禁止折行 */
-.markdown-body code {
-    /* 先还原到只影响行内 code： */
-    white-space: nowrap !important;
-    word-break: normal !important;
-}
-
-/* 但对代码块里的 code（即 <pre><code>…</code></pre>）我们再覆盖回去 */
-.markdown-body pre code {
-    white-space: pre; /* 完全尊重换行和缩进 */
-    word-break: normal; /* 不要随意内部断词 */
-    overflow-x: auto; /* 溢出时出现横向滚动条 */
-}
