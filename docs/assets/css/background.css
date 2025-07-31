@@ -5,7 +5,15 @@
 
 @import "./click-values.css";
 
-
+/* —— 阻止所有 inline code 折行 —— */
+.markdown-body code,
+.post-content code,
+.subpage-container code,
+.reveal code {
+    /* 不允许在空格、标点、任何字符处换行 */
+    white-space: nowrap !important;
+    word-break: normal !important;
+}
 
 body {
     /* 使用背景图，居中不平铺并覆盖整个窗口 */
