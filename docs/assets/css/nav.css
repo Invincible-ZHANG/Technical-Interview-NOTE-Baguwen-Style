@@ -89,19 +89,19 @@
 
 
 /* —— 美化「首页」按钮 —— */
-.sticky-nav-link[href="/"] {
-    display: inline-flex; /* 支持水平居中图标+文字 */
-    align-items: center;
-    gap: 0.4em; /* 图标与文字间距 */
-    padding: 0.6em 1.6em; /* 内边距更舒适 */
-    border-radius: 1.2em; /* 超大圆角 */
-    background: linear-gradient( 135deg, rgba(255, 239, 186, 0.9), rgba(255, 200, 91, 0.9) );
-    color: #5a3e00 !important; /* 深棕文字 */
-    font-weight: 700; /* 加粗 */
-    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+/*.sticky-nav-link[href="/"] {
+    display: inline-flex;*/ /* 支持水平居中图标+文字 */
+    /*align-items: center;
+    gap: 0.4em;*/ /* 图标与文字间距 */
+    /*padding: 0.6em 1.6em;*/ /* 内边距更舒适 */
+    /*border-radius: 1.2em;*/ /* 超大圆角 */
+    /*background: linear-gradient( 135deg, rgba(255, 239, 186, 0.9), rgba(255, 200, 91, 0.9) );
+    color: #5a3e00 !important;*/ /* 深棕文字 */
+    /*font-weight: 700;*/ /* 加粗 */
+    /*text-shadow: 0 1px 3px rgba(0,0,0,0.2);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
-}
+}*/
 
     /* 加个小房子图标 */
     .sticky-nav-link[href="/"]::before {
@@ -110,8 +110,8 @@
     }
 
     /* 悬停态 */
-    .sticky-nav-link[href="/"]:hover {
+    /*.sticky-nav-link[href="/"]:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 18px rgba(0,0,0,0.2);
         background: linear-gradient( 135deg, rgba(255, 225, 150, 0.95), rgba(255, 180, 50, 0.95) );
-    }
+    }*/

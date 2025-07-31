@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
-    <!--<link rel="stylesheet" href="assets/css/background.css">-->
-    <!--<link rel="stylesheet" href="assets/css/click-values.css">-->
     {{ content_for_header }}
     <!-- 引入 MathJax -->
     <script>
@@ -22,15 +20,58 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-
     <script src="{{ '/assets/js/click-values.js' | relative_url }}" defer></script>
 
     <!-- 全站公用导航栏 -->
     {% include nav.html %}
+
     <!-- 主内容区 -->
     <main class="subpage-container">
+        {%- comment -%}
+        如果这是 notes 目录下的 index 页面，就渲染系列卡片列表
+        {%- endcomment -%}
+        {% assign dir = page.dir %}
+        {% if dir contains '/notes/' and (page.url == dir or page.url == dir | append: 'index.html') %}
+        <!-- 系列页标题 -->
+        <header class="section-header">
+            <h1>{{ page.title }}</h1>
+        </header>
+
+        <!-- 只渲染与当前目录相同的页面 -->
+        <div class="post-grid">
+            {% assign these = site.pages
+            | where: "dir", page.dir
+            | sort: "date"
+            | reverse %}
+            {% for note in these %}
+            {% unless note.basename == "index" %}
+            <article class="post-card">
+                <h3 class="post-title">
+                    <a href="{{ note.url }}"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        {{ note.title }}
+                    </a>
+                </h3>
+                <p class="post-excerpt">
+                    {{
+ note.excerpt
+                  | default: note.content
+                  | truncatewords: 30
+                    }}
+                </p>
+                <time class="post-date">🕒 {{ note.date | date: "%Y-%m-%d" }}</time>
+            </article>
+            {% endunless %}
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- 普通页面仍然输出原生 Markdown 内容 -->
         {{ content }}
+        {% endif %}
     </main>
+
     {{ content_for_footer }}
 </body>
 </html>
