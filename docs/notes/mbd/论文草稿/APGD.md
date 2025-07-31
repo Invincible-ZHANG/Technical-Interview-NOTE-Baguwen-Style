@@ -14,6 +14,10 @@ excerpt: 毕业论文APGD部分草稿草稿。:)
 
 为了解决上述问题，投影梯度法（Projected Gradient Method, PGM）得到了广泛的关注。但传统的投影梯度法收敛速度较慢，难以满足实时性要求。为此，Accelerated Projected Gradient Descent (APGD)，即加速投影梯度下降算法被提出并应用于非光滑动力学求解领域。
 
+
+首先基于LCP建模去完成APGD求解器算法的实现，然后在去进行CCP的大规模建模，从而提高大规模问题的计算速度
+
+
 ### 2 数学模型
 
 APGD算法用于求解以下凸优化问题：
@@ -118,3 +122,82 @@ APGD算法被成功应用于非光滑动力学求解器中，包括大规模接�
 ### 8 小结
 
 综上所述，APGD算法以其高效的加速收敛特性，适合于大规模非光滑动力学系统的求解。通过精细的参数调控和约束建模策略，该算法在实际仿真系统中展现出良好的精度和计算性能平衡，成为求解复杂非光滑动力学系统的重要算法之一。
+
+
+
+## APGD算法的理论背景与实现细节
+
+本节详细介绍用于求解非光滑动力学问题的APGD算法（Accelerated Projected Gradient Descent），并给出其具体的数学描述、实现细节与参数分析。
+
+### APGD算法的数学描述
+
+给定一个凸集约束优化问题：
+
+$$
+\min_{x \in C} f(x)
+$$
+
+其中\$C\$是凸集，函数\$f(x)\$是连续可微的凸函数。APGD算法通过对梯度下降法的迭代过程加入动量项，显著提高了收敛速度。其迭代过程如下：
+
+初始化参数\$x^{(0)} \in C, t\_0=1, y^{(0)}=x^{(0)}\$，对于每次迭代\$k \geq 0\$，进行以下步骤：
+
+$$
+\begin{aligned}
+x^{(k+1)} &= \text{proj}_C \left(y^{(k)} - \eta \nabla f(y^{(k)})\right) \\
+t_{k+1} &= \frac{1 + \sqrt{1 + 4 t_k^2}}{2} \\
+y^{(k+1)} &= x^{(k+1)} + \frac{t_k - 1}{t_{k+1}} \left(x^{(k+1)} - x^{(k)}\right)
+\end{aligned}
+$$
+
+其中，\$\text{proj}\_C(\cdot)\$表示向量投影到凸集\$C\$上，\$\eta\$表示步长，通常可通过回溯线搜索（backtracking line search）确定。
+
+### Chrono框架中的APGD实现
+
+Project Chrono框架通过定义系统描述子（System Descriptor），将非光滑动力学问题形式化为以下线性系统：
+
+$$
+\begin{bmatrix}
+M & -C_q^T \\
+C_q & E
+\end{bmatrix}
+\begin{bmatrix}
+q \\
+\lambda
+\end{bmatrix}
+-
+\begin{bmatrix}
+f \\
+b
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\
+c
+\end{bmatrix}
+$$
+
+此处，\$q\$表示广义速度，\$\lambda\$表示约束反作用力（Lagrange乘子），\$M\$是质量矩阵，\$C\_q\$是约束的雅克比矩阵，\$f\$为外力项，\$b\$和\$c\$为约束相关已知向量，矩阵\$E\$通常表示用于接触约束的正则化项或阻尼项。
+
+在Chrono的实际代码实现中，如文件`ChIterativeSolverVI.cpp`所示，APGD算法的核心迭代过程使用了以下参数：
+
+* 最大迭代次数 `max_iterations`
+* 收敛容忍度 `tolerance`
+* 超松弛因子 \$\omega\$
+* 摩擦项尖锐系数 `sharpness_lambda`
+
+其中，\$\omega\$通常取值在0.2至1.0之间，通过调节松弛参数能够提高算法的稳定性和收敛速度；而尖锐系数则用于精细控制摩擦接触条件的处理。
+
+### 收敛性与参数分析
+
+实际仿真发现，APGD算法的收敛性能受到迭代次数及步长控制的显著影响。当迭代次数增加时，解的精度明显提高。然而，过大的迭代次数可能导致计算成本上升，甚至引发数值不稳定性，表现为仿真中刚体弹飞或解不稳定的现象。这表明，在实际应用中，应根据问题规模与具体动力学场景选取适当的参数组合，以实现精度与性能的平衡。
+
+### 结论
+
+综上所述，APGD算法通过引入动量项显著提高了求解效率，尤其适合大规模并行计算场景。未来的研究可关注如何有效自动调整算法参数，并探索不同投影方法对APGD性能的影响。
+
+### 参考文献
+
+1. Anitescu, M., Potra, F. A., & Stewart, D. E. (1997). Time-stepping for three-dimensional rigid body dynamics. *Computer Methods in Applied Mechanics and Engineering*, 177(3-4), 183-197.
+2. Tasora, A., Anitescu, M., Mazhar, H., Heyn, T., & Negrut, D. (2015). Chrono: An Open Source Multi-physics Dynamics Engine. *International Conference on High Performance Computing in Science and Engineering*, Springer, Cham.
+3. Project Chrono. Chrono Engine Documentation. [http://projectchrono.org](http://projectchrono.org).
+4. Serban, R. et al. (2014). `ChIterativeSolverVI.cpp`, Project Chrono Source Code. [https://github.com/projectchrono/chrono](https://github.com/projectchrono/chrono).
