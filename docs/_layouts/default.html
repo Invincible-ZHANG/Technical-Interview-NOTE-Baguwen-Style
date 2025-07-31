@@ -41,7 +41,7 @@
         <div class="post-grid">
             {% assign these = site.pages
             | where: "dir", page.dir
-            | reject: "basename", "index"
+            | reject: "url", page.url
             | sort: "date"
             | reverse %}
             {% for note in these %}
