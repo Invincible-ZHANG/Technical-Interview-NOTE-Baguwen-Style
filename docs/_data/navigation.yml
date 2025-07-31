@@ -1,4 +1,6 @@
-﻿- title: 博客
+﻿- title: 首页
+  url: /
+- title: 博客
   children:
     - title: 嵌入式
       url: /notes/embedded/
