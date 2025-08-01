@@ -4,7 +4,7 @@
     position: absolute;
     white-space: nowrap;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px; /* 默认大小，JS 会覆盖 */
+    font-size: 10px; /* 默认大小，JS 会覆盖 */
     color: #ff8c69; /* 默认颜色，JS 会覆盖 */
     user-select: none;
     pointer-events: none;
