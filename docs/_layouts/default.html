@@ -28,16 +28,16 @@
     <!-- 主内容区 -->
     <main class="subpage-container">
         {%- comment -%}
-        如果这是 notes 目录下的 index 页面，就渲染系列卡片列表
+        如果这是 notes 目录下的 index 页面，就渲染系列卡片列表；否则输出常规内容
         {%- endcomment -%}
         {% assign dir = page.dir %}
-        {% if dir contains '/notes/' and (page.url == dir or page.url == dir | append: 'index.html') %}
-        <!-- 系列页标题 -->
+        {% assign note_index = dir | append: 'index.html' %}
+
+        {% if dir contains '/notes/' and page.url == dir %}
+        <!-- 渲染 /notes/ 本身 的系列卡片列表 -->
         <header class="section-header">
             <h1>{{ page.title }}</h1>
         </header>
-
-        <!-- 只渲染与当前目录相同的页面 -->
         <div class="post-grid">
             {% assign these = site.pages
             | where: "dir", page.dir
@@ -49,18 +49,41 @@
             {% unless filename == "index.html" or filename == "index.md" %}
             <article class="post-card">
                 <h3 class="post-title">
-                    <a href="{{ note.url }}"
-                       target="_blank"
-                       rel="noopener noreferrer">
+                    <a href="{{ note.url }}" target="_blank" rel="noopener noreferrer">
                         {{ note.title }}
                     </a>
                 </h3>
                 <p class="post-excerpt">
-                    {{
- note.excerpt
-                  | default: note.content
-                  | truncatewords: 30
-                    }}
+                    {{ note.excerpt | default: note.content | truncatewords: 30 }}
+                </p>
+                <time class="post-date">🕒 {{ note.date | date: "%Y-%m-%d" }}</time>
+            </article>
+            {% endunless %}
+            {% endfor %}
+        </div>
+
+        {% elsif dir contains '/notes/' and page.url == note_index %}
+        <!-- 渲染 /notes/index.html 的系列卡片列表（同上） -->
+        <header class="section-header">
+            <h1>{{ page.title }}</h1>
+        </header>
+        <div class="post-grid">
+            {% assign these = site.pages
+            | where: "dir", page.dir
+            | reject: "url", page.url
+            | sort: "date"
+            | reverse %}
+            {% for note in these %}
+            {%- assign filename = note.path | split:'/' | last -%}
+            {% unless filename == "index.html" or filename == "index.md" %}
+            <article class="post-card">
+                <h3 class="post-title">
+                    <a href="{{ note.url }}" target="_blank" rel="noopener noreferrer">
+                        {{ note.title }}
+                    </a>
+                </h3>
+                <p class="post-excerpt">
+                    {{ note.excerpt | default: note.content | truncatewords: 30 }}
                 </p>
                 <time class="post-date">🕒 {{ note.date | date: "%Y-%m-%d" }}</time>
             </article>
@@ -73,6 +96,7 @@
         {{ content }}
         {% endif %}
     </main>
+
 
     {{ content_for_footer }}
 </body>
