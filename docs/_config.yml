@@ -1,5 +1,5 @@
 ﻿title: K1n's blog
-description: "嵌入式 / CUDA / 多体动力学 / 面试记录"
+description: "K1n's blog"
 url: "https://blog.k1n.asia"
 baseurl: ""
 author: kin
@@ -8,58 +8,8 @@ author: kin
 encoding: "utf-8"
 
 
-markdown: kramdown
 kramdown:
-  toc_levels: 1..6
-  auto_ids: true
-  input: GFM
-  syntax_highlighter: rouge     # 或者 "rouge" / "pygments"
   syntax_highlighter_opts:
-    disable: true
+    disable : true
 
 
-
-plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: true
-include:
-  - CONTRIBUTING.md
-  - README.md
-  - LICENSE.md
-  - CODE_OF_CONDUCT.md
-  - ISSUE_TEMPLATE.md
-  - PULL_REQUEST_TEMPLATE.md
-
-exclude:
-  - Gemfile
-  - Gemfile.lock
-
-collections:
-  embedded:
-    output: true
-    permalink: /embedded/:path/
-  software:
-    output: true
-    permalink: /software/:path/
-  gpu_cuda:
-    output: true
-    permalink: /gpu-cuda/:path/
-  algorithms:
-    output: true
-    permalink: /algorithms/:path/
-  mbd:
-    output: true
-    permalink: /mbd/:name/  
-
-defaults:
-  - scope:
-      path: ""
-    values:
-      layout: default
-  - scope:
-      path: ""
-    values:
-      includes:
-        - head.html
