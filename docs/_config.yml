@@ -14,6 +14,9 @@ kramdown:
   auto_ids: true
   input: GFM
   syntax_highlighter: rouge     # 或者 "rouge" / "pygments"
+  syntax_highlighter_opts:
+    disable: true
+
 
 
 plugins:

@@ -1,0 +1,92 @@
+﻿
+
+.code-wrapper {
+    position: relative;
+    border-radius: 10px;
+    margin: 30px 0;
+    overflow: hidden;
+    background: #1e1e1e;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    padding-top: 2em;
+    color: inherit; /* ✅ 不干扰 Prism 的颜色 */
+}
+
+    /* 顶部文件名栏 */
+    .code-wrapper::before {
+        content: '';
+        height: 2em;
+        width: 100%;
+        background: #2c2c2c;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+
+    /* Mac 风格圆点 */
+    .code-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 16px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #fc625d;
+        box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
+        z-index: 2;
+    }
+
+    /* 修复 pre 内部样式 */
+    .code-wrapper pre {
+        margin: 0;
+        padding: 1em 1.2em;
+        font-size: 0.95rem;
+        font-family: 'Fira Code', 'Consolas', monospace;
+        color: #f8f8f2;
+        background: transparent;
+        border-radius: 0;
+        overflow-x: auto;
+    }
+
+/* 放在你自己的 CSS 文件中，覆盖 Prism 的背景 */
+pre[class*="language-"] {
+    background: transparent !important;
+}
+
+/* —— 行内代码（p、li 等内文中）—— */
+p code,
+li code {
+  background: rgba(255, 245, 210, 0.14);
+  color: #ffeead;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  display: inline;
+}
+
+/* —— 代码块 —— */
+pre {
+  background: rgba(255, 245, 210, 0.14);
+  color: #ffeead;
+  border-radius: 7px;
+  padding: 0.85em 1.2em;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+
+/* 兼容 Markdown 的 <pre><code> 结构 */
+pre code {
+  display: block;
+  white-space: inherit;
+  background: none;
+  padding: 0;
+  box-shadow: none;
+}
+    pre code span.token {
+        all: unset;
+    }

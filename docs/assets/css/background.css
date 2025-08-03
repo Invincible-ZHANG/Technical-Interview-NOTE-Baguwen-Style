@@ -8,7 +8,7 @@
 @import "./responsive_design_adjustments.css";
 @import "./nav.css";
 @import "./toc.css";
-
+@import "./code_style.css";
 
 
 
@@ -377,45 +377,7 @@ th, td {
         text-shadow: 0 2px 8px #2223, 0 1px 0 #fff5;
     }
 
-    /* —— 行内代码 —— */
-    .subpage-container p code,
-    .subpage-container li code {
-        /* 轻量标识，不干扰正文换行 */
-        background: rgba(255, 245, 210, 0.14);
-        color: #ffeead;
-        padding: 0.15em 0.4em;
-        border-radius: 3px;
-        font-family: 'Fira Mono', 'Consolas', monospace;
-        /* 允许自动折行 */
-        white-space: normal;
-        word-break: break-word;
-        overflow: visible;
-        display: inline;
-    }
-
-    /* —— 代码块 —— */
-    .subpage-container pre {
-        /* 保留之前你的背景、内边距等 */
-        background: rgba(255, 245, 210, 0.14);
-        color: #ffeead;
-        border-radius: 7px;
-        padding: 0.85em 1.2em;
-        font-family: 'Fira Mono', 'Consolas', monospace;
-        /* 不折行，用滚动条 */
-        white-space: pre;
-        overflow-x: auto;
-        margin: 1.2em 0;
-    }
-
-        /* 确保 <pre><code> 也继承上面样式 */
-        .subpage-container pre code {
-            display: block;
-            white-space: inherit;
-            background: none;
-            padding: 0;
-            box-shadow: none;
-        }
-
+    
 
     .subpage-container ul, .subpage-container ol {
         color: #fffbe7;
