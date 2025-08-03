@@ -5,6 +5,9 @@ baseurl: ""
 author: kin
 
 
+encoding: "utf-8"
+
+
 markdown: kramdown
 kramdown:
   toc_levels: 1..6
