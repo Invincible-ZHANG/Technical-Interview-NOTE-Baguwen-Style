@@ -146,6 +146,15 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 📁 **主站入口地址**：[https://invincible-zhang.github.io/blog](https://invincible-zhang.github.io/blog)
 
 ---
+## 未来展望
+
+1. **多语言支持**：计划增加英文版，覆盖更广泛的读者群体。
+2. 微信小程序：考虑开发微信小程序版，方便在移动端访问。
+3. **更多主题**：增加更多技术领域的笔记集合，如机器学习、数据科学等。
+4. 优化设计：持续改进主页设计与用户体验，增加更多互动元素。
+
+
+---
 
 ### 致谢 SimonAKing 🙏
 
