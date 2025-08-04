@@ -31,7 +31,9 @@ Chapter1. [C基础](./basic_knowledge/CH1_c_basic.md)
 Chapter2. [C++链表](./basic_knowledge/CH2_CPP_LinkList.md)
  - 章节内容：链表
 
-Chapter3. [C++ STL](./basic_knowledge/CH3_STL.md)
+Chapter3. [C++ STL(模板编程)](./basic_knowledge/CH3_STL.md)
+
+Chapter4. [C++ Hash map(哈希表)](./basic_knowledge/CH4_CPP_hashmap.md)
 
 Chapter7. [git的用法](./basic_knowledge/git.md)
 
