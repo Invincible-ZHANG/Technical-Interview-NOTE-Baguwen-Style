@@ -11,7 +11,7 @@
         "#E6E6FA", "#FFFACD", "#F0FFF0"
     ];
     // 一组可选字体大小（px）
-    const sizes = [18, 22, 26, 30, 34];
+    const sizes = [16, 18, 20, 22, 24];
 
     document.addEventListener('click', function (e) {
         const txt = values[Math.floor(Math.random() * values.length)];

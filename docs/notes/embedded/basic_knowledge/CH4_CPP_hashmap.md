@@ -23,3 +23,9 @@ tags:
 $$
 \mathrm{Loc}(i) = \mathrm{Hash}(\mathrm{key}_i)
 $$
+
+![hash key](./images/hash_key.png)
+
+详细的实现细节不过分赘述，之后如果有时间会进行补充。
+
+
