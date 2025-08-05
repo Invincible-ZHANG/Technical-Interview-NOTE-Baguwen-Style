@@ -37,7 +37,7 @@ Chapter4. [C++ Hash map(哈希表)](./basic_knowledge/CH4_CPP_hashmap.md)
 
 Chapter7. [git的用法](./basic_knowledge/git.md)
 
-Chapter8. [RTOS](./basic_knowledge/rtos_basics.md)
+Chapter8. [RTOS](./basic_knowledge/CH8_rtos_basics.md)
 
 ---
 
