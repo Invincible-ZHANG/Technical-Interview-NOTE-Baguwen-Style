@@ -1,22 +1,24 @@
-﻿- title: 首页
+﻿- title: Home
   url: /
-- title: 博客
+- title: Blog
   children:
-    - title: 嵌入式
+    - title: Embedded
       url: /notes/embedded/
-    - title: GPU/CUDA
+    - title: GPU
       url: /notes/gpu_cuda/
-    - title: 算法
+    - title: Algorithms
       url: /notes/algorithms/
    # - title: 秋招
    #   url: /notes/Fall_Reviews/
-    - title: 大模型
+    - title: LLM
       url: /notes/LLM/
     - title: ENG
       url: /notes/English/
-    - title: 旅行
+    - title: Trips
       url: /notes/travel/
 - title: Thesis
   url: /notes/mbd/
+- title: AI Infra
+  url: /notes/AI_Infra/
 
 
