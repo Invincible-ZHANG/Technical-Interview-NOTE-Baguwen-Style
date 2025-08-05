@@ -1,5 +1,5 @@
 ﻿---
 layout: default
-title: 多体动力学 系列
+title: Multibody Dynamics
 ---
 
