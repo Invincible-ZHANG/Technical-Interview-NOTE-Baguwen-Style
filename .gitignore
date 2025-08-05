@@ -38,3 +38,5 @@ __pycache__/
 *.lib
 *.ilk
 *.pdb
+
+.venv/
