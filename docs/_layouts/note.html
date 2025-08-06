@@ -44,6 +44,25 @@
     <main class="subpage-container">
         {{ content }}
     </main>
+    <!-- ====== 评论区（放在正文下方、页面最底） ====== -->
+    <div id="comments" class="giscus"></div>
+    <script src="https://giscus.app/client.js"
+            data-repo="Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style"
+            data-repo-id="R_kgDOPlZeaQ"
+            data-category="Comments"
+            data-category-id="DIC_kwDOPlZeAc4Ct2gH"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="preferred_color_scheme"
+            data-lang="zh-CN"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <!-- ====== 评论区结束 ====== -->
     {{ content_for_footer }}
 
     <!-- Tocbot JS 自动目录初始化 -->
