@@ -4,13 +4,14 @@
     {%- include head.html -%}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--移动端提示-->
+    <script src="/js/mobile-alert.js" defer></script>
     <title>{{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
     <!--<link rel="stylesheet" href="assets/css/background.css">-->
     <!--<link rel="stylesheet" href="assets/css/click-values.css">-->
-
     {{ content_for_header }}
 </head>
 
