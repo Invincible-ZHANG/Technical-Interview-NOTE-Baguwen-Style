@@ -9,17 +9,10 @@
 @import "./nav.css";
 @import "./toc.css";
 @import "./code_style.css";
+@import "./giscus_comment.css";
 
-//评论区
-/* 放到 background.css 或者你的主 CSS 里 */
-.giscus {
-    background-color: transparent !important;
-}
 
-.giscus-frame {
-    background-color: transparent !important;
-    box-shadow: none !important;
-}
+
 
 body {
     /* 使用背景图，居中不平铺并覆盖整个窗口 */

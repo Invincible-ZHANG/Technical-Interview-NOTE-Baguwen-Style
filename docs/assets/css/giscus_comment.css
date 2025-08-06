@@ -1,0 +1,27 @@
+﻿/* 外部容器：居中、限制最大宽度、半透明背景、圆角 */
+.giscus {
+    max-width: 700px; /* 你可根据内容宽度调整 */
+    margin: 2rem auto; /* 上下间距 2rem，左右自动居中 */
+    padding: 1rem; /* 内边距 */
+    background-color: rgba(0, 0, 0, 0.6); /* 半透明黑，更融入夜景 */
+    border-radius: 0.5rem; /* 圆角 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* iframe 本体：全宽、高度自适应、去除默认边框 */
+.giscus-frame {
+    width: 100% !important; /* 强制撑满容器 */
+    min-height: 300px; /* 最小高度，内容多时自动增高 */
+    border: none !important;
+    border-radius: 0.5rem; /* 同容器圆角保持一致 */
+    overflow: hidden;
+}
+
+/* 移动端适配：缩小边距和内边距 */
+@media (max-width: 768px) {
+    .giscus {
+        max-width: 100%;
+        margin: 1rem;
+        padding: 0.5rem;
+    }
+}
