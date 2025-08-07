@@ -1,8 +1,8 @@
 ﻿---
-title:"Hash map"
-layout:note
+title: "Hash map"
+layout: note
 date: 2025-08-04
-excerpt:"hash"
+excerpt: "hash"
 categories: embedded
 tags:
   - C++

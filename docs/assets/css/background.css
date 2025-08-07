@@ -16,7 +16,7 @@
 
 body {
     /* 使用背景图，居中不平铺并覆盖整个窗口 */
-    background: url('../images/Cologne.jpg') no-repeat center center fixed;
+    background: url('../images/background9.jpg') no-repeat center center fixed;
     background-size: cover;
     /* 如果图片加载慢，先给个渐变色做占位 */
     background-color: #f0f0f0;
@@ -86,45 +86,7 @@ th, td {
     box-shadow: none;
 }
 
-/* ---- 吸顶导航栏 ---- */
-.sticky-nav {
-    position: sticky;
-    top: 0;
-    z-index: 99;
-    background: rgba(38,38,38,0.80);
-    box-shadow: 0 2px 18px #0002;
-    backdrop-filter: blur(4px);
-    width: 100%;
-    border-bottom: 1.5px solid #eed36e30;
-}
 
-.sticky-nav-inner {
-    display: flex;
-    justify-content: center;
-    gap: 2.1rem;
-    padding: 0.72em 0;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-.sticky-nav-link {
-    color: #ffedb2;
-    font-weight: 700;
-    font-size: 1.15rem;
-    letter-spacing: 0.08em;
-    text-decoration: none;
-    padding: 0.48em 2.1em;
-    border-radius: 0.9em;
-    background: transparent;
-    transition: background .18s, color .18s, box-shadow .15s;
-    box-shadow: 0 1.5px 7px #fff3, 0 1.5px 6px #d9ba4422;
-}
-
-    .sticky-nav-link:hover, .sticky-nav-link:focus {
-        background: #ffe6a6ea;
-        color: #684c00;
-        box-shadow: 0 2px 16px #ffe19e67, 0 2px 8px #bcb04c26;
-    }
 
 /* 主标题+副标题+卡片区 */
 .header-flex {
@@ -230,57 +192,12 @@ th, td {
     /* font-family: 'ZCOOL KuaiLe', cursive, 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;*/
     font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
     border-radius: 1.3em;
-    background: rgba(44,44,44,0.14);
+    /*background: rgba(44,44,44,0.14);*/
+    background: rgba(0, 0, 0, 0.50);
     box-shadow: 0 6px 40px #2223, 0 2px 8px #fff3;
 }
 
-/* @media (max-width: 900px) {
-            .header-flex {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.6em;
-            }
 
-            .main-title-block {
-                margin-left: 0;
-            }
-
-            .sticky-nav-inner {
-                gap: 1.0rem;
-            }
-
-            .right-top-cards {
-                flex-direction: row;
-                min-width: 0;
-                justify-content: flex-start;
-            }
-
-            .main-content {
-                padding: 1em 0.6em 2em 0.6em;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .sticky-nav-inner {
-                flex-wrap: wrap;
-                gap: 0.5em;
-                padding: 0.3em 0.2em;
-            }
-
-            .main-title {
-                font-size: 2.2rem;
-            }
-
-            .main-content {
-                font-size: 1.05rem;
-            }
-
-            .card {
-                padding: 1em 0.5em;
-                max-width: 95vw;
-            }*/
-/*}*/
-/*</style>*/
 
 /* ───────────── 简介&链接 ───────────── */
 .dashboard-middle {
@@ -333,7 +250,8 @@ th, td {
 .subpage-container {
     max-width: 1000px;
     margin: 2rem auto 3rem auto;
-    background: rgba(255,255,255,0.12);
+    /*background: rgba(255,255,255,0.12);*/
+    background: rgba(0, 0, 0, 0.50);
     backdrop-filter: blur(22px) saturate(1.7);
     border-radius: 26px;
     box-shadow: 0 10px 50px 0 rgba(60,60,100,0.19), 0 2px 16px #e1eaff;

@@ -17,11 +17,11 @@
 
 <body class="dashboard">
     <script src="{{ '/assets/js/click-values.js' | relative_url }}" defer></script>
-
+    <!-- 吸顶导航（公用 include，支持多级下拉） -->
+    {% include nav.html %}
     <div class="dashboard-bg"></div>
     <div class="dashboard-container">
-        <!-- 吸顶导航（公用 include，支持多级下拉） -->
-        {% include nav.html %}
+
 
         <!-- 顶部：标题+一言/时钟 -->
         <header class="header-flex">
