@@ -365,6 +365,9 @@ th, td {
 .post-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* 关键：让每一行等高 */
+    justify-items: stretch; /* 让每个格子里的 .post-card 都撑满单元格 */
+    grid-auto-rows: 1fr;
     gap: 1.5rem;
     margin: 2rem 0;
 }
@@ -383,6 +386,9 @@ th, td {
 }
 
 .post-card {
+    /* 关键：卡片内部做垂直拉伸布局 */
+    display: flex;
+    flex-direction: column;
     position: relative;
     background: rgba(255,255,255,0.32);
     border-radius: 8px;
@@ -393,6 +399,7 @@ th, td {
     opacity: 0;
     transform: translateY(20px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* 确保它拉伸到单元格的最大宽度 */
 }
 
     .post-card:nth-child(1) {
