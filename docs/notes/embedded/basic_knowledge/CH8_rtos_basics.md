@@ -81,3 +81,60 @@ FreeRTOS 文件夹下的 Source 文件夹里面包含的是 FreeRTOS 内 核的�
 heap_1.c 是 FreeRTOS 提供的最简单的内存管理器实现。它只支持线性分配内存，不能释放已分配的内存块。适用于那些只需要一次性分配内存的场景，比如游戏关卡加载等。由于没有释放机制，它的内存使用效率较低，但速度非常快且稳定。
 
 它只实现了 pvPortMalloc，没有实现 vPortFree。 如果你的程序不需要删除内核对象，那么可以使用 heap_1。FreeRTOS 在创建任务时，需要 2 个内核对象：task controlblock(TCB)、stack。（TCB任务控制块和栈）。
+
+
+在 FreeRTOS 中，每当你调用 `xTaskCreate()`（或类似的 API）来创建一个新任务时，内核会为该任务分配两块关键资源：
+
+1. **TCB（Task Control Block，任务控制块）**
+   TCB 是一个结构体，保存了任务的所有管理和调度信息，包括：
+
+   * 任务状态（就绪／运行／阻塞／挂起）
+   * 优先级（`uxPriority`）
+   * 任务名（`pcTaskName`）
+   * 指向任务栈顶和栈底的指针
+   * 上下文寄存器保存区（用于切换时保存 CPU 寄存器）
+   * 任务句柄（`TaskHandle_t`）
+   * 任务通知／事件／消息队列／信号量等同步对象的引用
+
+   内核通过 TCB 来跟踪每个任务，决定哪个任务该运行、该阻塞，以及保存／恢复任务的上下文。
+
+2. **Stack（任务栈）**
+   每个任务都有自己独立的栈空间，用于保存：
+
+   * 函数调用时的返回地址
+   * 局部变量
+   * 临时寄存器数据
+   * 中断／异常发生时的寄存器上下文
+
+   当任务被上下文切换（context switch）出去时，FreeRTOS 会把 CPU 寄存器的值压入这块栈里；当任务重新切回时，再从栈里恢复寄存器。这个栈空间通常由你在创建任务时传入的 `usStackDepth`（以 `StackType_t` 为单位）决定，或由你传入的指针指定。
+
+
+
+为什么 heap\_1 只实现 `pvPortMalloc` 而没有 `vPortFree`
+
+FreeRTOS 提供了多种内存管理方案（heap\_1、heap\_2、heap\_3、heap\_4、heap\_5），它们都用来给内核对象（如 TCB、stack）、队列、定时器等分配内存。
+
+* **heap_1**
+
+  * 只有 `pvPortMalloc()`，没有 `vPortFree()`。
+  * 适合那些运行时不需要销毁／删除内核对象（任务、队列、信号量等）的系统。
+  * 实现简单、占用最少。
+
+如果你的程序在运行过程中从不删除任务、队列或其他对象，就可以用 heap\_1，省去内存管理的复杂性；但如果需要动态删除，就得选用支持释放的方案，如 **heap\_2**（简单的 malloc/free）、**heap\_4**（更高效的碎片整理）等。
+
+
+## 8.2 RTOS移植与中断管理
+
+1、修改sys.h⽂件，让它⽀持OS。
+
+2、修改usart⽂件，更改中断。在uC/OS的时候，进⼊和退出中断需要添加OSIntEnter()和
+OSIntExit()两个函数，然后在FreeRTOS中并没有该机制，所以将这⾥的代码删除。
+
+3、关于delay函数的修改，FreeRTOS中使⽤SysTick作为作为操作系统的⼼跳，所以需要
+将xPortSysTickHandler()添加，作为系统始终中断。
+
+4、delay_init() ⽤于初始化SysTick，主要修改SysTick的重装载值，修改delay_ms和
+delay_us函数。
+
+5、修改中断（SysTick中断、SVC中断、PendSV中断）。其中SysTick中断在delay.c⽂件中
+已经定义。
