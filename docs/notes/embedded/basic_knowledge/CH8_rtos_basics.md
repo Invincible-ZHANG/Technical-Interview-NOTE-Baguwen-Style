@@ -1,5 +1,5 @@
 ﻿---
-layout: default
+layout: note
 title: "RTOS 基础"
 date: 2025-07-07
 excerpt: "入门实时操作系统（RTOS）的核心概念、调度模式与典型应用，为后续深入嵌入式系统开发和项目实践打下基础。"
