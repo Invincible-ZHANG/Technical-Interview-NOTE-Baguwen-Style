@@ -22,3 +22,6 @@ C++中的动态规划（Dynamic Programming, DP）是一种通过分解问题、
 [动态规划](./算法/dp.md)
 
 
+## 栈
+
+https://blog.csdn.net/zichen_ziqi/article/details/80807989
