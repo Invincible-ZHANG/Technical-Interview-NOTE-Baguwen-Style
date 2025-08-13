@@ -16,9 +16,11 @@
       url: /notes/English/
     - title: Trips
       url: /notes/travel/
+    - title: AI Infra
+      url: /notes/AI_Infra/
 - title: Thesis
   url: /notes/mbd/
-- title: AI Infra
-  url: /notes/AI_Infra/
+- title: Linux
+  url: /notes/Linux/
 
 
