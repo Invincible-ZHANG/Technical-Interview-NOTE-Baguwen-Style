@@ -35,7 +35,9 @@ Chapter3. [C++ STL(模板编程)](./basic_knowledge/CH3_STL.md)
 
 Chapter4. [C++ Hash map(哈希表)](./basic_knowledge/CH4_CPP_hashmap.md)
 
-Chapter5. [C++的匿名函数](./basic_knowledge/CH4_CPP_hashmap.md)
+Chapter5. [C++的匿名函数](./basic_knowledge/CH5_CPP_Lambda.md)
+
+Chapter6. [工厂模式](./basic_knowledge/CH6_CPP_Factory.md)
 
 Chapter7. [git的用法](./basic_knowledge/git.md)
 
