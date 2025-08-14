@@ -9,6 +9,8 @@
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     <!--<link rel="stylesheet" href="assets/css/background.css">-->
+    <!-- head 里放样式 -->
+    <link rel="stylesheet" href="{{ '/assets/css/image-zoom.css' | relative_url }}">
     {{ content_for_header }}
 
 
@@ -33,6 +35,8 @@
 
     <script src="/assets/js/mac_code.js"></script>
 
+    <!-- body 底部放脚本（defer 也行） -->
+    <script defer src="{{ '/assets/js/image-zoom.js' | relative_url }}"></script>
 
     <!-- 左侧目录栏 -->
     <div class="sidebar-toc">

@@ -1,0 +1,82 @@
+﻿/* 让正文里的图片看起来“可点” */
+.post-content img,
+.subpage-container img,
+.main-content img {
+    cursor: zoom-in;
+    transition: transform .2s ease;
+}
+
+/* 全屏查看层 */
+.iv-overlay {
+    position: fixed;
+    inset: 0;
+    display: none; /* 通过 .open 切换显示 */
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.92);
+    z-index: 9999;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+    .iv-overlay.open {
+        display: flex;
+    }
+
+    /* 大图本体 */
+    .iv-overlay img {
+        max-width: 96vw;
+        max-height: 96vh;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.45);
+        user-select: none;
+        -webkit-user-drag: none;
+        cursor: zoom-out;
+        animation: iv-fade-in .15s ease-out both;
+    }
+
+@keyframes iv-fade-in {
+    from {
+        opacity: .3;
+        transform: scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 工具条（右上角） */
+.iv-toolbar {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    gap: 10px;
+    z-index: 10000;
+}
+
+.iv-btn {
+    border: 1px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font: 600 14px/1 system-ui, -apple-system, Segoe UI, Roboto, PingFang SC, sans-serif;
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+}
+
+    .iv-btn:hover {
+        background: rgba(255,255,255,.16);
+    }
+
+.iv-link {
+    text-decoration: none;
+}
+
+/* 可选：不想被放大的图片加这个类 */
+img.no-zoom {
+    cursor: default !important;
+}
