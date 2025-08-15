@@ -48,3 +48,12 @@
         color: #2340a1;
         font-weight: bold;
     }
+
+
+
+/* 手机端（<=900px）隐藏左侧目录 */
+@media (max-width: 900px) {
+    .sidebar-toc {
+        display: none !important;
+    }
+}
