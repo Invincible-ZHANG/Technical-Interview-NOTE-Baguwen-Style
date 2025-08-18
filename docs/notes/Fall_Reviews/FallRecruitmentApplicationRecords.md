@@ -1,6 +1,6 @@
 ﻿---
 title: "26fall投递记录"
-date: 2025-07-31
+date: 2025-08-18
 categories: Fall_Reviews
 tags: [面经, 秋招, 嵌入式软件]
 layout: note
@@ -28,6 +28,7 @@ excerpt: 只记录秋招正式批，不记录提前批。
 |7月31日(暂时撤回)|华为|AI Infra| AI基础建设|
 |8.1 |京东|嵌入式技术工程师|嵌入式|
 |8.14|联想|[嵌入式开发工程师](https://talent.lenovo.com.cn/position/detail?id=1541)||
+|8.18|VIVO|[C、C++工程师（嵌入式方向）](https://hr-campus.vivo.com/campus/detail?jobAdId=b1d97aa0-54b7-4b13-902b-3b2b9a91afe2)||
 
 
 ---
