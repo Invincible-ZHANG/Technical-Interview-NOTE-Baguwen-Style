@@ -18,3 +18,13 @@ published: true     # false 可作为草稿不发布
 
 ---
 
+
+## Reference
+
+* [Transformer模型详解（图解最完整版）](https://zhuanlan.zhihu.com/p/338817680)
+* [Attention is All You Need](./reference/transformer.pdf)
+
+## Github项目
+
+* [tensor2tensor/models/transformer.py](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
+* [attention-is-all-you-need-pytorch](https://github.com/jadore801120/attention-is-all-you-need-pytorch?tab=readme-ov-file)
