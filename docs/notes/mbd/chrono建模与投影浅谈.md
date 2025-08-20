@@ -60,6 +60,7 @@ CHRONO 使用 ChVariables 类及其派生类来封装物体的动力学变量（
 约束对象会调用相关 ChVariables 的质量逆乘法来得到 $M^{-1}[Cq_i]^T$（即 Eq_i 向量），
 再与 $[Cq_i]` 求点积得到 $g_i$[13][14]。
 整个过程中并未显式形成全局质量矩阵或全局雅可比矩阵，而是利用变量对象的接口完成运算。
+
 这种设计保证了系统的稀疏和模块化：每个物体的质量属性（质量标量或质量矩阵块）由其自身管理，求解器只需要调度这些小型运算即可[9]。
 此外，ChVariables 还维护了一些元数据，例如变量在全局向量中的偏移量 offset，以及自由度数量 ndof[15]。
 在组装全局方程时，系统描述符 (ChSystemDescriptor) 会为每个变量分配在全局状态向量中的位置，并调用 SetOffset 进行记录[16][15]。
@@ -111,7 +112,6 @@ CHRONO 主要专注于基于互补约束的刚体接触建模方法，即差分�
 
 ## 参考资料：
 1.	Tasora, A., & Serban, R. Project Chrono: Chrono::ChConstraint, ChConstraintTwo, ChVariables 类参考和源码[1][2][3][6][21][18]等。上述引用片段来自 CHRONO 8.0/9.0 文档和源代码注释，详述了约束雅可比分块、变量质量矩阵运算、以及投影算法等实现细节。
-________________________________________
 
 * [1] [4] [5] [13] [14] [18] [20] [23] [31] [32] ChConstraint.h
 * [2] [Project Chrono: chrono::ChConstraintTwo Class Reference](https://api.projectchrono.org/8.0.0/classchrono_1_1_ch_constraint_two.html)
