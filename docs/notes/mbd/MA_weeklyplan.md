@@ -176,6 +176,7 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 * **Chrono**：`sysd.ConstraintsProject(...)` 从系统描述器里拿**所有约束类型**（等式、上下界、库仑圆锥/多边形）做统一投影，细节都封装在约束对象里。
 * **实现**：自己实现 `projectBounds + projectFriction`，通过 `myNub + frictionIndices` 把切向块投影到 `‖t‖ ≤ μ n`。只要索引/μ 的约定一致，效果等价；但**可覆盖的约束类型**取决于你写的投影器（Chrono 的更通用一些）。
 
+**目前已经实现了CHRONO中APGD相关代码的所有功能，现在开始围绕投影部分做出相应的检查（CHRONO），在 Project Chrono 里，“投影（projection）”不是直接写在求解器里逐个元素去裁剪的，而是放在各个约束类的 Project() 方法里**
 
 ## 毕业论文草稿
 
