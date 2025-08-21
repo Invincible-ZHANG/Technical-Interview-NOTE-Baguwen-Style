@@ -1,6 +1,6 @@
 ﻿---
 title: "26fall投递记录"
-date: 2025-08-18
+date: 2025-08-21
 categories: Fall_Reviews
 tags: [面经, 秋招, 嵌入式软件]
 layout: note
@@ -17,18 +17,25 @@ excerpt: 只记录秋招正式批，不记录提前批。
 
 > ✅ 表格展示了目前已投递公司与岗位，方便横向对比岗位方向与技术要求。
 
-| 日期     | 公司         | 职位名称                             | 技术方向说明             |
-|----------|--------------|--------------------------------------|--------------------------|
-| 7月02日  | DJI 大疆     | 嵌入式软件开发工程师         | MCU / 实时系统 / HAL     |
-| ~~7月16日~~  |~~OPPO~~      | ~~底层软件开发工程师~~          | ~~SoC驱动 / 内核接口~~      |
-| 7月16日  | 地平线       | 嵌入式系统软件工程师（基础系统）    | BSP / Linux Kernel       |
-| 7月23日  | 远景能源     | 嵌入式软件开发                       | IoT / 电源管理 / 通信协议 |
-| 7月26日  | insta360     | 嵌入式软件开发                       | RTOS / 影像 / USB / SDIO  |
-|7.28|卓驭科技|嵌入式开发工程师|
-|7月31日(暂时撤回)|华为|AI Infra| AI基础建设|
-|8.1 |京东|嵌入式技术工程师|嵌入式|
-|8.14|联想|[嵌入式开发工程师](https://talent.lenovo.com.cn/position/detail?id=1541)||
-|8.18|VIVO|[C、C++工程师（嵌入式方向）](https://hr-campus.vivo.com/campus/detail?jobAdId=b1d97aa0-54b7-4b13-902b-3b2b9a91afe2)||
+| 日期        | 公司        | 职位名称                                                                                                                                                                                        | 备注 |
+| --------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -- |
+| 07-02     | DJI 大疆    | 嵌入式软件开发工程师                                                                                                                                                                                  |    |
+| ~~07-16~~ | ~~OPPO~~  | ~~底层软件开发工程师~~                                                                                                                                                                               |    |
+| 07-16     | 地平线       | 嵌入式系统软件工程师（基础系统）                                                                                                                                                                            |    |
+| 07-23     | 远景能源      | 嵌入式软件开发                                                                                                                                                                                     |    |
+| 07-26     | insta360  | 嵌入式软件开发                                                                                                                                                                                     |    |
+| 07-28     | 卓驭科技      | 嵌入式开发工程师                                                                                                                                                                                    |    |
+| 08-01     | 京东        | 嵌入式技术工程师                                                                                                                                                                                    |    |
+| 08-14     | 联想        | [嵌入式开发工程师](https://talent.lenovo.com.cn/position/detail?id=1541)                                                                                                                            |    |
+| 08-18     | VIVO      | [C、C++工程师（嵌入式方向）](https://hr-campus.vivo.com/campus/detail?jobAdId=b1d97aa0-54b7-4b13-902b-3b2b9a91afe2)                                                                                    |    |
+| 08-20     | 华为        | AI Infra                                                                                                                                                                                    |    |
+| 08-21     | 上海人工智能实验室 | 嵌入式开发工程师                                                                                                                                                                                    |    |
+| 08-21     | 思特威       | [嵌入式工程师](https://app.mokahr.com/campus_apply/smartsenstech1/56088?recommendCode=DS2xZPy3#/job/d097d867-f2cd-4bae-8fa9-d5efafce4a97)                                                         |    |
+| 08-21     | 北方华创      | [软件工程师](https://career.naura.com/campus/detail?jobAdId=4bd4ef9b-7c7c-4d37-aea0-beb3bbe59afe)                                                                                                |    |
+| 08-21     | 安克创新      | [助理嵌入式软件工程师-机器人](https://anker-in.jobs.feishu.cn/referral/campus/position/7539826644011534643/detail?token=NTsxNzU1MTYzOTU4NzIwOzc1MzgyOTk5MDU2NjkwMjE2OTk7NzUzODM2MDMzNDUwOTAxNzQwNzsxLzE) |    |
+| 08-21     | CVTE      | 嵌入式软件开发工程师（Linux方向）                                                                                                                                                                         |    |
+| 08-21     | 深圳元戎启行    | MCU软件工程师                                                                                                                                                                                    |    |
+
 
 
 ---
