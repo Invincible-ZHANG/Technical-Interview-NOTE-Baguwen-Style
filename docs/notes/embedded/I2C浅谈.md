@@ -4,7 +4,7 @@ date: 2025-08-25
 layout: note
 categories: 
 tags: 
-excerpt: "。"
+excerpt: "Inter-Integrated Circuit"
 ---
 
 # I2C（Inter-Integrated Circuit）
