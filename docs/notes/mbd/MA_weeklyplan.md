@@ -168,7 +168,7 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 ## [Week 15](./MA_WP_CH/WP15.md)   Time:18.08.2025 - 22.08.2025
 
 - [x] 对比一些chrono看看是不是少东西（漏了某些特性）
-- [ ] LCP和CCP想办法去做一些对比
+- [x] LCP和CCP想办法去做一些对比
 
 
  2) 投影（Projection）来源
@@ -177,6 +177,12 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 * **实现**：自己实现 `projectBounds + projectFriction`，通过 `myNub + frictionIndices` 把切向块投影到 `‖t‖ ≤ μ n`。只要索引/μ 的约定一致，效果等价；但**可覆盖的约束类型**取决于你写的投影器（Chrono 的更通用一些）。
 
 **目前已经实现了CHRONO中APGD相关代码的所有功能，现在开始围绕投影部分做出相应的检查（CHRONO），在 Project Chrono 里，“投影（projection）”不是直接写在求解器里逐个元素去裁剪的，而是放在各个约束类的 Project() 方法里**
+
+## [Week 16](./MA_WP_CH/WP16.md)   Time:25.08.2025 - 29.08.2025
+
+- [ ] project APGD
+
+
 
 ## 毕业论文草稿
 
