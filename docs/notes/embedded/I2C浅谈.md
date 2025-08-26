@@ -174,8 +174,19 @@ SCL / SDA：把 P13.1 / P13.2 复用给 I²C0 外设。I²C是开漏 + 上拉的
 #define LENGTH_OF_SYSTEMMODE  1
 ~~~
 
+传输是以8位为单元数据传输的，先传输最高位(MSB)，主芯片发出start信号之后，然后发出9个时钟传输数据。
+（1）开始信号（S）：SCL为高电平时，SDA高电平向低电平跳变，开始传送数据。
+（2）结束信号（P）：SCL为高电平时，SDA由低电平向高电平跳变，结束传送数据。
+（3）响应信号(ACK)：接收器在接收到8位数据后，在第9个时钟周期，拉低SDA
+SDA上传输的数据必须在SCL为高电平期间保持稳定，SDA上的数据只能在SCL为低电平期间变化。如图
 
+这是一块“内存映射寄存器表”：I²C 访问套路是先告诉从机要访问哪个偏移（RegOff）→ 再读/写数据。
 
+放到波形上，就是常见的“寄存器读写事务”：
+
+写寄存器：START → ADDR+W → RegOff → Data…（每字节后从机ACK）→ STOP
+
+读寄存器：START → ADDR+W → RegOff → REPEATED START → ADDR+R → 读N字节（前N-1个主机ACK，最后1个主机NACK）→ STOP
 
 ## Reference
 
