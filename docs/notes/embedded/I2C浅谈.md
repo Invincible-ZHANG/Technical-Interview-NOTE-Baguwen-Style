@@ -140,13 +140,11 @@ I2C通信寻址有7位和10位寻址方式，并且支持两种寻址模式的�
 
 我之前工作时候，参与设计了MCU与EC之间的通信，用的就是I2C，其中MCU做主，EC做从，现在基于我当时写的AURIX 代码，把 I²C 讲透：
 
+下面把头文件 + 源文件串成一条“从上到下”的 I²C 驱动流程图，按“做了什么 → 线上发生了什么（时序/协议）”来讲。
 
-1）这几行管脚和地址，决定了“你在和谁、用哪两根线说话”
-* SCL（时钟）、SDA（数据）都用[开漏（open-drain）](./opendrain&pushpull.md)驱动，靠上拉电阻拉成高电平。
 
-* 空闲总线：SCL=1、SDA=1。
+SCL（时钟）、SDA（数据）都用[开漏（open-drain）](./opendrain&pushpull.md)驱动，靠上拉电阻拉成高电平。
 
-* 线与效应：多主时，谁拉低，线上就是低；这支撑了仲裁与时钟拉伸。
 ```c
 #define EC_SCL_PIN IfxI2c0_SCL_P13_1_INOUT
 #define EC_SDA_PIN IfxI2c0_SDA_P13_2_INOUT
@@ -154,13 +152,15 @@ I2C通信寻址有7位和10位寻址方式，并且支持两种寻址模式的�
 #define EC_I2C_ADDRESS 0x68
 ```
 
-SCL / SDA：把 P13.1 / P13.2 复用给 I²C0 外设。I²C是开漏 + 上拉的“线与”总线：谁拉低谁说话，没人拉低就被上拉电阻拉成高电平。
+引脚：EC_SCL_PIN / EC_SDA_PIN 接到 I²C0 外设；I²C是开漏 + 上拉的“线与”总线。
 
-100 kHz：标准模式（Standard-mode）的节拍。I²C所有时序都围绕“SCL 低时允许改数据、SCL 高时必须稳定”展开。
+速率：I2C_BAUDRATE = 100 kHz（Standard-mode）。
 
-0x68（7位地址）：这是 EC 器件的从机地址。上线传输时会变成 ADDR[6:0] + R/W 共 8 位（第 8 位是读写位）。你的源文件里会把 0x68 左移一位交给驱动，这是把它变成“8位地址字段”的常见做法。
+地址：EC_I2C_ADDRESS = 0x68（7 位）。上线发的是 ADDR[6:0] + R/W。
 
-2）“EC RAM 寄存器地图”＝ I²C 里要读写的内部地址
+寄存器表（EC RAM）：0x00 CHIPID、0x01 PWR_STATUS、0x02 HEARTBEAT、0x03 SYSTEMMODE… —— 读写都以“先指针，后数据”的套路进行。
+
+
 
 ~~~c
 // 偏移、长度、属性
@@ -187,6 +187,12 @@ SDA上传输的数据必须在SCL为高电平期间保持稳定，SDA上的数�
 写寄存器：START → ADDR+W → RegOff → Data…（每字节后从机ACK）→ STOP
 
 读寄存器：START → ADDR+W → RegOff → REPEATED START → ADDR+R → 读N字节（前N-1个主机ACK，最后1个主机NACK）→ STOP
+
+
+## Q & A
+
+
+
 
 ## Reference
 
