@@ -183,6 +183,15 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 - [ ] project APGD
 - [ ] 并行化
 
+## [Week 17](./MA_WP_CH/WP17.md)   Time:01.09.2025 - 05.09.2025
+
+
+- [ ] 确定原先RBDClusterLagrangeMultipliers的投影方式
+- [ ] chrono求解器部分的结构，写一个小的note
+- [ ] 先不添加并行化计算
+- [ ] 局部最优解和整体最优解的问题
+- [ ] Nestrov的论文
+
 
 
 ## 毕业论文草稿
