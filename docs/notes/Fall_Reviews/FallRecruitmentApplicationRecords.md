@@ -1,6 +1,6 @@
 ﻿---
 title: "26fall投递记录"
-date: 2025-08-27
+date: 2025-08-29
 categories: Fall_Reviews
 tags: [面经, 秋招, 嵌入式软件]
 layout: note
@@ -30,7 +30,7 @@ excerpt: 只记录秋招正式批，不记录提前批。
 | 9   | 08-14  | 联想           | [嵌入式开发工程师](https://talent.lenovo.com.cn/position/detail?id=1541) |     |
 | 10  | 08-18  | VIVO           | [C、C++工程师（嵌入式方向）](https://hr-campus.vivo.com/campus/detail?jobAdId=b1d97aa0-54b7-4b13-902b-3b2b9a91afe2) |     |
 | 11  | 08-20  | 华为           | 嵌入式软件开发工程师  |     |
-| 12  | 08-21  | 上海人工智能实验室 | 嵌入式开发工程师   |     |
+| ~~12~~  | ~~08-21~~  | ~~上海人工智能实验室~~ | ~~嵌入式开发工程师~~   |     |
 | 13  | 08-21  | 思特威         | [嵌入式工程师](https://app.mokahr.com/campus_apply/smartsenstech1/56088?recommendCode=DS2xZPy3#/job/d097d867-f2cd-4bae-8fa9-d5efafce4a97) |     |
 | 14  | 08-21  | 北方华创       | [软件工程师](https://career.naura.com/campus/detail?jobAdId=4bd4ef9b-7c7c-4d37-aea0-beb3bbe59afe) |     |
 | 15  | 08-21  | 安克创新       | [助理嵌入式软件工程师-机器人](https://anker-in.jobs.feishu.cn/referral/campus/position/7539826644011534643/detail?token=NTsxNzU1MTYzOTU4NzIwOzc1MzgyOTk5MDU2NjkwMjE2OTk7NzUzODM2MDMzNDUwOTAxNzQwNzsxLzE) |     |
@@ -58,6 +58,7 @@ excerpt: 只记录秋招正式批，不记录提前批。
 |37|0827|字节跳动|||
 |38|0827|阳关电源|嵌入式||
 |39|0827|蔚来|SDE||
+|40|0829|美团|全栈工程师|0829约一面，901一面|
 
 
 
