@@ -1,7 +1,7 @@
 ---
 title: Dantzig
 date: 2025-08-29
-excerpt: ""
+excerpt: "对于现在VEROSIM已经实现的Danzig谈一下自己的理解。"
 layout: note
 ---
 

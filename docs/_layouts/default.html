@@ -56,7 +56,7 @@
                     </a>
                 </h3>
                 <p class="post-excerpt">
-                    {{ note.excerpt | default: note.content | truncatewords: 30 }}
+                    {{ note.excerpt | default: note.content | truncatewords: 15 }}
                 </p>
                 <time class="post-date">🕒 {{ note.date | date: "%Y-%m-%d" }}</time>
             </article>
