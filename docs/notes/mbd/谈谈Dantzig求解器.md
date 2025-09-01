@@ -1,5 +1,5 @@
 ---
-title: Dantzig
+title: 谈谈Dantzig求解器
 date: 2025-08-29
 excerpt: "对于现在VEROSIM已经实现的Danzig谈一下自己的理解。"
 layout: note
@@ -128,7 +128,30 @@ setValuesInMatrix：把“常规矩阵”拷贝成 ODE 期望的行对齐内存�
 
 
 
+ODE 的通用 LCP 解算入口 dxSolveLCP_Generic：
 
+```
+
+        if (!hit_first_friction_index && findex && findex[i] >= 0) {
+            // un-permute x into delta_w, which is not being used at the moment
+            for (unsigned j = 0; j < n; ++j) delta_w[p[j]] = (pairsbx + (sizeint)j * PBX__MAX)[PBX_X];
+
+            // set lo and hi values
+            for (unsigned k = i; k < n; ++k) {
+                dReal *currlh = pairslh + (sizeint)k * PLH__MAX;
+                dReal wfk = delta_w[findex[k]];
+                if (wfk == 0) {
+                    currlh[PLH_HI] = 0;
+                    currlh[PLH_LO] = 0;
+                }
+                else {
+                    currlh[PLH_HI] = dFabs (currlh[PLH_HI] * wfk);
+                    currlh[PLH_LO] = -currlh[PLH_HI];
+                }
+            }
+            hit_first_friction_index = true;
+        }
+```
 
 
 

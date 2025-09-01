@@ -354,3 +354,299 @@ s->draw();
   * **动态多态**：像“遥控器接口”——你按下“播放”键（相同接口），插电视放电视，插 DVD 播电影，插游戏机进游戏（运行时确定）。
 
 
+
+
+## 3.final标识符的作用是什么？
+
+1. `final` 用在类上
+
+**作用**：
+
+* 表示这个类不能被继承。
+* 一旦某个类被标记为 `final`，别人就不能再写子类去继承它。
+
+**示例**：
+
+```cpp
+class Animal final {
+public:
+    void sound() { std::cout << "Some sound\n"; }
+};
+
+// ❌ 编译错误：final 类不能被继承
+class Dog : public Animal {
+};
+```
+
+2. `final` 用在虚函数上
+
+**作用**：
+
+* 表示这个虚函数在当前类已经是**最后版本**，不能再被子类重写。
+* 阻止“无限重写”，锁定接口。
+
+**示例**：
+
+```cpp
+class Base {
+public:
+    virtual void show() final {  // 不能再被重写
+        std::cout << "Base show\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    // ❌ 编译错误：final 函数不能再被重写
+    void show() override {
+        std::cout << "Derived show\n";
+    }
+};
+```
+
+3. 为什么需要 `final`？
+
+* **设计意图明确**：告诉别人“这个类不该被继承”或“这个接口不能再改”。
+* **防止滥用继承**：有些类（比如工具类、单例类）不希望再派生。
+* **保证接口稳定性**：有些虚函数如果继续被重写，可能破坏逻辑，就可以 `final`。
+* **性能优化**：编译器知道函数不会被重写时，可以直接静态绑定，省掉虚函数表查找。
+
+
+
+
+## 4.虚函数是怎么实现的？它存放在哪里在内存的哪个区？什么时候生成的？
+
+
+
+1. 虚函数的实现核心：**vtable（虚函数表）+ vptr（虚表指针）**
+
+* **虚函数表 (vtable)**
+
+  * 编译器为每个有虚函数的类生成一张表。
+  * 表里存放的是**该类虚函数的地址**（函数入口地址）。
+  * 就像一张“菜单”，告诉对象：`draw` 在哪里，`show` 在哪里。
+
+* **虚表指针 (vptr)**
+
+  * 每个含虚函数的对象实例里，编译器会偷偷塞一个指针（vptr）。
+  * vptr 指向该对象所属类的 vtable。
+  * 当你调用虚函数时，程序先通过对象里的 vptr 找到 vtable，再跳到正确的函数地址。
+
+
+2. 内存布局示意
+
+假设有代码：
+
+```cpp
+class Base {
+public:
+    virtual void show() { std::cout << "Base show\n"; }
+};
+
+class Derived : public Base {
+public:
+    void show() override { std::cout << "Derived show\n"; }
+};
+
+int main() {
+    Base* p = new Derived();
+    p->show();
+}
+```
+
+运行时，`p->show()` 调用流程：
+
+1). `p` 是一个指向 `Derived` 对象的基类指针。
+
+2). 该对象里有一个 `vptr`，指向 `Derived` 的虚函数表。
+
+3). 在虚表里，`show` 的入口被填成 `Derived::show`。
+
+4). 所以执行的是 **Derived 的版本**。
+
+
+
+
+
+3. 内存在哪儿？
+
+* **虚函数表 (vtable)**
+
+  * **编译时生成**，是一个静态结构。
+  * 存在**全局/只读数据区**（通常在**静态存储区**，跟全局变量、静态变量类似）。
+  * 所有该类对象共享同一张 vtable，不会为每个对象单独分配。
+
+* **虚表指针 (vptr)**
+
+  * 存在于对象实例内部，跟随对象一起分配在 **栈区**（局部对象）或 **堆区**（动态分配的对象）。
+  * 占用对象内存的一部分（通常是一个指针大小：32 位机器是 4 字节，64 位机器是 8 字节）。
+
+* **虚函数本身代码**
+
+  * 和普通函数一样，存在于 **代码段（text/code segment）**。
+  * vtable 里存的就是这些函数入口地址。
+
+
+4. 什么时候生成？
+
+* **编译阶段**：编译器就会为类生成 vtable，并在对象构造时设置好 vptr。
+* **运行阶段**：调用虚函数时，通过 vptr 查表，执行函数。
+
+
+5. 直观例子（模拟打印 vtable 地址）
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    virtual void show() { cout << "Base show\n"; }
+};
+
+class Derived : public Base {
+public:
+    void show() override { cout << "Derived show\n"; }
+};
+
+int main() {
+    Base* p = new Derived();
+
+    cout << "对象地址: " << p << endl;
+    cout << "虚表指针(vptr)地址: " << *((void**)p) << endl;
+    cout << "虚函数入口地址: " << *((void**)(*((void**)p))) << endl;
+
+    p->show();  // 实际调用 Derived::show
+}
+```
+
+
+
+## 5.智能指针的本质是什么，它们的实现原理是什么？
+
+
+智能指针本质是一个封装了一个原始C++指针的类模板，为了确保动态内存的安全性而产生的。实现原理是通过一个对象存储需要被自动释放的资源，然后依靠对象的析构函数来释放资源。
+
+1. 智能指针的本质
+
+* **普通指针**：`int* p = new int(10);` → 需要手动 `delete p;`。
+* **智能指针**：用一个类封装 `int*`，当类对象生命周期结束（析构）时，自动调用 `delete`。
+
+**一句话**：智能指针就是**带有自动回收功能的指针包装类**。
+
+
+2. 实现原理（核心思想）
+
+(1) RAII
+
+* **R**esource **A**cquisition **I**s **I**nitialization
+* 当对象构造时获取资源（比如申请内存），当对象析构时释放资源。
+* 智能指针就是 RAII 的典型应用。
+
+(2) 内部封装
+
+* 智能指针类里有一个**原始指针成员**。
+* 在智能指针的 **析构函数** 里调用 `delete` 或 `delete[]` 来释放指针。
+
+(3) 常见实现方式
+
+* 重载 `*` 和 `->` 运算符，让智能指针用起来和普通指针一样。
+* 可能需要**引用计数**，来支持多个智能指针共享同一块资源。
+
+
+3. 常见智能指针种类（C++11）
+
+1). **`unique_ptr`**
+
+   * 独占所有权，一个对象只能有一个 `unique_ptr` 指向它。
+   * 禁止拷贝，只能转移（move）。
+
+2). **`shared_ptr`**
+
+   * 共享所有权，多个 `shared_ptr` 可以指向同一块内存。
+   * 内部用**引用计数**来决定什么时候释放资源。
+
+3). **`weak_ptr`**
+
+   * 弱引用，不增加引用计数。
+   * 避免循环引用（`shared_ptr` 之间相互引用会导致内存无法释放）。
+
+
+
+4. 简单模拟实现
+
+(1) 模拟 `unique_ptr`
+
+```cpp
+template <typename T>
+class UniquePtr {
+private:
+    T* ptr;
+public:
+    explicit UniquePtr(T* p = nullptr) : ptr(p) {}
+    ~UniquePtr() { delete ptr; }
+
+    // 禁止拷贝
+    UniquePtr(const UniquePtr&) = delete;
+    UniquePtr& operator=(const UniquePtr&) = delete;
+
+    // 允许移动
+    UniquePtr(UniquePtr&& other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;
+    }
+    UniquePtr& operator=(UniquePtr&& other) noexcept {
+        if (this != &other) {
+            delete ptr;
+            ptr = other.ptr;
+            other.ptr = nullptr;
+        }
+        return *this;
+    }
+
+    T& operator*() { return *ptr; }
+    T* operator->() { return ptr; }
+};
+```
+
+### (2) 模拟 `shared_ptr`（引用计数）
+
+```cpp
+template <typename T>
+class SharedPtr {
+private:
+    T* ptr;
+    int* ref_count;
+
+public:
+    explicit SharedPtr(T* p = nullptr) : ptr(p), ref_count(new int(1)) {}
+
+    ~SharedPtr() {
+        if (--(*ref_count) == 0) {
+            delete ptr;
+            delete ref_count;
+        }
+    }
+
+    SharedPtr(const SharedPtr& other) {
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        ++(*ref_count);
+    }
+
+    SharedPtr& operator=(const SharedPtr& other) {
+        if (this != &other) {
+            if (--(*ref_count) == 0) {
+                delete ptr;
+                delete ref_count;
+            }
+            ptr = other.ptr;
+            ref_count = other.ref_count;
+            ++(*ref_count);
+        }
+        return *this;
+    }
+
+    T& operator*() { return *ptr; }
+    T* operator->() { return ptr; }
+};
+```
