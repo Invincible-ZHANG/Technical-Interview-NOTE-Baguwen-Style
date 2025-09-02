@@ -608,7 +608,7 @@ public:
 };
 ```
 
-### (2) 模拟 `shared_ptr`（引用计数）
+(2) 模拟 `shared_ptr`（引用计数）
 
 ```cpp
 template <typename T>
@@ -650,3 +650,7 @@ public:
     T* operator->() { return ptr; }
 };
 ```
+
+
+
+## 6.匿名函数的本质是什么？他的优点是什么？
