@@ -180,16 +180,16 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 
 ## [Week 16](./MA_WP_CH/WP16.md)   Time:25.08.2025 - 29.08.2025
 
-- [ ] project APGD
+- [x] project APGD
 - [ ] 并行化
 
 ## [Week 17](./MA_WP_CH/WP17.md)   Time:01.09.2025 - 05.09.2025
 
 
-- [ ] 确定原先RBDClusterLagrangeMultipliers的投影方式
+- [x] 确定原先RBDClusterLagrangeMultipliers的投影方式
 - [ ] chrono求解器部分的结构，写一个小的note
-- [ ] 先不添加并行化计算
-- [ ] 局部最优解和整体最优解的问题
+- [x] 先不添加并行化计算
+- [x] 局部最优解和整体最优解的问题
 - [ ] Nestrov的论文
 
 
