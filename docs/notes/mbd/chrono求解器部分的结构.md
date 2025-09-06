@@ -286,3 +286,132 @@ layout: note
    * 若不满足就把 L 翻倍（步长 t 变小），直到满足；
    * 这保证了每步更新后目标不“犯规”，数值更稳。
 
+
+
+
+## ChIterativeSolverVI
+
+ChIterativeSolverVI 是 面向 VI（Variational Inequality，变分不等式）/互补问题 的迭代求解器基类。它站在 Chrono 的求解器栈中间位置：
+
+* 顶层接口：ChSolver
+
+* VI 专用接口：ChSolverVI（声明了问题形式与类别）
+
+* 你看到的类：ChIterativeSolverVI（提供迭代法通用参数、迭代历史记录、归档等）
+
+* 具体算法派生类（例如基于 P(S)OR、投影梯度、Nesterov/FISTA 等）从它继承并实现 Solve() 内部的迭代循环。
+
+
+类注释写了 VI 的标准块结构（把约束统一装进大矩阵/向量）：
+
+$$
+\begin{bmatrix} M & -C_q^{\top}\\ C_q & -E\end{bmatrix}
+\begin{bmatrix} q\\ \lambda \end{bmatrix}
+-
+\begin{bmatrix} f\\ b \end{bmatrix}
+=
+\begin{bmatrix} 0\\ c \end{bmatrix},\quad 
+\lambda \in Y,\; C\in N_Y
+$$
+
+* `M` 是质量（或广义质量）矩阵；
+* `C_q` 是约束 Jacobian；
+* `E` 用于 CFM/合规项等；
+* `q` 是状态量的增量（速度/加速度/冲量依具体 formulation）；
+* `\lambda` 是拉格朗日乘子（接触法向力、摩擦力等）；
+* `f, b` 是右端项（外力、稳定化项/恢复速度等）；
+* `c` 是约束残差。
+
+此外，为了让整体矩阵 **Z 对称**，注释里说明了一个“把 $\lambda$ 翻符号”的等价写法（把第二块行写成 `| Cq  E | |-l|`），这样许多对称正定/半正定的技巧可以用得更顺手。这些公式与分类（Linear/LCP/CCP）都在 `ChSolverVI.h` 的文档块中明示。
+
+**三种特例的集合 $Y$：**
+
+* 线性问题：全部 $Y_i=\mathbb{R}$（纯等式/双边约束，无互补条件）。
+* LCP：全部 $Y_i=\mathbb{R}_+$，并满足 $\lambda\ge 0,\; c\ge 0,\; \lambda^\top c = 0$。
+* CCP：$Y_i$ 是**摩擦圆锥**（切向分量被投影到半径 $\mu \lambda_n$ 的圆盘/圆锥上）。
+
+> 这些分类与注释里的“`- case LCP/CCP`”对得上。
+
+
+
+ 成员与可调参数（直说怎么用）
+
+* `m_max_iterations`（父类里）：最大迭代次数（默认 50）。你可以改它。改完会顺带**重设历史记录数组大小**（见下）。
+* `m_tolerance`（父类里）：停止准则所用阈值；具体含义由派生类解释（最大约束违背、投影梯度范数……）。
+* `m_omega`：**过松弛因子** $\omega$（PSOR/Jacobi 一类会用到）。注释建议：Jacobi 取 \~0.2，其他迭代法可到 1.0。设置时强制 $>0$。
+* `m_shlambda`：**锐化因子**（Mangasarian 风格 LCP 投影里会出现；0.8–1.0，越低越稳/慢，越高越快/可能震荡）。设置时强制 $>0$。
+* `m_iterations`：**上次 Solve 实际跑了多少步**（派生类里需要更新它）。
+* `record_violation_history`：是否记录每步的“最大约束违背量”和“$\Delta\lambda$ 的最大变化量”。用
+  `SetRecordViolation(true)` 开启后，`SetMaxIterations()` 会自动把两条历史向量 `violation_history` / `dlambda_history` 调整到合适长度。
+
+---
+
+# 关键方法（派生类一定会用到的）
+
+**1) `SetMaxIterations(int)`**
+除了设置上限，还会 `resize` 两个历史数组，使其能按迭代步保存轨迹。
+
+**2) `SetRecordViolation(bool)`**
+开关历史记录，并调用一次 `SetMaxIterations(m_max_iterations)` 来保证容量匹配。
+
+**3) `AtIterationEnd(double mmaxviolation, double mdeltalambda, unsigned iternum)`**
+这是**最重要的“迭代尾钩子”**：**所有迭代法的派生类都应在每一步末尾调用它**来把当前步的“最大约束违背量”和“$\Delta\lambda$ 最大变化”记录下来（如果 `record_violation_history=true`）。超界访问会断言。
+
+**4) `SolveRequiresMatrix() const`**
+这里返回 `true`，表示 **Solve 阶段需要可用的系统矩阵**（至少要能做 SpMV）。Chrono 的基类 `ChIterativeSolver` 也提供了调试辅助：
+
+* `WriteMatrices(sysd)` 会装配稀疏 Z 并用 \*\*系统提供的 `SystemProduct`（矩阵-向量乘）\*\*再重建一份，输出到 `Z1.dat/Z2.dat` 对比；
+* `CheckSolution(sysd, x)` 用“全矩阵”和“SPMV”两种方式计算残差范数，方便核对。
+
+**5) 归档**
+`ArchiveOut/ArchiveIn` 把 `m_max_iterations / m_warm_start / m_tolerance / m_omega / m_shlambda` 等成员序列化，便于保存/恢复配置。
+
+---
+
+# 派生类应该长啥样（最小骨架）
+
+派生类（比如一个投影高斯–赛德尔/投影梯度的实现）通常会：
+
+1. 在 `Solve()` 前，确保 `ChSystemDescriptor` 已经把大系统（$Z, d$）装配好；
+2. 进行迭代，每一轮：
+
+   * 做一次矩阵-向量乘、投影/更新 $\lambda$、评估违背量；
+   * 如果启用了历史记录，**调用** `AtIterationEnd(max_violation, max_dlambda, it)`；
+   * 如达到 `m_tolerance` 就停；并把 `m_iterations = it+1`。
+3. 返回 `true/false` 由你定义的“收敛判据”决定（Chrono 中不同算法 GetError 的语义略有差异，类注释也提醒了这点）。
+
+> 样例中的历史记录与矩阵检查函数在 `ChIterativeSolver.cpp` / `ChIterativeSolverVI.cpp` 里都能对上。
+
+---
+
+# 与系统数据结构如何配合
+
+* 变量与力向量由 `ChVariables` 抽象（每个变量块会告诉你如何做 $M^{-1}x$、装配到全局等），**并不强制显式存 `M`**，以便矩阵-自由算法或稀疏装配。`ChVariables` 提供了 `State()`（局部 $q_b$）和 `Force()`（局部 $f_b$）的引用。
+* `ChSystemDescriptor` 负责把所有 `Variables` 和 `Constraints` 组合出系统 $Zx=d$，然后迭代器在 `Solve()` 里不断做 SpMV 与投影（或显式矩阵操作，视实现而定）。
+* 由于 `SolveRequiresMatrix()==true`，这个基类假定你的迭代过程需要至少能做“矩阵-向量运算”。如果你的算法是**严格矩阵-自由**的（像你自己实现的 APGD-MF），则会在**另一个基类**或自定义路径下实现，不必继承这里这一条约束（参考你项目中的 `RBDSolverAPGD_MF` 和 `RBDChronoNSC` 的矩阵自由施密特乘实现）。
+
+---
+
+# 参数调优一览（经验值）
+
+* **Omega（过松弛）**：Jacobi/PSOR 一类从 0.2 起试，逐步加大到 1.0 左右；过大易震荡。
+* **SharpnessLambda（锐化）**：0.8–1.0；越小保守，越大更快但可能抖。
+* **MaxIterations**：场景稀疏、良态时几十步内应收敛；难问题（强摩擦、多体啮合）可适当提高，但更建议改模型/预条件。
+* **Tolerance**：依据你派生类定义的误差度量（例如最大违背或投影梯度范数）去设，不同算法的“1e-4”含义不同，这点类注释也特别提醒了。
+
+---
+
+# 常见踩坑
+
+* **忘了调用 `AtIterationEnd`**：你会发现 `GetViolationHistory()` 和 `GetDeltalambdaHistory()` 一直是零或者脏值。
+* **把 `SetRecordViolation(true)` 和 `SetMaxIterations()` 顺序弄乱**：虽然类内部做了自洽处理（开关时会再 `resize`），但你最好在设置迭代上限后立刻开启记录，这样一目了然。
+* **误解 `SolveRequiresMatrix()`**：这里返回 true，不代表必须“显式装配稀疏矩阵”，而是说**需要系统提供 SpMV**（SystemProduct），调试函数里也提供了这两条路径的对比输出来帮你排查装配/乘法是否一致。
+
+---
+
+# 小结与延伸
+
+* `ChIterativeSolverVI` 为 **VI/互补问题** 的迭代法提供了**统一的外壳**：参数（$\omega$、锐化、阈值、迭代上限）、历史记录钩子、序列化、以及“需要矩阵/SpMV”的约定。派生类只管专心把**每一步**写扎实，记得在回合末用 `AtIterationEnd` 把指标喂给基类。
+* 调试时，配合 `ChIterativeSolver::WriteMatrices/CheckSolution` 很好用，能快速定位是装配问题还是算法本体问题。
+
+如果你接下来在做 **APGD/PGS/PSOR** 的派生实现，我可以给你一个“**Solve() 骨架模板**”（含误差度量、历史记录、早停策略），或者把它接到你当前的 NSC/CCP 管线里和 `RBDChronoNSC` 的矩阵自由版本对齐做 A/B 测试（同一停止准则、同一容差），这样能更科学地比较收敛行为与性能。
