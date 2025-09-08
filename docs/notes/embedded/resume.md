@@ -86,7 +86,7 @@ HDF 把“驱动 → 服务”这一层做了统一抽象，方便跨内核、�
 
 > HDF 世界里，设备“出现”靠 **device\_info.hcs**，设备“参数与匹配”靠 **平台专属 hcs**（这里用 rk3568\_uart\_config.hcs 作为例子）。两者配对才能被 DevMgr 正确装载。
 
-### 1) `device_info.hcs`：声明“我要发布一个 UART9 服务”
+ 1) `device_info.hcs`：声明“我要发布一个 UART9 服务”
 
 * 路径（示例）：`vendor/kaihong/RK3566-xxx/hdf_config/khdf/device_info/device_info.hcs`
 * 关键要点：
@@ -97,7 +97,7 @@ HDF 把“驱动 → 服务”这一层做了统一抽象，方便跨内核、�
   * **deviceMatchAttr**：要与平台 hcs 里的 `match_attr` 对上。
     这些在官方开发指导书里都有明确说明。
 
-### 2) `rk3568_uart_config.hcs`：告诉系统“第几个 UART，用哪个内核驱动名”
+ 1) `rk3568_uart_config.hcs`：告诉系统“第几个 UART，用哪个内核驱动名”
 
 * 路径（示例）：`vendor/kaihong/RK3566-xxx/hdf_config/khdf/platform/rk3568_uart_config.hcs`
 * 典型片段（示意）：
@@ -114,9 +114,8 @@ root {
 
 * **特殊板卡**：如果不是 `ttyS` 开头（比如 `ttyXRUSB`），就要改 `driver_name`，否则默认用 template 里的值。指导书里有明确提醒。
 
----
 
-# 四、驱动骨架：HDF DriverEntry & 独立服务模式
+四、驱动骨架：HDF DriverEntry & 独立服务模式
 
 UART 在 KaihongOS 中走 **独立服务模式**：每个设备对象会发布一个服务节点，由 HDF 设备管理器分发调用。应用通过 **HDI/API** 用 `port` 参数定位到具体实例（比如 9）。
 
@@ -139,88 +138,12 @@ HDF_INIT(g_uartEntry);
 
 **注意**：如果你同时提供 HDI（IDL→Stub/Proxy），就需要在 `Init()` 里注册你的服务对象，HDF 的 DevMgr 才能把调用路由过来。
 
----
 
-# 五、应用 API 的使用（端到端验证）
 
-KaihongOS 提供了上层 UART API；常用的方法包括：
 
-* `uartOpen(port)`：port 就是前面 `HDF_PLATFORM_UART_9` 的后缀 **9**；
-* `uartSetBaud()`：设置波特率；
-* `uartSetAttribute()`：设置 8N1、硬件流控等。
-  这几项在官方文档的 “应用使用流程 / 常用 UART API” 部分明确写了说明。
 
-**示例（伪代码）**：
 
-```cpp
-int fd = uartOpen(9);                      // 对应 HDF_PLATFORM_UART_9
-uartSetBaud(fd, 115200);
-UartAttr attr{ .dataBits=8, .parity='N', .stopBits=1, .rtscts=true };
-uartSetAttribute(fd, &attr);
 
-// Write / Read
-const char *msg = "hello\n";
-write(fd, msg, strlen(msg));
-char buf[256];
-int n = read(fd, buf, sizeof(buf));
-```
 
----
-
-# 六、自检与联调：Loopback & 双终端
-
-**最小自测法**：短接 **RX 与 TX**，用两个终端对着**同一个 tty 节点**做回环测试：
-
-* 终端 A：`cat /dev/ttyS9`
-* 终端 B：`echo "abc" > /dev/ttyS9`
-* 若 A 收不到：
-
-  1. 看 DTS 的 `pinctrl-0` 是否选错；
-  2. 硬件连接是否 OK；
-  3. 是否有其他进程占用串口；
-     这些“常见问题处理”的步骤，官方文档给出了逐条排查建议。
-
-**/dev 节点检查**
-
-* 是否有 `/dev/ttyS9`（或你配置的 `driver_name + num`）
-* 是否有 `HDF_PLATFORM_UART_9`（Policy=2 时可见）
-  没有的话，倒查 3.1 的 DTS 与 3.2 的 HCS 两步。
-
----
-
-# 七、性能/稳定性参数建议
-
-* **DMA**：尽量打开；小包多发可考虑聚合发送或适当放大环形缓冲。
-* **流控**：有线长或高波特率就上 `RTS/CTS`，能显著降低丢包。
-* **P99 延迟**：打点统计写/读完成耗时；必要时在驱动侧增加水位线与超时告警。
-* **电源管理**：补齐 `suspend/resume`，恢复时重配串口寄存器，避免恢复后“偶发黑洞”。
-
----
-
-# 八、提交流程清单（把变更一次性讲清楚）
-
-1. DTS：`&uart9 { status="okay"; pinctrl-0=<...>; dma-names="tx","rx"; }`（含引脚组）。
-2. HCS：
-
-   * `device_info.hcs`：`serviceName=HDF_PLATFORM_UART_9`、`Policy=2`、`moduleName`、`deviceMatchAttr`。
-   * `rk3568_uart_config.hcs`：`num=9`、`driver_name="ttyS"`（或特殊板卡改成 `"ttyXRUSB"`）、`match_attr` 对齐。
-3. 驱动入口：`HdfDriverEntry` 与 `moduleName` 对齐，`Bind/Init/Release` 完整；若提供 HDI，确保已注册服务对象。
-4. 应用/测试：
-
-   * API：`uartOpen/uartSetBaud/uartSetAttribute`；回环测试；
-   * /dev 节点检查：`/dev/ttyS9` 与 `HDF_PLATFORM_UART_9`。
-
----
-
-# 九、你需要的“一句话证据链”（放到评审或简历里）
-
-* UART 采用**独立服务模式**，每个设备单独发布服务（节省上层路由复杂度），但需要为每个设备配置节点，内存占用略增。
-* `serviceName` 的数字后缀和应用层 `uartOpen(port)` 的 `port` 一致（例如 9）。
-* DTS 负责控制器与引脚、DMA 使能；HCS 负责 HDF 装载、匹配与设备命名（`driver_name+num`→`/dev/ttyS9`）。
-* 常见问题排查：/dev 节点存在性、引脚复用正确性、硬件回路、并发占用。
-
----
-
-需要我把上面这套变更整理成 **git patch 清单**（按文件路径列出增删改）或做一份 **A4 速查图（DTS→HCS→DriverEntry→API）**，我可以直接给你成品模板，复制到 MR 描述里就能过审。
-
+实现 usbip 自启动 == watchdog 
 
