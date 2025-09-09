@@ -72,4 +72,23 @@ Chplatform: Chrono 的“跨平台胶水” ，ChApiEXPORT/IMPORT 解决不同�
 
 ChApiCE: ChApi 是一个“可见性贴纸”宏——你把它贴在要对外公开的类/函数前面，它会在编库时展开成“导出符号”，在用库时展开成“导入符号”；如果是静态库或非 Windows，它通常什么也不做。
 
-ChClassFactory:
+ChClassFactory:工厂机制
+
+ChSystemDescriptor: 
+
+  CH_FACTORY_REGISTER(ChSystemDescriptor):注册进 Chrono 的类工厂（ClassFactory）这个类能被按名字动态创建/持久化；
+
+  CH_SPINLOCK_HASHSIZE:并发用的自旋锁分片大小;
+
+  ChSystemDescriptor() and ~ChSystemDescriptor():构造/析构把计数/参数复位、容器清空，但不负责删除外部对象。
+
+  ComputeFeasabilityViolation: 扫一遍所有约束，统计“最坏的违反量”和“（单边）互补残差的最坏值”，用于判断这一仿真步的约束是否“解干净了”。
+
+  CountActiveVariables and CountActiveConstraints:“统计 + 编号（写偏移）”的工具，用来把当前步中激活的变量/约束映射到全局向量里的正确位置。
+
+  UpdateCountsAndOffsets : 一次性刷新“计数 + 偏移”并开启缓存。
+
+  PasteMassKRMMatrixInto：把变量侧的大块 𝐻（质量/刚度/阻尼的组合）贴到全局稀疏矩阵 Z 的指定位置。
+  如图所示：![H矩阵](./images/H矩阵.png)
+
+ChSolverAPGD：
