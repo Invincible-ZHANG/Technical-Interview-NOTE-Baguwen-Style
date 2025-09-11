@@ -22,10 +22,20 @@ matrix-free不绝对是为并行化做准备的。真正把并行吃满的，是
 
 算子相对来说更快但是不绝对，主要是出于缓存的考量。
 
+
+
 **更多的是为了节约缓存**
 
 
 关于ChSystemMulticore是怎么设计完成并行的的，我觉得可以作为后面学习的重点。
+
+
+
+关于里面的投影部分，执行约束乘子的投影：将约束的拉格朗日乘子投影到允许的集合上（例如，双边约束不会改变乘子；而对摩擦约束，会把乘子投影到摩擦圆锥上）在CHCONSTRAINT中定义了结构体用来定义Constraint mode，如果时FRICTION选择，ccp投影摩擦锥。
+
+ChConstraintTwoTuplesContactN<Ta,Tb>：法向（Normal, N）约束行
+
+ChConstraintTwoTuplesFrictionT<Ta,Tb>：切向（Tangential, T）约束行（U 与 V 两条）
 
 ## Simulation system
 
