@@ -179,6 +179,8 @@ static VSM::MatrixNxM calcMatrix(const VSLibRBDynMath::RBMJacobeanMatrix& J, int
 
 // (ci) LM mit Debuggingmöglichkeit
 //
+
+// 构造函数  带“调试观察者”指针
 RBDClusterLagrangeMultipliers::RBDClusterLagrangeMultipliers(RBDScene* scene, VSLibRBDynamX::RBDClusterLagrangeDebugObserver* LagrangeDebugObserver)
 	: RBDCluster(scene)
 	//, M_Inv(0)
@@ -193,19 +195,21 @@ RBDClusterLagrangeMultipliers::RBDClusterLagrangeMultipliers(RBDScene* scene, VS
 #endif
 }
 
+// // 构造函数  不带“调试观察者”指针
 RBDClusterLagrangeMultipliers::RBDClusterLagrangeMultipliers(RBDScene* scene)
-	: RBDCluster(scene)
+	// : RBDCluster(scene)   // ① 先调用“基类”构造，把场景交给基类层
 	//, M_Inv(0)
-	, myScene(scene)
-	, f_ext(0)
+	, myScene(scene)   // 把基类 RBDCluster 用当前的 scene 初始化；  ② 初始化成员：保存场景指针
+	, f_ext(0)     // 把本类的关键指针成员设成空（延迟到后续 doTimeStep() 再分配/使用）；
 	, myLcp(0)
 	//, mySizeOfJacobean(0)
 {
 #ifdef RBD_DEBUG
-	insts.ref();
+	insts.ref();   //在开启 RBD_DEBUG 时，用一个静态的原子计数器统计实例数，便于内存/对象泄漏排查。
 #endif
 }
 
+// 析构函数 用来统计当前活跃的 RBDClusterLagrangeMultipliers 实例数量，析构后减1
 RBDClusterLagrangeMultipliers::~RBDClusterLagrangeMultipliers()
 {
 #ifdef RBD_DEBUG
@@ -213,6 +217,7 @@ RBDClusterLagrangeMultipliers::~RBDClusterLagrangeMultipliers()
 #endif
 }
 
+// 更新刚体的速度
 void updateRigidBodyTwist(RBDRigidBody* rb, VSM::VectorN v_new)
 {
 	VSM::Vector6 twist;
@@ -222,33 +227,45 @@ void updateRigidBodyTwist(RBDRigidBody* rb, VSM::VectorN v_new)
 	rb->setTwist(twist);
 }
 
+// “做一帧时间推进”
+// 本帧推进后的绝对时间戳 newTime
+// 本帧时间步长 delta_t > 0
 void RBDClusterLagrangeMultipliers::doTimeStep(
 	double newTime,
 	double delta_t)
 {
+	// 这是我当时专门为了测试UseBilateralFrictionCone 是否生效而加的调试输出
+	// 主要是为了看他后面写的关于摩擦的语句是否生效了
 	//// UseBilateralFrictionCone 是否生效
 	//const bool useCone = getScene()->getUseBilateralFrictionCone();
 	//qDebug() << "[Scene] UseBilateralFrictionCone =" << useCone;
 
 
+	// 应该是前朝遗物，不知道留这个开关是做什么的，猜测是有关“旧版实现”的功能分支
 	bool useOldImplementation = false;
-#ifndef USE_QP_IMPLEMENTATION
+#ifndef USE_QP_IMPLEMENTATION   // 这个宏没被定义 ，就走LCP
 
-	Q_UNUSED(newTime);
+	Q_UNUSED(newTime);  // Qt 的小宏
 
-	if (delta_t <= 0)
+	// delta_t 必须大于0，否则不推进
+	if (delta_t <= 0)		
 		return;
 
+	// 观察者模式的记录但是，至于是否存在线程的安全问题，不清楚
 	if (myLagrangeDebugObserver)
 	{
 		actualStep.newTime = newTime;
 	}
 
+	// 性能采样/打点的计时宏，开一个秒表
 	PERFORMANCESUITE_TIC("810 RBDCluster, Collect constraints");
 
-	int numRBodies = 0;
+	int numRBodies = 0;   //用来统计当前 cluster 里有多少个刚体，并作为编号的起点。
+
+	// “从当前 cluster 的刚体集合里，拿一个只读的起始迭代器 it”
 	RBDRigidBodyPtrSet::const_iterator it = getRigidBodies().begin();
 
+	// 打印刚体信息的调试代码，被注释掉了 好像整个函数都没用到
 	//#ifdef RBD_DEBUG
 	//  qDebug() << "Cluster: " << this << " Größe: " << getRigidBodies().size();
 	//  for (; it != getRigidBodies().end(); ++it)
@@ -262,6 +279,8 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 	//  it = getRigidBodies().begin();
 	//#endif
 
+
+	// cluster 内的局部索引
 	for (; it != getRigidBodies().end(); ++it)
 	{
 		RBDRigidBody* rBody = *it;
@@ -270,35 +289,45 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 		++numRBodies;
 	}
 
+	// 整团刚体的全局状态向量”预分配内存
 	// The size of the state vector
 	int sizeOfProblem = 6 * numRBodies;
 
 	// Allokation des Gesamtspeedvektors
-	VSM::VectorN v_old(sizeOfProblem);
-	VSM::VectorN pos_old(sizeOfProblem);
-	VSM::VectorN mass(sizeOfProblem);
+	VSM::VectorN v_old(sizeOfProblem); // 旧速度
+	VSM::VectorN pos_old(sizeOfProblem); // 旧位置
+	VSM::VectorN mass(sizeOfProblem);	// 质量
 
 	//int numberFoundContacts = 0;
 
+	// 在当前 Cluster 里收集所有“属于本集群”的约束资源
+
+	//本帧临时表：记录本集群里已处理过的接触指针。
 	std::list<RBDContact*> allHandledContactsInCluster;
 
+	
 	// Store all the constraints of each rigid body in a list myConstraintResources.
 	for (int i = 0; i < getRigidBodies().size(); ++i)
 	{
+		// 遍历本集群里的刚体集合
 		RBDRigidBody* rBody = getRigidBodies()[i];   //for(RBDRigidBody* rBody: getRigidBodies())
 
+		//遍历该刚体挂接的“约束资源”（关节、接触、限位等）
 		const RBDConstraintResourcePtrSet& bodiesConstrRes = rBody->getConstraintResources();
 
 		for (int i = 0; i < bodiesConstrRes.size(); ++i)   //for(RBDConstraintResource* joint: )
 		{ // In Differenzialen wird derzeit nur der 0te Body gesetzt - body (1) wird immer 0 returnieren.
 			RBDConstraintResource* res = bodiesConstrRes[i];
 
+			// 跳过禁用的约束
 			if (res->getDisabled())
 				continue;
-
+				
+			// 跳过没有挂接刚体0的约束
 			if (!res->body(0))
 				continue;
 
+			// 只有当约束两端的“非固定刚体”都属于当前这个 Cluster 时，才纳入本集群的装配。
 			// Check whether body 0 and body 1 of the constraints are both in this cluster
 			if (!res->body(0, true)->isFix() && res->body(0, true)->getCluster() != this)
 				continue;
@@ -306,8 +335,10 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 			if (res->body(1, true) && !res->body(1, true)->isFix() && res->body(1, true)->getCluster() != this)
 				continue;
 
+			// 把这个约束资源加入本集群的总表。
 			myConstraintResources.add(res);
 
+			// 如果这个约束资源是一个接触，就要做额外的处理, 防止被重复添加
 			RBDContact* contact = res->dynamicCast<RBDContact*>();
 			if (contact)
 			{
@@ -317,13 +348,17 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 				//++numberFoundContacts;
 				contact->setHandled(true);
 
-				allHandledContactsInCluster.push_back(contact);
+				allHandledContactsInCluster.push_back(contact);  // 这个就用到了 306行定义的本帧临时表
 			}
 		}
 	}
 
+	// 记录雅可比矩阵 𝐽的“行数”（也就是约束变量的总数 = 等式约束数 + 互补/不等式约束数）
+	// 可能在之前老的实现中涉及了用这个变量分配内存，但现在已经不需要了。
 	//   mySizeOfJacobean = numberEqualityConstraints + numberComplementaryConstraints;
 
+	// 这里我存在一定的疑惑 ，下一个时间帧不一定是接触的了吧？
+	// 这里是对于之前的接触登记表进行复位的，防止影响下一帧的计算，至于为什么去掉，可能在别的地方被包含了，我没有找到？？
 	   //// Reset handled-flag in contacts
 	   //for (std::list<RBDContact*>::const_iterator it = allHandledContactsInCluster.begin(); it != allHandledContactsInCluster.end(); ++it)
 	   //{
@@ -331,45 +366,56 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 	   //}
 
 	PERFORMANCESUITE_TOC("810 RBDCluster, Collect constraints");
-	PERFORMANCESUITE_TIC("820 RBDCluster, Build J");
-	PERFORMANCESUITE_TIC("821 J, add eq. constr.");
+	// 给性能打点分段计时
+	PERFORMANCESUITE_TIC("820 RBDCluster, Build J"); // 820 构建雅可比 J”的总耗时
+	PERFORMANCESUITE_TIC("821 J, add eq. constr.");  // 821 向 J 添加等式约束”的耗时
 
 	/* Now start to calculate J,lambdaLow,lambdaHigh,addFriction,constraintsRightSide
 	   -lambdaLow,lambdaHigh: limits of lambda
 	   -constraintsRightSide: baumgarte term
 	   -First calculate with equality constraints, then with complementarity constraints
 	*/
-	VSLibRBDynMath::RBMJacobeanMatrix J;
-	VSM::VectorNDynamic constraintsRightSide(0.0);
-	VSM::VectorNDynamic lambdaLow(-VSM::maxDouble);
-	VSM::VectorNDynamic lambdaHigh(VSM::maxDouble);
-	VSM::VectorNDynamic addFriction(0.0);
-	VSM::VectorNDynamicTemplate<int> frictionNormalIndices(-1);
-	VSM::VectorN v_new(sizeOfProblem);
 
-	int numberEqualityConstraints = 0;
-	int numberComplementaryConstraints = 0;
-	int numberFrictionConstraints = 0;
+	// 进入装配阶段前，把“约束求解需要的所有容器与计数器”初始化好
+	VSLibRBDynMath::RBMJacobeanMatrix J;  // 雅可比矩阵 J
+	VSM::VectorNDynamic constraintsRightSide(0.0);  // 约束右端项（等式约束的 Baumgarte 项）
+	VSM::VectorNDynamic lambdaLow(-VSM::maxDouble);  // λ 的下界
+	VSM::VectorNDynamic lambdaHigh(VSM::maxDouble);	// λ 的上界
+	VSM::VectorNDynamic addFriction(0.0);  // 摩擦相关的附加项占位
+	VSM::VectorNDynamicTemplate<int> frictionNormalIndices(-1); // 摩擦相关的法向量索引	
+	VSM::VectorN v_new(sizeOfProblem); // 新速度
+
+	int numberEqualityConstraints = 0;  // 统计等式约束的行数（关节约束、锁定等）
+	int numberComplementaryConstraints = 0; // 统计互补约束的行数（接触、摩擦等）
+	int numberFrictionConstraints = 0;   // 统计摩擦的“附加约束”产生的额外行数。
+	
+	// 用于误差统计
 	int numberEqConstraintsForPoseCorrection = 0; // velocity based motor with unlimited force is not considered.
 
-	int currentRow = 0;
-	constraintError = 0;
+	int currentRow = 0;  // 当前正在装配的约束行号，J 的每一行对应一条约束
+	constraintError = 0; // 本帧约束误差累加器，用于计算均方根误差
 
 	// First run the joints and add the equality constraints to the system
+	// 首先处理关节等约束，把等式约束装配进系统
 	for (RBDConstraintResource* constraintRes : myConstraintResources)
 	{
+		// 1) 告诉这个约束：你的等式约束从全局J的哪一行开始
 		constraintRes->setEqualityConstraintsOffset(currentRow);
 
+		// 2) 让它把自己的等式约束写进系统
 		int number = constraintRes->addEqualityConstraintsToSystem(
 			J,
 			constraintsRightSide,
 			delta_t,
 			currentRow);
 
-		currentRow += number;
-		numberEqualityConstraints += number;
+		// 3) 写完后推进“行光标”和计数器	
+		currentRow += number;  // // 下一条约束该从哪一行写
+		numberEqualityConstraints += number;  // 统计等式约束的总行数
+		// 位姿修正（Pose Correction） 做误差的均方根（RMSE）归一化
 		numberEqConstraintsForPoseCorrection += constraintRes->getNumberEqConstraintsForPoseCorrection();
 
+		// 4) 误差统计（平方和，稍后会做均方根）
 		// calculate the square sum of constraint error for this cluster at this time point
 		constraintError += constraintRes->getConstraintError();
 	}
