@@ -4,8 +4,17 @@ date: 2025-09-06
 excerpt: "VEROSIM中特定场景的Extension伐木车RollingOver判定。"
 layout: note
 ---
+> tips: 关键点在于:FaellerVorrueckeFahrzeug -> childNodes -> Physical System -> childNodes -> FaellerVorrueckeFahrzeug (RBD) -> childNodes -> Interconnections (RBD - RBD) -> childNodes -> **HingeJoint: Motorwagen_RBD <--> Mittelgelenk_RBD** -> extension -> JointHinge: Motorwagen_RBD <--> Mittelgelenk_RBD   set isLocked
 
 
+HingeJoint（铰链）：两刚体之间本来有 6 个相对自由度（DoF）。铰链会约束 5 个（3 个平移 + 2 个旋转），只留下 1 个旋转自由度，就是“绕铰轴转动”。
+
+把铰链设为 Locked：把最后这 1 个旋转自由度也禁掉 → 变成 Fixed/Weld Joint（刚性焊接） 的效果。两边不能再发生任何相对运动。
+
+
+通过断点调试，问题没有出现在代码里，就是因为一设 isLocked 引擎就会把原来的 Hinge 销毁并换成 Fixed/锁死版本，从而重建了刚体的 constraint 列表，形成了一个union。这个和你树里的关节矛盾，所以直接报错。你手里的旧容器/旧指针还在被迭代 → 元素越界/悬空；
+
+我之前的用轮子判断是不崩溃的？？？？？？
 
 # 1. 静态稳定判据的力学基础（为什么用“COM 投影 ∈ 支撑域”）
 
