@@ -14,7 +14,22 @@ HingeJoint（铰链）：两刚体之间本来有 6 个相对自由度（DoF）�
 
 通过断点调试，问题没有出现在代码里，就是因为一设 isLocked 引擎就会把原来的 Hinge 销毁并换成 Fixed/锁死版本，从而重建了刚体的 constraint 列表，形成了一个union。这个和你树里的关节矛盾，所以直接报错。你手里的旧容器/旧指针还在被迭代 → 元素越界/悬空；
 
-我之前的用轮子判断是不崩溃的？？？？？？
+我之前的用轮子判断也是崩溃的
+所以判断是因为树里面的刚体和isLocked之后不符合
+
+![alt text](image.png)
+
+崩溃不是在你的 ExtensionCheckRollover 里，而是发生在 VSPluginRBDynamXD.dll 里的一个别的扩展——名字就写在栈上：
+```
+VSPluginRBDynamX::ExtensionGetCOG::slotPostDynamXInitialized(...)
+→ VSPluginRBDynamX::ExtensionGetCOG::getTotalCOGofConnectedRB(...)
+→ VSPluginRBDynamX::ExtensionRigidBody::getCOG(...)
+→ VSLibRBDynamX::Ptr<...>::operator T*()   // 这里炸，this = 0x850
+
+```
+一旦把关节设为 isLocked，引擎会把 Hinge 换成 Fixed/焊接，重建约束容器；凡是还拿着旧容器/旧元素去遍历的代码，都会在 Ptr::operator T*() 这种地方爆。
+
+问题出现在外部ExtensionRigidBody::getCOG()，在ExtensionCheckRollover中的算的COG没有走到这一步呢。
 
 # 1. 静态稳定判据的力学基础（为什么用“COM 投影 ∈ 支撑域”）
 
