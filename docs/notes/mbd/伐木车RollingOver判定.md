@@ -31,6 +31,18 @@ VSPluginRBDynamX::ExtensionGetCOG::slotPostDynamXInitialized(...)
 
 问题出现在外部ExtensionRigidBody::getCOG()，在ExtensionCheckRollover中的算的COG没有走到这一步呢。
 
+定位问题：为什么一点isLocked就不进入我的代码的地方了。
+
+
+
+9.22
+定位形成一个union后，39个刚体变成38个了。
+
+Union 刚体，而 Union 是场景临时生成的聚合节点，没有对应的 ExtensionRigidBody
+
+
+[COG] ext=null for "Union_(Motorwagen_RBDRB_Motorwagen_(++)+Mittelgelenk_RBDRB_Mittelgelenk_(+))"
+
 # 1. 静态稳定判据的力学基础（为什么用“COM 投影 ∈ 支撑域”）
 
 * 车辆受到重力 $\mathbf{W}=m\mathbf{g}$。在**准静态**（或低速、加速度很小）下，支撑面（地面）上的接触力合力 $\mathbf{R}$ 会抵消重力：$\mathbf{R}+\mathbf{W}=\mathbf{0}$。
