@@ -214,7 +214,7 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 
 - [ ] Multicore相关代码
 - [ ] 评估实现相关代码的工作量
-- [ ] RBDClusterLagrangeMultipliers代码细节
+- [x] RBDClusterLagrangeMultipliers代码细节
 - [ ] openMP test
 - [ ] 伐木车union
 - [ ] PPT + 论文
