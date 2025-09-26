@@ -5,7 +5,7 @@ excerpt: "阶段性总结汇总，PPT草稿，演讲搞"
 layout: note
 ---
 
-## 2. 背景（Background）
+## 2. NCP -> QP
 
 在三维欧氏空间中描述刚体 $j$ 的位置与姿态的**广义坐标**分别为 $\mathbf{r}_j \in \mathbb{R}^3$ 与 $\boldsymbol{\varepsilon}_j \in \mathbb{R}^4$。前者给出刚体 $j$ 质心的绝对位置，后者为一组**欧拉参数（四元数）**，用于在全局参考系下表征刚体的取向。由 $n_b$ 个刚体组成的系统，其广义坐标集合写作
 
