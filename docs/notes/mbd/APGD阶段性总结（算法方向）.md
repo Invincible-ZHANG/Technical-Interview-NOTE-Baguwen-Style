@@ -108,30 +108,29 @@ $$
 
 其中乘子 $\hat\gamma_{i,n}\ge 0,\ \hat\gamma_{i,u},\ \hat\gamma_{i,w}$ 表示各方向上的力幅值。摩擦力假设满足**库仑干摩擦模型**可写为
 
+> 圆锥约束（不等式）
+> 
 > 互补条件（粘—滑切换）
 > 
 > 方向对齐（反向做功）
 $$
+\begin{equation}
+\sqrt{\hat\gamma_{i,u}^{\,2}+\hat\gamma_{i,w}^{\,2}}\le \mu_i\,\hat\gamma_{i,n}\qquad
+
 \|\mathbf v_{i,T}\|\!
 \left(\sqrt{\hat\gamma_{i,u}^{\,2}+\hat\gamma_{i,w}^{\,2}}-\mu_i\,\hat\gamma_{i,n}\right)=0,\qquad
 \left\langle \mathbf F_{i,T},\,\mathbf v_{i,T}\right\rangle=-\|\mathbf F_{i,T}\|\,\|\mathbf v_{i,T}\|,
-\tag{1}
+\end{equation}
 $$
-
-并满足
-> 圆锥约束（不等式）
-$$
-\sqrt{\hat\gamma_{i,u}^{\,2}+\hat\gamma_{i,w}^{\,2}}\le \mu_i\,\hat\gamma_{i,n}.
-$$
-
 
 其中 $\mathbf v_{i,T}$ 为在接触点处刚体 $A$ 与 $B$ 的**相对切向速度**。以上方程是如下**优化问题**的一阶 Karush–Kuhn–Tucker（KKT）**最优性条件**，该优化问题在两个虚变量 $y,z\in\mathbb R$ 上定义：
 
 $$
+\begin{equation}
 \big(\hat\gamma_{i,u},\hat\gamma_{i,w}\big)
 =\operatorname*{arg\,min}_{\sqrt{y^{2}+z^{2}}\le \mu_i\,\hat\gamma_{i,n}}
-\ \mathbf v_{i,T}^{\top}\big(y\,\mathbf u_i+z\,\mathbf w_i\big).
-
+\ \mathbf v_{i,T}^{\top}\big(y\,\mathbf u_i+z\,\mathbf w_i\big)
+\end{equation}
 $$
 
 第 $i$ 个接触点的合力记为 $\mathbf F_i=\mathbf F_{i,N}+\mathbf F_{i,T}$，并满足
@@ -144,5 +143,6 @@ $$
 
 并以接触点为锥尖、$\mathbf n_i$ 为锥轴方向。
 
----
+下面展示：从公式（1）推导到公式（2）的过程
+
 
