@@ -215,10 +215,20 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 - [ ] Multicore相关代码
 - [ ] 评估实现相关代码的工作量
 - [x] RBDClusterLagrangeMultipliers代码细节
-- [ ] openMP test
-- [ ] 伐木车union
+- [x] openMP test
+- [x] 伐木车union
 - [ ] PPT + 论文
-- [ ] APGD收尾
+
+
+
+## [Week 21](./MA_WP_CH/WP21.md)   Time:29.09.2025 - 03.10.2025
+
+- [ ] Multicore相关代码
+- [ ] 评估实现相关代码的工作量
+- [x] openMP 线程问题
+- [ ] 精简求解器
+- [ ] PPT + 论文（直接把论文开始打）
+
 
 ## 毕业论文草稿
 
