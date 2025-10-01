@@ -146,3 +146,182 @@ $$
 下面展示：从公式（1）推导到公式（2）的过程
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ppt draft:
+
+
+下面这三页内容，按“PPT一页=一句话主旨+关键公式”来写；末尾给一段中文演讲稿（2–3 分钟）。你可以把“公式区”直接粘进 PPT 的公式框（已用 Markdown+LaTeX）。
+
+---
+
+# Page 1：DVI 接触-摩擦的最小耗散与KKT条件（SOCCP）
+
+**要点（放标题/要点区）**
+
+* 非光滑动力学（DVI）把接触-摩擦写成二阶锥互补问题（SOCCP）。
+* 法向互补 + 切向“最大耗散”投影 ⇒ 统一成一个变分不等式/锥约束。
+
+**公式区（直接粘贴）**
+
+法向互补（不穿透）
+[
+0 \le \hat\gamma_{i,n}\ \perp\ \Phi_i(q)\ge 0
+]
+
+库仑圆锥（切向乘子受法向支撑并被锥约束）
+[
+\sqrt{\hat\gamma_{i,u}^2+\hat\gamma_{i,w}^2};\le;\mu_i,\hat\gamma_{i,n}
+]
+
+最大耗散（切向沿相对切向速度的反方向，等价于在锥上做一次最小化）
+[
+(\hat\gamma_{i,u},\hat\gamma_{i,w})
+=\arg\min_{\sqrt{y^2+z^2}\le \mu_i\hat\gamma_{i,n}}
+; v_{i,T}^{!\top},(y,\mathbf u_i+z,\mathbf w_i)
+\tag{1}
+]
+
+接触点合力（位于以 (\mathbf n_i) 为轴、坡度 (\mu_i) 的摩擦圆锥 (\mathcal T_i) 内）
+[
+\mathbf F_i=\hat\gamma_{i,n},\mathbf n_i+\hat\gamma_{i,u},\mathbf u_i+\hat\gamma_{i,w},\mathbf w_i
+\in \mathcal T_i=
+\Bigl{,[x,y,z]^{!\top}:\ \sqrt{y^2+z^2}\le \mu_i x,\Bigr}
+]
+
+> 讲法提示：把((1))理解成“把切向分量往速度的反方向投影到摩擦圆锥边界上”，就是“最大耗散原理”的离散版本。
+
+---
+
+# Page 2：系统方程（牛顿-欧拉 + 约束冲量）
+
+**要点（放标题/要点区）**
+
+* 广义速度为每刚体的 twist（线速度+角速度）。
+* 外力 + 约束冲量的“生成子”叠加进入动力学方程。
+
+**公式区（直接粘贴）**
+
+状态-速度映射
+[
+\dot{\mathbf q}= \mathbf L(\mathbf q),\mathbf v
+]
+
+动力学（Stewart–Trinkle 形式）
+[
+\mathbf M,\dot{\mathbf v}
+=\mathbf f(t,\mathbf q,\mathbf v)
++\sum_{i\in\mathcal A(\mathbf q,\delta)}
+\Bigl(\hat\gamma_{i,n}\mathbf D_{i,n}
++\hat\gamma_{i,u}\mathbf D_{i,u}
++\hat\gamma_{i,w}\mathbf D_{i,w}\Bigr)
+\tag{2}
+]
+
+其中，(\mathbf D_i=[\mathbf D_{i,n},\mathbf D_{i,u},\mathbf D_{i,w}]\in\mathbb R^{6n_b\times 3}) 是接触 i 的**切空间生成子**（把接触方向映到各刚体的广义力上）。对一对接触体 (A,B) 与接触点相对位置 (\mathbf s_{i,A},\mathbf s_{i,B})，在世界系单位向量 (\mathbf d\in{\mathbf n_i,\mathbf u_i,\mathbf w_i}) 下，块结构可写成（更易做PPT图示）：
+[
+\mathbf D_i^{!\top}(\mathbf d)=
+\begin{bmatrix}
+\vdots[2pt]
+\underbrace{\begin{matrix}
+\mathbf d\
+\mathbf s_{i,A}\times \mathbf d
+\end{matrix}}*{\text{作用在 }A}
+[8pt]
+\underbrace{\begin{matrix}
+-\mathbf d\
+-\mathbf s*{i,B}\times \mathbf d
+\end{matrix}}_{\text{作用在 }B}
+[2pt]
+\vdots
+\end{bmatrix}
+\tag{3}
+]
+
+配合 Page 1 的锥约束/最小化条件，就得到一个标准的 **DVI→SOCCP** 问题在每个时间步上的离散形式。
+
+---
+
+# Page 3：参数化与变量选择（四元数 + twist）
+
+**要点（放标题/要点区）**
+
+* 广义坐标：每体位置 (\mathbf r_B) + 姿态四元数 (\boldsymbol\epsilon_B)。
+* 选择 twist (\mathbf v=[\dot{\mathbf r}^\top,\ \boldsymbol\omega^\top]^\top) 作为速度变量，可得到常对称正定的质量矩阵 (\mathbf M) 与更小的状态维度。
+
+**公式区（直接粘贴）**
+
+广义坐标堆叠
+[
+\mathbf q=\bigl[\mathbf r_1^{!\top},\ \boldsymbol\epsilon_1^{!\top},\ \ldots,\
+\mathbf r_{n_b}^{!\top},\ \boldsymbol\epsilon_{n_b}^{!\top}\bigr]^{!\top}\in\mathbb R^{7n_b}
+]
+
+广义速度（twist 堆叠）
+[
+\mathbf v=\bigl[\dot{\mathbf r}*1^{!\top},\ \boldsymbol\omega_1^{!\top},\ \ldots,\
+\dot{\mathbf r}*{n_b}^{!\top},\ \boldsymbol\omega_{n_b}^{!\top}\bigr]^{!\top}\in\mathbb R^{6n_b}
+]
+
+四元数与角速度关系（每体 (B)）
+[
+\boldsymbol\omega_B = 2,\mathbf G(\boldsymbol\epsilon_B),\dot{\boldsymbol\epsilon}_B
+\quad\Longrightarrow\quad
+\dot{\boldsymbol\epsilon}_B = \tfrac12,\mathbf G(\boldsymbol\epsilon_B)^{!\top}\boldsymbol\omega_B
+]
+
+于是
+[
+\dot{\mathbf q}=\mathbf L(\mathbf q),\mathbf v,\qquad
+\mathbf L(\mathbf q)=\mathrm{blkdiag}\bigl(\mathbf I_{3\times3},\ \tfrac12\mathbf G(\boldsymbol\epsilon_1)^{!\top},\ldots,
+\mathbf I_{3\times3},\ \tfrac12\mathbf G(\boldsymbol\epsilon_{n_b})^{!\top}\bigr).
+\tag{4}
+]
+
+---
+
+## 演讲稿（中文，2–3 分钟）
+
+各位好，这一页我们把 DVI（Differential Variational Inequality）框架下的接触与摩擦，压缩成一个“二阶锥互补问题”。直觉是：法向不穿透，对应“非负间隙-非负法向力-互补”；切向服从库仑摩擦，对应“切向合力落在以法向为轴的圆锥里”。**最大耗散原理**告诉我们——在所有满足摩擦锥的切向力里，真正发生的那个，会让功率 (v_T^\top F_T) 最小，也就是与相对切向速度尽可能“对着干”。把这件事写成式子，就是我们第一页的式(1)：在半径 (\mu \hat\gamma_n) 的圆盘上做一个很小的凸优化。
+
+第二页我们回到全系统：广义速度我们选 twist（每个刚体的线速度和角速度），写成 (\dot q=L(q)v)。动力学里，除了常规外力，我们把每个接触的“冲量生成子” (\mathbf D_{i,\cdot}) 乘上对应的乘子 (\hat\gamma) 相加进来，就得到式(2)。(\mathbf D_i) 的结构很容易记：对 A 号刚体是 ([\mathbf d;\ s_A\times\mathbf d])，对 B 号刚体取相反号——这反映了动量守恒和力-偶矩的平衡。这样做的好处是，我们可以在同一套形式里，把双边约束、单边接触、以及摩擦都统一起来。
+
+第三页我们解释为什么用四元数+twist。四元数避免奇异，twist 让质量矩阵 (\mathbf M) 是常对称正定的块结构，方便矩阵-向量乘和并行化。通过 (\omega=2G(\epsilon)\dot\epsilon) 的关系，我们得到 (\dot q=L(q)v) 的块对角映射式(4)，这让积分器和约束求解器都能在“速度层”工作，从而自然落在“DVI→SOCCP”的离散时间步求解流程上。
+
+落地实现时，你可以把“每一帧的 (\hat\gamma)”看作在摩擦锥+盒约束上的一次**投影梯度**求解；矩阵部分只需要用 (\mathbf J\mathbf M^{-1}\mathbf J^\top) 的乘算子，不必显式装配整块矩阵，这就非常适合大规模并行（见你项目里的 APGD / matrix-free 设计思路）。接下来可以接入你的 APGD/FISTA 求解器与 Chrono/VEROSIM 的 Jacobian 生成器，实现端到端的 DVI 仿真管线。
