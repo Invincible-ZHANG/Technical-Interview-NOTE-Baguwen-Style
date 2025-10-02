@@ -364,6 +364,8 @@ DynamXStateDerivative* RBDScene::calculateDerivative(DynamXState* currentState, 
    //   myRootRigidBodies[i]->initNewCycle();
    //}
 
+   // 给可变质量刚体（比如“带喷口的火箭”）算并施加“喷射反推力（thrust）”的外力/外矩
+   // 适用于某些特殊场景
    for (RBDRigidBodyPtrSet::iterator it = myRootRigidBodies.begin(); it != myRootRigidBodies.end(); it++)
    {
       // Check if current RB is a variable mass body
@@ -405,10 +407,12 @@ DynamXStateDerivative* RBDScene::calculateDerivative(DynamXState* currentState, 
       }
    }
 
+   // 认为的大括号只是为了计时？？？ 但是被注释掉了
    {
       //VSL_PERFORMANCE_MEASUREMENT_CHILD_BLOCK(QStringList() << __FUNCTION__ << "Collision detection");
       //static long long totaltime = 0;
       //auto start = std::chrono::high_resolution_clock::now();
+      // 碰撞检测阶段
       myNumberFoundContacts = doCollisionDetection(dt, newTime);
       //auto end = std::chrono::high_resolution_clock::now();
       //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -416,41 +420,55 @@ DynamXStateDerivative* RBDScene::calculateDerivative(DynamXState* currentState, 
       //qDebug() << "CD Time: " << totaltime << " µs" ;
    }
 
+   // 从当前碰撞检测算法实例拉取这帧的接触列表（常是 QList<RBDContact*> 或自家容器）。
    myFoundContacts = myCDAlgorithm->getContacts();
 
    /*emit signalCollisionDetectionReady();*/
 
+   // 若开启了碰撞事件广播开关 myGenerateCollisionSignals，并且算法对象存在，
+   // 就根据这帧的接触结果生成并发出更细粒度的事件
    if (myGenerateCollisionSignals && myCDAlgorithm)
       generateCollisionSignals(myCDAlgorithm->getContacts(), myNumberFoundContacts);
 
+   // Update pre-inverse dynamics for all constraint resources (e.g. calculate jacobians)
    DXForAllDirectChildren(RBDConstraintResource*, res, this)
    {
       res->updatePreInverseDynamics(dt, newTime);
    }
 
+   // Calculate distances to main actors for all rigid bodies
+   // 决定是否要从“主角”刚体（myMainActors）出发做图距离计算
    if (calcPathDistancesToMainActors())
    {
+      //把全局/节点的“图算法运行状态”清零（visited/距离/父指针等），BFS/DFS/Dijkstra 开新局。
       initNewGraphAlgoRun();
-
+      // 从每个主角刚体出发做图距离计算
       foreach(RBDRigidBody * mainActor, myMainActors)
       {
+         // 计算图距离（跳数、路径长度等），结果写回各刚体的成员变量
          QList<VSLibRBDynamX::RBDRigidBody*> list = mainActor->bsCalculateDistances(Edge::SameCluster, Edge::SameCluster, false, false);
+         
          foreach(VSLibRBDynamX::RBDRigidBody * b, list) b->initNewGraphAlgorithmRun();
       }
    }
 
+   // 确定堆叠中的高度
    // Bestimmung der Höhe in einem Stapel
    doStackHeightComputation();
 
+   // 按连通关系（关节/接触/锁定）把刚体分成若干 cluster。
    // Add the rigid bodies to the cluster list.
    doClustering();
 
    //VSL_PERFORMANCE_MEASUREMENT_CHILD_BLOCK(QStringList() << __FUNCTION__ << "Inverse dynamics");
 
+   // 逆动力学/约束求解阶段，调用积分器
    // Use LCP solver to calculate the lambda and velocity
    doInverseDynamics(dt, newTime);
 
    // Reset the clusters
+   // 求解完立刻销毁本帧构建的簇。
+   // 因为下一帧接触/连通关系可能完全变了（物体分离/新接触），每帧重建更稳妥；也避免持有过期指针（接触、关节对象的生灭）。
    foreach(RBDCluster * cluster, myClusters)
    {
       delete cluster;
@@ -458,6 +476,8 @@ DynamXStateDerivative* RBDScene::calculateDerivative(DynamXState* currentState, 
    myClusters.clear();
 
    // Rücksetzen der Kontakte (Stack, nicht Heap!):
+   // 这段是在为下一帧清场
+   // 下一帧碰撞检测前，把上一帧的接触标记为“未处理”，并启用它们（有些可能被关节锁死了）。
    if (myCDAlgorithm)
    {
       for (int i = 0; i < myNumberFoundContacts; ++i)
@@ -468,6 +488,8 @@ DynamXStateDerivative* RBDScene::calculateDerivative(DynamXState* currentState, 
    }
 
    //get values from the root rigid bodies to calculate the derivative
+   // 把刚体的当前状态（位置/姿态、线/角速度、质量、惯量等）与“导数容器”对齐
+   // 以便积分器能算出正确的导数（加速度、广义速度增量等）
    for (RBDRigidBodyPtrSet::iterator it = myRootRigidBodies.begin(); it != myRootRigidBodies.end(); it++)
    {
       unsigned int currentID = (*it)->getRigidBodyID();
