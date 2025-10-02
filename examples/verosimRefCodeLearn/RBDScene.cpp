@@ -324,23 +324,36 @@ void RBDScene::generateCollisionSignals(RBDContact** contacts, int count)
    myCollisionPairsSentLastCycle = pairsSentThisCycle;
 }
 
+// 被委托/转发函数：积分器基类不自己算导数，而是把活儿交给场景 RBDScene 去算
+// 来自IntegrationAlgorithmBase::calculateDerivative这个基类实现的转发函数
 DynamXStateDerivative* RBDScene::calculateDerivative(DynamXState* currentState, double dt, double newTime)
 {
+   // 新建“状态导数/增量”的容器（加速度、广义速度增量、等式/不等式约束残差等最终都会写进它）。
+   // 本行只是分配，还没填内容。
    DynamXStateDerivative* currentDerivative = new DynamXStateDerivative();
 
+   // 让每个刚体开启“一帧的新循环”：清外力/外矩累加、清上一帧标志/缓存（比如接触“已处理”标记）、准备本帧暂存区。
+   // 确保导数计算用的是干净基线。
    for (int i = 0; i < (int)myRootRigidBodies.size(); ++i)
    {
       myRootRigidBodies[i]->initNewCycle();
    }
 
+   // 把 currentState 里的 q、v（位置/姿态、线/角速度）反写到刚体对象。
+   // 这一步把“状态快照”与“场景里的实体刚体”对齐，后续所有基于刚体的计算才有统一基准。
    // get current simulation state at the beginning of every simulation step
    currentState->setCurrentStateToPtrList(myRootRigidBodies);
 
+   // 用当前速度做一次位姿预测
    doBodiesPositionUpdate(dt);
+   // 更新所有约束资源（接触、关节、限位等）
    doConstraintResourcesUpdate(dt, newTime, false);
 
+   // Qt 信号：告诉外部“导数计算开始了”（UI、记录器、插件可据此挂钩）。
    emit signalPreDerivativeCalculation(dt);
 
+   // 若外部改了刚体的碰撞形状、质量、所属“碰撞分组”等，把 BodyConfigDirty 置位
+   // 统一重新分配/更新刚体的 colliderGroup、联合体等资源，保证这一帧前配置一致。
    if (getFlag(RBDScene::BodyConfigDirty))
    {
       slotDoConfigUpdate();
@@ -534,22 +547,28 @@ void RBDScene::simulate(
    //VSL_PERFORMANCE_MEASUREMENT_ROOT_BLOCK(QStringList() << __FUNCTION__);
    //VSL_PERFOMANCE_MEASUREMENT_OUTPUT(100);
 
+   //时间步长 和 绝对时间戳 存到场景成员里，方便其他子系统（日志/回调/可视化）查询。
    myCurrentDt = delta_t;
    myCurrentNewTime = newTime;
 
+   // Qt 信号：告诉外部“这一帧的仿真开始了”（UI、记录器、插件可据此挂钩）。
    emit beginSimulateFunction();
 
    // get current simulation state at the beginning of every simulation step
    //currentSimulationState->setCurrentStateToPtrList(myRootRigidBodies);
+   // 把散落在各个 RBDRigidBody 里的 q/v 打包成一个大状态向量，供积分器使用
    currentSimulationState->updateCurrentStateFromPtrList(myRootRigidBodies);
    //currentSimulationState->qDebugDynamXState();
 
+   // 若外部改了刚体的碰撞形状、质量、所属“碰撞分组”等，把 BodyConfigDirty 置位
+   // 统一重新分配/更新刚体的 colliderGroup、联合体等资源，保证这一帧前配置一致。
    // When BodyConfigDirty is set, the rigid body's union and colliderGroup are reallocated in the simulate function.
    if (getFlag(RBDScene::BodyConfigDirty))
    {
       slotDoConfigUpdate();
    }
 
+   // 帧内初始化（清累计量、统计器、缓冲等）
    for (int i = 0; i < (int)myRootRigidBodies.size(); ++i)
    {
       myRootRigidBodies[i]->initNewCycle();
@@ -558,12 +577,17 @@ void RBDScene::simulate(
    //myNumberFoundContacts = doCollisionDetection(delta_t, newTime);
    //myFoundContacts = myCDBroadPhaseAlgorithm->myContacts;
 
+   // Qt 信号：告诉外部“碰撞检测算好了”（UI、记录器、插件   
    emit signalCollisionDetectionReady();
 
+   // 自适应步长控制（可选）
+   // 这里是预留的“自适应步长控制”入口（目前被硬编码为 false 未启用）。
    // check if adaptive stepwidth control should be used
    if (false)
       delta_t = myIntegrationAlgorithmStepWidthControl->adjustStepsize(currentSimulationState);
 
+   // 被注释的）基于约束误差的粗略 dt 调整
+   // 应该是自适应步长失败，所以这部分暂且就没开启了。
    //if (constraintError > 5e-4)
    //{
    //   timeStepFactor /= 2;
@@ -577,17 +601,23 @@ void RBDScene::simulate(
    //   timeStepFactor = qMin(timeStepFactor, 0.1);
    //}
 
+   // 调用积分器做“状态推进”
+   // 
    // calculate new state, based on integration algorithm
    DynamXState* newState = integrationAlgorithm->performeIntegrationStep(currentSimulationState, delta_t, newTime);
 
+   // 用新状态写回刚体对象
    currentSimulationState = newState;
    currentSimulationState->setCurrentStateToPtrList(myRootRigidBodies);
 
+   // 统一做位姿（位置/姿态）更新，积分位置
    doBodiesPositionUpdate(delta_t);
 
+   // 更新所有约束资源（接触、关节、限位等）
    // Standardlösung - schön aber langsam? --> Lauf über ALLE Kontakt instanzen, ob in use oder nicht!
    doConstraintResourcesUpdate(delta_t, newTime, true);
 
+   // 结束信号
    emit endSimulateFunction();
 }
 

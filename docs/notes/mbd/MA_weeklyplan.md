@@ -228,7 +228,7 @@ excerpt: 关于毕业设计每周任务同步以及在实现过程中的想法�
 - [ ] openMP 线程问题
 - [ ] 精简求解器
 - [x] 看调用逻辑 save -> simulate -> performeIntegrationStep -> calculateDerivative
-- [ ] PPT + 论文（直接把论文开始打）
+- [x] PPT + 论文（直接把论文开始打）
 
 
 ## 毕业论文草稿
