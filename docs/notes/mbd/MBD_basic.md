@@ -4,6 +4,8 @@ date: 2025-10-03
 excerpt: "系统梳理多体动力学的核心概念、基本原理及数学建模方法，为后续进阶学习与科研应用打下坚实基础。"
 layout: note
 ---
+>  请点击链接看详细笔记，版权所有。
+
 
 # 多体动力学基础
 
@@ -26,3 +28,6 @@ layout: note
 
 建模指导： [chrono 建模指导](./MBD文件/Chrono%20Source%20Code建模指导.pdf)
 
+### 求解器论文
+
+APGD学习笔记 [APGD学习](./MBD文件/APGD.pdf)
