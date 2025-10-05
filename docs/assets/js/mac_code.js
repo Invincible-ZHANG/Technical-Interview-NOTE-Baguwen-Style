@@ -1,20 +1,35 @@
-// ×Ô¶¯½« <pre><code> °ü×°Îª´øÓĞ .code-wrapper ÑùÊ½µÄÈİÆ÷£¬±£Áô Markdown ÖĞµÄÓïÑÔÀàĞÍ
+// ï¿½Ô¶ï¿½ï¿½ï¿½ <pre><code> ï¿½ï¿½×°Îªï¿½ï¿½ï¿½ï¿½ .code-wrapper ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Markdown ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("pre code").forEach((codeBlock) => {
         const pre = codeBlock.parentElement;
         if (!pre || pre.classList.contains("code-wrapper")) return;
 
-        // »ñÈ¡ÓïÑÔÃû£¨±ÈÈç language-cpp¡¢language-python£©
         const langMatch = codeBlock.className.match(/language-(\w+)/);
         const langLabel = langMatch ? langMatch[1] : "code";
 
-        // ´´½¨ Mac ·ç¸ñ wrapper
         const wrapper = document.createElement("div");
         wrapper.className = "code-wrapper";
-        wrapper.setAttribute("data-rel", langLabel);  // ÏÔÊ¾ÎÄ¼şÓïÑÔÃû£¨¿ÉÑ¡£©
+        wrapper.setAttribute("data-rel", langLabel);
 
-        // °ü×°Ìæ»»½á¹¹
+        // é¡¶æ å³ä¾§ï¼šå¤åˆ¶æŒ‰é’®
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "code-copy-btn";
+        copyBtn.type = "button";
+        copyBtn.textContent = "Copy";
+        copyBtn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(codeBlock.innerText);
+                copyBtn.textContent = "Copied";
+                setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+            } catch (e) {
+                copyBtn.textContent = "Failed";
+                setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+            }
+        });
+
+        // æ„å»ºç»“æ„ï¼šwrapper -> é¡¶æ (ä¼ªå…ƒç´ ) + æŒ‰é’® + pre
         pre.parentNode.replaceChild(wrapper, pre);
         wrapper.appendChild(pre);
+        wrapper.appendChild(copyBtn);
     });
 });
