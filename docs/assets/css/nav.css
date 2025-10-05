@@ -32,12 +32,16 @@
     font-family: 'segoe ui', 'helvetica neue', 'pingfang sc', 'microsoft yahei', arial, sans-serif;
     letter-spacing: 0.08em;
     text-decoration: none;
-    padding: 0.48em 2.1em;
+    padding: 0.48em 0; /* 内边距垂直方向，水平由固定宽度控制 */
     border-radius: 0.9em;
     background: transparent;
     transition: background .18s, color .18s, box-shadow .15s;
     box-shadow: 0 1.5px 7px #fff3, 0 1.5px 6px #d9ba4422;
-    display: block;
+    display: inline-flex; /* 水平垂直居中 */
+    align-items: center;
+    justify-content: center;
+    width: 9.2em; /* 统一宽度，确保四个按钮等宽 */
+    box-sizing: border-box;
     background: transparent;
 }
 
@@ -53,6 +57,16 @@
     /* 清掉背景与阴影 */
     background: none;
     box-shadow: none;
+}
+
+/* 下拉父项的主按钮与普通链接保持一致大小 */
+.nav-dropdown > .sticky-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 9.2em;
+    box-sizing: border-box;
+    padding: 0.48em 0;
 }
 /* 下拉菜单本体 */
 .dropdown-menu {
@@ -113,6 +127,7 @@
     .sticky-nav-link[href="/"]::before {
         content: "🏠";
         font-size: 1.1em;
+        margin-right: 0.4em;
     }
 
     /* 悬停态 */
