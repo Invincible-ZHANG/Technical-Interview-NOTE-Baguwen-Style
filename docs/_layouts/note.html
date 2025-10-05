@@ -2,9 +2,14 @@
 <html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
 <head>
 
-    <!--plausible 页面数据分析-->
-    <script defer data-domain="k1n.asia" src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"></script>
-    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+    {% if site.ga4_measurement_id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga4_measurement_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+        gtag('config', '{{ site.ga4_measurement_id }}');
+    </script>
+    {% endif %}
 
     {%- include head.html -%}
     <meta charset="utf-8">

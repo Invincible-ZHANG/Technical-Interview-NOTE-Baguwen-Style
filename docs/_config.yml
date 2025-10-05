@@ -13,3 +13,6 @@ kramdown:
     disable : true
 
 
+
+# Google Analytics 4 配置（留空则不注入脚本）
+ga4_measurement_id: G-WNZR555V1D
