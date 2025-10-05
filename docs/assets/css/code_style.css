@@ -11,6 +11,29 @@
     color: inherit; /* ✅ 不干扰 Prism 的颜色 */
 }
 
+/* 复制按钮样式与定位 */
+.code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    z-index: 3;
+    padding: 4px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #e6e6e6;
+    background: #3a3a3a;
+    border: 1px solid #555;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.code-copy-btn:hover {
+    background: #4a4a4a;
+    border-color: #777;
+    color: #fff;
+}
+
     /* 顶部文件名栏 */
     .code-wrapper::before {
         content: '';
