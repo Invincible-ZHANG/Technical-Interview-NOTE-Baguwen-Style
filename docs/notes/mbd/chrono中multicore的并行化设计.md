@@ -4,7 +4,7 @@ date: 2025-10-09
 excerpt: "chrono中multicore的并行化设计,并评估代码移植的成本。"
 layout: note
 ---
-
+![alt text](image-2.png)
 
 ## DataManager
 
