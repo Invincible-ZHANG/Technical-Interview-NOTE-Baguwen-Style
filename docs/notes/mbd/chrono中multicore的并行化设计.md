@@ -4,9 +4,12 @@ date: 2025-10-09
 excerpt: "chrono中multicore的并行化设计,并评估代码移植的成本。"
 layout: note
 ---
+
+# chrono中multicore的并行化设计
+
 ![alt text](image-2.png)
 
-## DataManager
+## 1. 集中式DataManager + SoA 大数组
 
 在整个并行化流程中，核心思想就是这个DataManager数据管理系统。
 
@@ -15,6 +18,8 @@ layout: note
 ChMulticoreDataManager 是 多核后端的总控/数据枢纽 ： 
 * 把碰撞检测、求解器、物理对象状态需要的所有大块数据，集中放在一个「结构化的数组仓库」里（host_container host_data）；
 * 再提供一些尺寸信息（num_* 族）、计时器/配置/统计、以及材质混配策略等。
+
+>Tips : 一切跨模块共享的数据（刚体/粒子状态、接触、稀疏矩阵 D/D_T/M/M_inv/M_invD、右端向量 v/hf/gamma/E 等）。
   
 核心成员是 host_container，它是“结构化数组（SoA）”——为了并行和缓存友好，每一类量都放成一大块线性数组，而不是面向对象的分散指针。
 
@@ -63,39 +68,65 @@ pos_rigid / rot_rigid / ct_force / ct_torque / gamma / E / D / D_T ... 都是大
 4) 稀疏矩阵与动态向量（Blaze）
 
 
-
-
 ChMulticoreDataManager/host_container = 多核 NSC/SMC 的“数据中台”。
 
 
 
+## 2. 稀疏算子化的 Schur 乘
+
+“Blaze”就是一个高性能的 C++ 线性代数库。（可能和VSM 数学库相似，但是有待考察）。
+
+这个问题之前就说过，在提上日程的过程中，主要是算子化，可以减小缓存，也可以为之后并行化做好准备。
+
+这部分在笔记[chrono求解器部分的结构](./chrono求解器部分的结构.md)有所提到过，核心思想
+如下：
+
+> chrono中的建模阶段是通过对不同块的矩阵进行偏移，也就是编码，然后不组装大矩阵Z，看求解器需要不，如果是直接线性求解器，类比VEROSIM中的dantzig，那么我就按照编号把大矩阵组装好，然后进行线性的求解，但是对于APGD这种迭代的求解器暂时不需要大矩阵，那么他在APGD调用相关数据时，比如N和R时，就可以根据偏移编码，读取出数据，从而进行计算，怎么编写的目的是为“既能装配、也能算子式”的通用接口层，方便不同类型求解器插拔。
 
 
+**Multicore 只是在 SoA 数据布局上把这套算子化思路进一步做了“视图化/批处理化”。**
+
+这里的“视图化”（views）指的是：不复制数据，而是用“切片视图”去引用SoA大数组里的一个连续（或规则）片段，并把这个片段当成“像独立矩阵/向量一样”的对象来操作。
+
+读写都直接作用在原数组上 + 上层拿“窗口”来用（宏定义） + 底层仍是一份大数组
+
+优点： 
+* 零拷贝 + 批处理 ： 
+把“成千上万个约束里所有的切向分量”一次性拿出来当成一个大 Submatrix/Subvector，一次循环就能做完“投影/缩放/加权”等批量操作。无需把每个约束挨个取字段、拼小数组。
+
+* 语义清晰（宏定义）： 提供了移植代码的思路 ，
+逻辑上你就写“对 T 块做摩擦盒投影，对 N 块做非负投影，对 B 块跳过投影”。代码层面体现为对 _DT_、_DN_、_EB_ 这样的“窗口对象”做运算，物理块和代码块一一对应。
+
+* 缓存/并行友好： 
+视图让你顺序地扫一整个物理块（SoA 连续内存），避免在 AoS 里“跨字段跳来跳去”。OpenMP 只要包一层 #pragma omp parallel for 就能把块内循环并起来。
+
+## 3. OpenMP 数据并行 + 线程自适应
+
+* 大头循环（清力、收集/回散状态、粒子重映射、接触建图/回填等）用 #pragma omp parallel for 做数据并行；线程数由系统侧集中管理，并提供计时窗口 + 试探/回退的动态调优（例如每 10～50 帧评估一次）。
+
+* 并行的“计算密集内核”多在装配/碰撞/数据层；**迭代内部未强绑 OMP，便于替换不同算法**（PGS/BB/CG/APGD…）。
 
 
+## 4. 模块边界清晰（碰撞 ↔ 物理 ↔ 求解器）
 
+碰撞系统在 PreProcess() 把内部 cd_data 的指针直接指向 DataManager 的外部状态数组（避免复制），Run() 后 PostProcess() 把接触/材料信息回填，再交给求解器（NSC/SMC 任选）。
 
+关于这部分我找到了相关的文献，有待查看。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+[CHRONO: a parallel multi-physics library for rigid-body, flexible-body, and fluid dynamics](https://ms.copernicus.org/articles/4/49/2013/?utm_source=chatgpt.com)
 ### ChSolverMulticoreAPGD.cpp:
 
+## 代码移植的可行性分析
+
+* 数据层（SoA & DataManager）：  把“分散在对象/容器里的状态与接触数据”下沉为一套集中式 SoA 大数组，并建立与 UI/对象世界的双向映射。
+* 碰撞系统对接
+* 约束装配（稀疏 + 视图宏）
+* 求解器并行（APGD/PGS/SIPGS 等）
+* 积分器
+（其中每部分都要做，稳定性测试和线程调试）
 
 
-
-
-
+>下面这部分来源于cursorm,考虑删除
 ### 并行总体架构（Multicore 模块）
 - **数据核心（DataManager）**: `ChMulticoreDataManager` 持有所有跨模块共享的数据数组（状态、接触、稀疏矩阵、右端项等），并集中管理定时器、设置项与统计信息。求解器、碰撞系统、系统装配均通过它共享数据，避免频繁传参与复制。
 - **时间步流水线**: `ChSystemMulticore::AdvanceDynamics()` 驱动一次完整时间步：
