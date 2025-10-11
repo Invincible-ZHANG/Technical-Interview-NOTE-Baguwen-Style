@@ -1,10 +1,26 @@
 ﻿---
-title: APGD部分草稿
+title: Master论文草稿
 date: 2025-07-28
 layout: note
 excerpt: 毕业论文APGD部分草稿草稿。:)
 ---
 
+# Implementation of an Accelerated Projected Gradient Descent Solver for Multibody Dynamics Simulation
+
+## Abstract
+
+
+中文摘要
+
+大规模多刚体非光滑动力学中的接触与摩擦求解常被表述为变分不等式或互补问题。传统的 Dantzig 与 PGS 方法在强不良条件数与高接触密度场景下容易出现收敛慢与内存压力大的问题。本文实现了一种面向多刚体仿真的加速投影梯度下降求解器，并完成与现有求解管线的集成。方法上，采用算子化的 Schur 补乘法以避免显式装配，结合 Nesterov 加速的动量策略与基于 Armijo 的回溯搜索以保证目标值单调下降，并通过盒约束裁剪与库仑摩擦圆锥投影维护可行性，同时提供跨时间步的 warm start。工程实现方面，对算子乘法与投影步骤进行数据并行化：对 J 乘与质量逆乘按“约束分块/刚体分块”进行并行划分，使用 OpenMP 实现线程级并行与线程本地工作区以避免写入冲突；对法向与切向投影进行成组批处理以降低分支与访存开销。基于上万级接触的基准测试显示，本文方法在保持物理一致性的前提下，相较 Dantzig 与 PGS 展现更稳定的收敛与更少的迭代次数；结合 warm start 与上述并行化后，实现约 1.3 至 1.6 倍的端到端加速，并因避免显式矩阵装配而降低峰值内存占用。结果表明，一阶加速与算子化并行实现对大规模非光滑动力学仿真具有良好的通用性与可扩展性。
+
+关键词： 非光滑动力学；互补问题；加速投影梯度；Armijo 回溯；摩擦圆锥；Schur 算子；算子化实现；并行计算；OpenMP；matrix free。
+
+English Abstract 
+
+Contact and friction in large-scale non-smooth multibody dynamics are often posed as variational inequalities or complementarity problems. Classical Dantzig and PGS solvers may suffer from slow convergence and memory pressure under ill-conditioned and densely contacting scenarios. We implement an Accelerated Projected Gradient Descent solver for multibody simulation and integrate it into an existing Lagrange-multiplier pipeline. The method performs matrix-free Schur complement multiplications to avoid explicit assembly, couples Nesterov-style momentum with Armijo backtracking for monotonic decrease, and enforces feasibility via box constraints and Coulomb friction-cone projection, with warm start across time steps. On the engineering side, we parallelize both operator application and projection: J times and mass-inverse times are block-partitioned by constraints and by bodies, executed with OpenMP threads and thread-local workspaces to avoid write conflicts; normal and tangential projections are processed in batches to reduce branching and memory traffic. On benchmarks with tens of thousands of contacts, the proposed approach achieves more stable convergence and fewer iterations than Dantzig and PGS while preserving physical consistency; with warm start and parallelization, it delivers about 1.3 to 1.6× end-to-end speedup and reduces peak memory by avoiding explicit matrix assembly. These results indicate that first-order acceleration and matrix-free parallel implementation are effective and scalable for large-scale non-smooth dynamics simulation.
+
+Keywords: non-smooth dynamics; complementarity; accelerated projected gradient; Armijo backtracking; friction cone; Schur operator; matrix-free; parallel computing; OpenMP.
 
 
 
