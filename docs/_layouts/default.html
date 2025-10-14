@@ -51,12 +51,28 @@
             <h1>{{ page.title }}</h1>
         </header>
         <div class="post-grid">
-            {% assign these = site.pages
-            | where: "dir", page.dir
-            | reject: "url", page.url
-            | sort: "date"
-            | reverse %}
-            {% for note in these %}
+            {% assign base_pages = site.pages | where: "dir", page.dir | reject: "url", page.url %}
+            {% assign pinned = base_pages | where_exp: "p", "p.order != nil" | sort: "order" %}
+            {% assign others = base_pages | where_exp: "p", "p.order == nil" | sort: "date" | reverse %}
+
+            {% for note in pinned %}
+            {%- assign filename = note.path | split:'/' | last -%}
+            {% unless filename == "index.html" or filename == "index.md" %}
+            <article class="post-card">
+                <h3 class="post-title">
+                    <a href="{{ note.url }}" target="_blank" rel="noopener noreferrer">
+                        {{ note.title }}
+                    </a>
+                </h3>
+                <p class="post-excerpt">
+                    {{ note.excerpt | default: note.content | truncatewords: 15 }}
+                </p>
+                <time class="post-date">🕒 {{ note.date | date: "%Y-%m-%d" }}</time>
+            </article>
+            {% endunless %}
+            {% endfor %}
+
+            {% for note in others %}
             {%- assign filename = note.path | split:'/' | last -%}
             {% unless filename == "index.html" or filename == "index.md" %}
             <article class="post-card">
@@ -80,12 +96,28 @@
             <h1>{{ page.title }}</h1>
         </header>
         <div class="post-grid">
-            {% assign these = site.pages
-            | where: "dir", page.dir
-            | reject: "url", page.url
-            | sort: "date"
-            | reverse %}
-            {% for note in these %}
+            {% assign base_pages = site.pages | where: "dir", page.dir | reject: "url", page.url %}
+            {% assign pinned = base_pages | where_exp: "p", "p.order != nil" | sort: "order" %}
+            {% assign others = base_pages | where_exp: "p", "p.order == nil" | sort: "date" | reverse %}
+
+            {% for note in pinned %}
+            {%- assign filename = note.path | split:'/' | last -%}
+            {% unless filename == "index.html" or filename == "index.md" %}
+            <article class="post-card">
+                <h3 class="post-title">
+                    <a href="{{ note.url }}" target="_blank" rel="noopener noreferrer">
+                        {{ note.title }}
+                    </a>
+                </h3>
+                <p class="post-excerpt">
+                    {{ note.excerpt | default: note.content | truncatewords: 30 }}
+                </p>
+                <time class="post-date">🕒 {{ note.date | date: "%Y-%m-%d" }}</time>
+            </article>
+            {% endunless %}
+            {% endfor %}
+
+            {% for note in others %}
             {%- assign filename = note.path | split:'/' | last -%}
             {% unless filename == "index.html" or filename == "index.md" %}
             <article class="post-card">
