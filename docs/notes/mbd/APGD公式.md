@@ -1,5 +1,5 @@
 ---
-title: APGD阶段性总结（算法方向）
+title: APGD公式
 date: 2025-09-26
 excerpt: "阶段性总结汇总，PPT草稿，演讲搞"
 layout: note
