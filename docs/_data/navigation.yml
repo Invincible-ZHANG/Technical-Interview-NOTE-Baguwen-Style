@@ -18,9 +18,11 @@
       url: /notes/travel/
     - title: AI Infra
       url: /notes/AI_Infra/
-- title: Thesis
+    - title: Linux
+      url: /notes/Linux/
+- title: MBD
   url: /notes/mbd/
-- title: Linux
-  url: /notes/Linux/
+- title: Embedded
+  url: /notes/embedded/
 
 
