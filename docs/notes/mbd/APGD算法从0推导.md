@@ -7,6 +7,8 @@ layout: note
 
 # 梯度优化算法前世今生 （最后是APGD）
 
+Author: Zhang Zijian
+
 ## Introduction
 APGD (Accelerated Projected Gradient Descent)
 
@@ -272,6 +274,113 @@ $$
 
 ## APGD
 基于Nestrov我们可以进一步的应用到我们的多体动力学仿真上，也就是把摩擦锥加进去。
+
+我们对于Nestrov的知识，已经知道他会在每次迭代走一个固定的距离，然后在所谓的中间点更新一次进度，所以我们把公式换一种形式展示：
+
+$$
+\begin{alignat}{1}
+& x_{k+1} = y_k - t_k \nabla f(y_k) \tag{16}\\
+& \theta_{k+1}\ \text{solves }\ \theta_{k+1}^2 = (1-\theta_{k+1})\,\theta_k^2 + q\,\theta_{k+1} \tag{17}\\
+& \beta_{k+1} = \frac{\theta_k(1-\theta_k)}{\theta_k^2+\theta_{k+1}} \tag{18}\\
+& y_{k+1} = x_{k+1} + \beta_{k+1}\big(x_{k+1}-x_k\big) \tag{19}
+\end{alignat}
+$$
+
+* $f:\mathbb{R}^n!\to\mathbb{R}$：目标函数，**凸且梯度 Lipschitz 连续**。
+  $|\nabla f(x)-\nabla f(y)|\le L|x-y| \quad(\text{定义 }L)$
+* $x_k$：第 (k) 次迭代的**当前点**（主变量）。
+* $y_k$：第 (k) 次迭代的**外推/加速点**（用来算梯度与下一步）。
+* $t_k>0$：**步长**（学习率）。常见两种设定：
+
+  1. 固定步长 $t_k=\tfrac{1}{L}$（已知 (L) 时）；
+  2. **Armijo 回溯**／非单调线搜索（未知 (L) 或追求更稳）。
+* $\theta_k\in(0,1]$：**动量刻度参数**。它通过 (17) 与强凸性比值 (q) 耦合，决定外推“拉多远”。
+* $\beta_{k+1}$：由 $\theta_k,\theta_{k+1}$ 计算的**外推系数**，用于形成 $y_{k+1}$（见 (18)–(19)）。
+* $q\in[0,1)$：**强凸性比值**，定义为
+  $
+  \boxed{q=\mu/L,}
+  $
+  其中 $\mu$ 是 $f$ 的强凸常数（若 $f$ 满足 $f(x)\ge f(x^\star)+\tfrac{\mu}{2}|x-x^\star|^2)$。
+
+  * **强凸情形**：已知 $\mu>0$ 时用 $q=\mu/L$；
+  * **一般凸情形**：$\mu$ 不知或为 0，**取 (q=0)**，这就是经典的 Nesterov/FISTA，加速率 (O(1/k^2))。
+* $\nabla f(y_k)$：在加速点的梯度；(16) 用它做一次普通的梯度前进；(18)–(19) 再把这步“拉长”以实现加速。
+
+现在我们已经得到了相关的公式，但是其中的强凸性比值被设定为0，虽然根据之前建模的部分，我们已经把求解方程变成了一个QP问题：
+$$
+\min_{\lambda \in \mathcal{K}} \quad f(\lambda) = \frac{1}{2} \lambda^T Z \lambda + \lambda^T d
+$$
+
+但是如$A$正定，$f$就是强凸，理论上可以用 $q=\mu/L$但在多体约束里，“强凸”往往拿不到，或拿到也不稳定，所以工程上普遍仍取$𝑞=0$。但是$A$只保证半正定（PSD），不是必然正定。
+$$
+\begin{alignat}{1}
+& x_{k+1} = \Pi_{\mathcal K}\!\big( y_k - t_k \nabla f(y_k) \big) \tag{20}\\
+& \theta_{k+1} \ \text{solves}\ \ \theta_{k+1}^2 = (1-\theta_{k+1})\,\theta_k^2 \tag{21}\\
+& \beta_{k+1} = \frac{\theta_k(1-\theta_k)}{\theta_k^2+\theta_{k+1}} \tag{22}\\
+& y_{k+1} = x_{k+1} + \beta_{k+1}\big(x_{k+1}-x_k\big) \tag{23}
+\end{alignat}
+
+$$
+
+当我们搞懂Nestrov之后，我们最优把算出的值投影到摩擦锥，说人话，就是给计算值加一个限制，只不过这个摩擦锥我们需要用到数学化表达，——这个可行域由盒约束（上下界）和摩擦锥（这部分在代码中所有体现即可）。
+
+
+现在我们的算法的原理讲完了，我们加一些工程方面的优化：
+1. Matrix Free 机制
+
+    建模阶段是通过对不同块的矩阵进行偏移，也就是编码，然后不组装大矩阵Z，看求解器需要不，如果是直接线性求解器，类比VEROSIM中的dantzig，那么我就按照编号把大矩阵组装好，然后进行线性的求解，但是对于APGD这种迭代的求解器暂时不需要大矩阵，那么他在APGD调用相关数据时，比如N和R时，就可以根据偏移编码，读取出数据，从而进行计算，怎么编写的目的是为“既能装配、也能算子式”的通用接口层，方便不同类型求解器插拔。
+
+2. 迭代步长自适应/学习率自适应
+
+    这里引入一个知识点,用**“二次上界”做合格证**。FISTA 的回溯线搜索（backtracking line-search），常把它口头叫“Lipschitz 回溯”（Lipschitz backtracking）
+    $$f(\mathbf{x})
+    \;\le\;
+    f(\mathbf{y}) \;+\; \nabla f(\mathbf{y})^{\!\top}(\mathbf{x}-\mathbf{y})
+    \;+\; \frac{L}{2}\,\lVert \mathbf{x}-\mathbf{y} \rVert^2 .$$
+
+    这段“二次上界当作合格证”的逻辑，核心是**下降引理（descent lemma）**：只要目标的梯度在局部是 $L$-Lipschitz（即“变化不太猛”），那么 $f$ 在任意点 $\mathbf{y}$ 的一阶泰勒近似再加一个二次项，就能**上界**住 $f$ 在任意点 $\mathbf{x}$ 的值。把这个上界当作“合格证”，就能做**回溯线搜索**：若用当前 $L_k$ 构造的二次上界已经比真实的 $f(\mathbf{x}_{k+1})$ 高，那这次步长 $t_k=1/L_k$ 就是安全的；否则把 $L_k$放大一点再试，直到安全为止。
+
+    % --- FISTA/Lipschitz 回溯判据（式(24)）---
+    $$f(\mathbf{x}_{k+1})
+    \;\le\;
+    f(\mathbf{y}_k) \;+\; \nabla f(\mathbf{y}_k)^{\!\top}(\mathbf{x}_{k+1}-\mathbf{y}_k)
+    \;+\; \frac{L_k}{2}\,\bigl\lVert \mathbf{x}_{k+1}-\mathbf{y}_k \bigr\rVert^2 .$$
+
+    已经在论文[A Fast Iterative Shrinkage-Thresholding Algorithm
+    for Linear Inverse Problems](./reference/2012_02_21_a_fast_iterative_shrinkage-thresholding.pdf)  证明。
+
+    所以根据这个下降引理，我们可以让步长变得更加的合理，当不满足下降引理时，说明步长太大，需要增大$L$的值来减小步长，所以我们使用$L=2L$,
+    
+    然后在本次迭代结束前，适当的缩小$L$的值来增加步长，可以适当的加速。
+    $L_{k+1} = 0.9\,L_k$，这样让收敛速度更快。
+
+
+    $L_0$的初始化值为：
+    $$
+      L_0 \;=\; \frac{\left\lVert \nabla f(\mathbf{z}_0) - \nabla f(\mathbf{z}_1) \right\rVert}
+               {\left\lVert \mathbf{z}_0 - \mathbf{z}_1 \right\rVert},
+      \qquad \mathbf{z}_0 \neq \mathbf{z}_1 .
+    $$
+    见于 FISTA/backtracking 文献与 APGD 论文注释
+
+3. 自适应重启
+   
+   全称是：Nesterov 动量的“自适应重启（Adaptive Restart），当动量方向“顶着”负梯度（也就是要往上爬 hill）时，干脆把动量清零，避免来回振荡，恢复稳定下降。这段在说 **Nesterov 动量的“自适应重启（Adaptive Restart）”**：当动量方向“顶着”负梯度（也就是要往上爬 hill）时，干脆把动量清零，避免来回振荡，恢复稳定下降。
+
+   核心判据：当
+    $\big\langle \nabla f(y_{k-1}), x_k - x_{k-1}\big\rangle > 0$
+    就**立即重启**：把动量置零$(\theta_k=1)$，并令$y_k = x_k$
+
+    含义：$(x_k-x_{k-1})$ 是“上一步的位移/动量方向”。若它与**当前梯度** $\nabla f(y_{k-1})$ 夹角小于 $90^\circ$（内积为正），说明动量方向与**负梯度**相反（即与最速下降方向“唱反调”）。此时继续用动量会“涟漪”甚至反弹，于是重启。
+
+4. Fallback
+   
+   这个就是回退机制，也就是全文中比较重要的机制，像 APGD 这种非单调迭代法，迭代中和结束时的当前解 $x_k$ 不一定是这一路里“最好”的那个。为保证输出的单调性（**至少别比历史最好还差**），就在退出时把历史上最好的一次迭代拿出来当作最终解。
+   所以需要有best的记录功能。
+
+### Overall of APGD
+综合上面所有的推导，最后的伪代码如下：
+![alt text](image-8.png)
 
 
 
