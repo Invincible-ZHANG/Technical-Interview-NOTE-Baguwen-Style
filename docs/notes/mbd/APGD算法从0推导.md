@@ -105,7 +105,7 @@ $$
 
 梯度下降更新公式
 
-选择步长（学习率）(\alpha>0)，迭代
+选择步长（学习率）($\alpha>0$)，迭代
 $$
 x^{k+1}=x^{k}-\alpha\,\nabla f(x^{k})
 $$
@@ -185,9 +185,10 @@ Momentum的想法很简单，就是多更新一部分上一次迭代的更新量
 
 动量算法的公式：
 $$
-d_i=\beta\, d_{i-1}+g(\theta_{i-1}),\qquad
-
-\theta_i=\theta_{i-1}-\alpha\, d_i
+\begin{aligned}
+d_i &= \beta\, d_{i-1}+g(\theta_{i-1}),\\
+\theta_i &= \theta_{i-1}-\alpha\, d_i
+\end{aligned}
 $$
 
 我现在知道你每次迭代都会多走$\alpha\beta\, d_{i-1}$，那我为什么不先走怎么多，在这个中间点，再计算新的梯度去求解呢？为什么还要拿之前的梯度呢？ok，现在你已经领悟了Nestrov的精髓。
