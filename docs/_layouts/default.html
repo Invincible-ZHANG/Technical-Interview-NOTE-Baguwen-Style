@@ -18,17 +18,22 @@
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
     {{ content_for_header }}
-    <!-- 引入 MathJax -->
+    <!-- 引入与配置 MathJax v3（增强包与兼容性） -->
     <script>
         window.MathJax = {
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            },
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                packages: { '[+]': ['ams', 'noerrors', 'noundefined', 'physics'] }
             },
             svg: { fontCache: 'global' }
         };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
 </head>
 <body>
     <script src="{{ '/assets/js/mac_code.js' | relative_url }}" defer></script>

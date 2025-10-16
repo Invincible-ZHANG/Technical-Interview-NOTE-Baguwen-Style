@@ -25,17 +25,22 @@
 
 
 
-    <!-- 引入 MathJax（可选） -->
+    <!-- 引入与配置 MathJax v3（增强包与兼容性） -->
     <script>
         window.MathJax = {
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            },
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                packages: { '[+]': ['ams', 'noerrors', 'noundefined', 'physics'] }
             },
             svg: { fontCache: 'global' }
         };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
 
     <!-- Tocbot 自动目录 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.25.0/dist/tocbot.css">
