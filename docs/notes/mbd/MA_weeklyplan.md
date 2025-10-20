@@ -249,6 +249,13 @@ order: 0
 - [x] 解耦dantzig experiment version
 - [ ] 另外两个求解器的作用
 
+## [Week 24](./MA_WP_CH/WP24.md)   Time:20.10.2025 - 17.10.2025
+
+- [ ] 进行算子化设计
+- [ ] 看BLAZE 
+- [ ] 简化求解器impulse
+- [ ] 简化求解器penalty
+
 
 ## 毕业论文草稿
 
