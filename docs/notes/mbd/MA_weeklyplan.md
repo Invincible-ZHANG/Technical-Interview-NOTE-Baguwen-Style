@@ -241,12 +241,12 @@ order: 0
 - [x] 精简求解器
 
 ## [Week 23](./MA_WP_CH/WP23.md)   Time:13.10.2025 - 17.10.2025
-- [ ] openMP 线程问题 (TBD 等)
 - [x] 完善PPT,尤其是算法部分。
 - [x] LaTeX把算法部分的代码打完，公式打上。
 - [ ] 进行算子化设计
-- [ ] 看BLAZE
+- [ ] 看BLAZE 
 - [x] 简化求解器（解耦interactive）
+- [x] 解耦dantzig experiment version
 - [ ] 另外两个求解器的作用
 
 
