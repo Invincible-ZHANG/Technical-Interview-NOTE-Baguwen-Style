@@ -12,7 +12,11 @@ creat_date: 2025-08-29
 
 > 题目主要参考：https://blog.csdn.net/songbijian/article/details/132507421 ，但是内容为自己写的。
 
+## 基础知识
 
+
+---
+---
 ## 1.封装、继承、多态
 
 * 封装（Encapsulation）

@@ -2,8 +2,6 @@
   url: /
 - title: Blog
   children:
-    - title: Embedded
-      url: /notes/embedded/
     - title: GPU
       url: /notes/gpu_cuda/
     - title: Algorithms
@@ -22,7 +20,6 @@
       url: /notes/Linux/
 - title: MBD
   url: /notes/mbd/
-- title: Embedded
-  url: /notes/embedded/
-
+- title: software
+  url: /notes/software/
 
