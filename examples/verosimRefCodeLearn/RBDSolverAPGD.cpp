@@ -51,6 +51,7 @@ void RBDLcpAPGD::SetLambda(const std::vector<double>& new_lambda) {
  * @brief Retrieve the stored warm-start values of the Lagrange multipliers.
  * @return Vector containing the previous solution (xprev).
  * 读取当前缓存的 warm-start 乘子。
+ * 这部分这个vector是不是要使用其他的VSM::VectorN 后面可以再做探讨。
  */
 std::vector<double> RBDLcpAPGD::GetLambda() const {
 	return xprev;
@@ -59,39 +60,67 @@ std::vector<double> RBDLcpAPGD::GetLambda() const {
 /**
  * @brief Load the right-hand side vector for the LCP from a VSM::VectorN object.
  * @param rhs Input vector containing the right-hand side values.
+ * 来自建模阶段的读取右端项的值。
  */
 void RBDLcpAPGD::setValuesInRightSide(const VSM::VectorN& rhs) {
 	if (b) delete[] b;
 	b = new double[size()];
 	memcpy(b, rhs.getData().data(), size() * sizeof(double));
 	// 仅作调试用的拷贝
+	// 等价于做了一次“深拷贝”。
 	rhs_.assign(rhs.getData().begin(), rhs.getData().end());
 }
 
-double RBDLcpAPGD::ResidualRes4(const std::vector<double>& gamma, double alpha) const {
-	const int n = size();
+
+/**
+ * @brief 计算 APGD 的 Res4 残差（Chrono 风格）：以固定步长 gdiff=1/n^2 做一次“投影-梯度”差分，
+ *        返回 || (γ - Proj(γ - gdiff * ∇f(γ))) || / gdiff 的 2-范数。
+ *
+ * 数学背景：
+ *   最小化 f(γ) = 0.5 * γᵀ A γ - bᵀ γ，∇f(γ) = Aγ - b。
+ *   Res4(gamma) = || (gamma - Π(gamma - gdiff * (A*gamma - b))) ||_2 / gdiff，
+ *   其中 Π(·) 为约束投影（盒约束 + 摩擦圆锥投影）。
+ *
+ * 设计动机：
+ *   - 采用固定的 gdiff 与线搜索步长解耦，避免当实际步长很小时残差被“缩小”而虚假收敛。
+ *   - 与 Project Chrono 的 APGD 实现保持一致的残差定义，数值更平滑、鲁棒性更好。
+ *
+ * @param gamma  当前拉格朗日乘子/约束反力向量（长度为 n）。
+ * @return double 残差标量（收敛判据用）。值越小表示越接近投影梯度不动点。
+ *
+ * 复杂度：O(n^2)（密集 A 的一次 SpMV + 一次投影遍历；若 A 为稀疏/算子式可降至 O(nnz)）。
+ * 前置条件：
+ *   - size() == n，A 为 n×n 的行主序连续存储（步幅 myPadSize），b 为长度 n。
+ *   - projectBounds / projectFriction 定义良好且与 gamma 维度匹配。
+ * 线程安全：非线程安全（读写临时向量本地 OK，但 A/b/内部状态并未声明为只读或互斥）。
+ */
+
+double RBDLcpAPGD::ResidualRes4(const std::vector<double>& gamma) const {
+	const int n = gamma.size();
+	// z时gamma的深拷贝，完整的复制一份
 	std::vector<double> g(n, 0.0), z(gamma);
+	const double gdiff = 1.0 / std::max(1.0, double(n) * n);
 
 	// g = A*gamma - b   （与你上面 grad 的号一致）
-//#pragma omp parallel for
-	for (int i = 0; i < n; ++i) {
-		const double* row = &A[i * myPadSize];
-		double s = 0.0;
-		for (int j = 0; j < n; ++j) s += row[j] * gamma[j];
-		g[i] = s - b[i];
+	for (int i = 0; i < n; ++i) {                 // 遍历矩阵 A 的第 i 行
+		const double* row = &A[i * myPadSize];    // 取出第 i 行的首地址（行主序 + 行步幅 myPadSize）
+		double s = 0.0;                           // 累加器 s = 0
+		for (int j = 0; j < n; ++j)               // 行·列做点积：A[i,:] · gamma
+			s += row[j] * gamma[j];               // s = Σ_j A[i,j] * gamma[j]
+		g[i] = s - b[i];                          // g[i] = (A*gamma)[i] - b[i]
 	}
-
 	// z = Proj( gamma - alpha * g )
 	for (int i = 0; i < n; ++i) z[i] = gamma[i] - alpha * g[i];
 	projectBounds(z);
 	if (useFriction) projectFriction(z);
 
-	// || (gamma - z) || / alpha
-	const double inva = 1.0 / std::max(alpha, 1e-16);
+	// 3) 残差 = ||(gamma - z)|| / gdiff
+	const double inv_g = 1.0 / gdiff;
+	// const double inva = 1.0 / std::max(alpha, 1e-16);
+	// double gdiff = 1.0 / std::max(1, n * n);
 	double accum = 0.0;
-//#pragma omp parallel for reduction(+:accum)
 	for (int i = 0; i < n; ++i) {
-		double d = (gamma[i] - z[i]) * inva;
+		double d = (gamma[i] - z[i]) * inv_g;
 		accum += d * d;
 	}
 	return std::sqrt(accum);
@@ -99,8 +128,27 @@ double RBDLcpAPGD::ResidualRes4(const std::vector<double>& gamma, double alpha) 
 
 
 /**
- * @brief Copy the system matrix values into the internal storage, with padding for alignment.
- * @param values Matrix containing the unpadded system matrix.
+ * @brief 将无填充（unpadded）的系统矩阵按行复制到内部存储，并在每行尾部补零到对齐宽度。
+ * 十分重要的函数，加上之后立竿见影的快
+ *
+ * 该函数把 @p values 的每一行连续内存拷贝到内部线性数组 @c A 中，
+ * 并将每行的尾部用 0 填充至固定步幅 @c myPadSize 。这样可使后续
+ * 矩阵-向量乘法 (A*vec) 具备固定上界、对齐良好的访问模式，便于 SIMD 向量化。
+ *
+ * @param values 输入矩阵（无填充、行主序），尺寸应为 size() × size()（或列数 ≤ myPadSize）。
+ *
+ * @pre
+ *  - 已为 @c A 分配至少 @c values.rows()*myPadSize 个 @c double 的连续内存；
+ *  - @c myPadSize >= values.columns()，且通常为 8/16 的整数倍以利于对齐；
+ *  - @c values 每行的元素在内存中连续存放（能通过 &values[r][0] 取得行首指针）。
+ *
+ * @post
+ *  - @c A 的第 r 行区间 [r*myPadSize, r*myPadSize+values.columns()) 拷贝自 @p values 第 r 行；
+ *  - 每行尾部区间 [r*myPadSize+values.columns(), (r+1)*myPadSize) 被置 0。
+ *
+ * @note 复杂度为 O(rows * myPadSize)。补零不会影响数值正确性（额外乘以 γ 的那一段是 0）。
+ * @warning 本函数不做边界检查或内存分配；调用方需保证前置条件满足，否则可能越界。
+ * @thread_safety 非线程安全；若在多线程环境下调用，请为不同求解器实例各自维护独立缓冲。
  */
 inline void RBDLcpAPGD::setValuesInMatrix(const VSM::MatrixNxM& values)
 {
@@ -113,6 +161,7 @@ inline void RBDLcpAPGD::setValuesInMatrix(const VSM::MatrixNxM& values)
 	for (unsigned int r = 0; r < rows; ++r) {
 		// 把有用的 cols 列复制进 A[p..]
 		std::memcpy(&A[p], &values[r][0], cols * sizeof(double));
+		// p是偏移量
 		p += cols;
 		// 剩下的位置补 0
 		std::memset(&A[p], 0, (myPadSize - cols) * sizeof(double));
@@ -121,14 +170,20 @@ inline void RBDLcpAPGD::setValuesInMatrix(const VSM::MatrixNxM& values)
 }
 
 /**
- * @brief Constructor: allocate and initialize solver data structures.
- * @param size Number of constraints/variables.
- * @param nub Number of unilateral constraints (contact normals).
- * @param maxIters Maximum number of APGD iterations.
- * @param tol Convergence tolerance (infinity norm of iterates difference).
- * @param accel Acceleration factor (unused default).
+ * @brief APGD 求解 “SOCCP” 的求解器。
+ *
+ * RBDLcpAPGD(int size, int nub, int maxIters_, double tol_, double accel_)
+ *
+ * @param size       变量总维数 n（约束未知量 λ 的长度），包含法向+切向等全部分量。
+ * @param nub        前缀自由变量（unbounded / equality）的个数；下标 [0..nub-1] 为等式行，
+ *                   它们没有上下界（或等价为 lo=-inf, hi=+inf），用于建模双边/驱动等等式约束。
+ *                   从 nub 到 n-1 的变量是带界的互补变量（接触/摩擦等）。
+ * @param maxIters_  迭代上限（每次 Solve 的最大步数）。
+ * @param tol_       收敛阈值（残差/投影梯度范数/互补违背量允许的最大值）。
+ * @param accel_     加速因子（Nesterov/FISTA 动量的权重或开关；0 退化为 PGD，1 为默认全加速）。没有用到。
  */
-RBDLcpAPGD::RBDLcpAPGD(int size, int nub, int maxIters_, double tol_, double accel_)
+// RBDLcpAPGD::RBDLcpAPGD(int size, int nub, int maxIters_, double tol_, double accel_)
+RBDLcpAPGD::RBDLcpAPGD(int size, int nub, int maxIters_, double tol_)
 	: VSLibRBDynMath::RBMMixedLCP(size, nub),
 	x(nullptr), w(nullptr),
 	A(nullptr), b(nullptr),
@@ -477,7 +532,7 @@ bool RBDLcpAPGD::solve()
 		// 2.3) 接受步长: γ_{k+1} = xnew
 		// （在做 Nesterov 加速、更新 yk 之前做收敛判断）
 		// === 使用 RES4 作为收敛判据 ===
-		last_r4 = ResidualRes4(xnew, t);
+		last_r4 = ResidualRes4(xnew);
 
 		// 维护“历史最好”：更小就刷新 gamma_hat
 		if (last_r4 < rmin) {
