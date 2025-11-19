@@ -2,6 +2,22 @@
 
 #include <iostream>
 
+/*
+ ============================================================================
+  RBDClusterLagrangeMultipliers.cpp
+ ----------------------------------------------------------------------------
+  该文件实现了基于拉格朗日乘子法（LCP 形式）的刚体集群约束解算器。
+  主要职责：
+    1. 收集场景中属于当前 cluster 的刚体与约束资源
+    2. 组装一帧的雅可比矩阵 J、右端项 b 以及 λ 的上下界
+    3. 通过 LCP 求解器（Dantzig / GS / APGD）求出约束冲量
+    4. 将新速度写回刚体，并输出调试/日志数据
+
+  文件中的注释以“逐阶段流程 + 关键数据结构解释”为主，帮助快速理解
+  动力学建模思路、数值步骤以及与调试设施的互动方式。
+ ============================================================================
+*/
+
 //头文件排序略有点不合理
 
 
@@ -1138,7 +1154,7 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 	}
 #endif
 }
-	// 为摩擦添加辅助约束的函数，但是没被用到，一般都是求解器自己处理摩擦
+// 为摩擦添加辅助约束的函数，但是没被用到，一般都是求解器自己处理摩擦
 	VSM::MatrixNxM RBDClusterLagrangeMultipliers::addAuxiliaryConstraintsForFriction(
 		VSM::MatrixNxM & A,
 		VSM::VectorNDynamic & lambdaLow,
@@ -1146,6 +1162,23 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 		VSM::VectorNDynamicTemplate<int>&frictionIndices,
 		VSM::VectorNDynamic & constFrictionForces)
 	{
+		/*
+			建模背景：
+			----------------------------------------------------------------
+			当摩擦圆锥被线性化为多个摩擦棱（tangent directions）时，
+			需要额外的等式约束来约束摩擦冲量之和等价于对应的法向冲量。
+			默认情况下 LCP 求解器内部已经实现了类似处理。
+			如果要在组装阶段显式扩展系统矩阵，就调用本函数。
+
+			实现思路：
+			  1. 遍历 frictionIndices，统计摩擦块数（每个法向接触开始位置）
+			  2. 扩展矩阵 A、上下界 λ，使其容纳辅助约束行/列
+			  3. 对于每个摩擦块，在新矩阵中插入如下结构：
+			       - 新的一行/列耦合法向变量与各摩擦分量
+			       - 将摩擦 λ 的上下界修改为 [0, +∞)
+			       - 记录 constFrictionForces 以便数值稳定
+			  4. 修改后的矩阵返回给调用者
+		*/
 		int numberFrictionBlocks = 0;
 
 		for (int i = 1; i < frictionIndices.size(); i++)
@@ -1211,6 +1244,13 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 		const RBDRigidBodyPtrSet & bodies,
 		const VSLibRBDynMath::RBMJacobeanMatrix & J)
 	{
+		// ----------------------------------------------------------------
+		// 目的：根据稀疏雅可比 J，快速构造 M^-1 * J^T，避免显式构造大块对角矩阵
+		// 核心思想：
+		//   - 每个约束块（jEntry）只作用于两个刚体
+		//   - 利用刚体的质量逆 / 惯量逆直接加到 result 的对应行
+		//   - targetColumn 对应 J 的当前行 => J^T 的列
+		// ----------------------------------------------------------------
 		int targetColumn = 0;
 		for (VSLibRBDynMath::RBMJacobeanMatrix::JacobeanRow* jRow : J.getRows())
 		{
@@ -1254,6 +1294,13 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 		const RBDRigidBodyPtrSet & bodies,
 		const VSM::VectorN & mult)
 	{
+		/*
+			向量版乘法在两个位置被使用：
+			  1. 计算 M^-1 * dt * f_ext
+			  2. 回代解 λ 得到 v_new
+			算法保持与前一个函数相同的“按刚体块”处理方式，
+			避免构造完整的 6n × 6n 质量逆矩阵。
+		*/
 		int bodyOffset = 0;
 		unsigned int r = 0;
 		int l = 0;
@@ -1294,12 +1341,14 @@ void RBDClusterLagrangeMultipliers::doTimeStep(
 	// 获取条件数 SVD用的
 	double RBDClusterLagrangeMultipliers::getCNDNr()
 	{
+		// 当奇异性探测器未启用时会返回 -1，以区分“未计算”与“有效值”
 		return CND_Nr;
 	}
 
 	// 获得误差
 	double RBDClusterLagrangeMultipliers::getConstraintError()
 	{
+		// 约束误差保存在 doTimeStep 的装配阶段，返回均方根误差
 		return constraintError;
 	}
 
