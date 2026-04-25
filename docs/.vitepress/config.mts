@@ -32,6 +32,10 @@ export default defineConfig({
   lastUpdated: true,
   ignoreDeadLinks: true,
 
+  sitemap: {
+    hostname: 'https://blog.k1n.asia',
+  },
+
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#646cff' }],
