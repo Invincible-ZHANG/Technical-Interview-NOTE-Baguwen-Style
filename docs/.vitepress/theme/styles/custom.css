@@ -1,0 +1,65 @@
+/**
+ * Additional visual tweaks: smoother hero, glass navbar, gradient chips.
+ */
+
+.VPHero .name,
+.VPHero .text {
+  letter-spacing: -0.02em;
+}
+
+.VPHero .tagline {
+  max-width: 640px;
+}
+
+.VPNavBar {
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+.dark .VPNavBar {
+  background-color: rgba(15, 16, 22, 0.72);
+}
+
+.VPFeature {
+  transition:
+    transform 240ms ease,
+    border-color 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.VPFeature:hover {
+  transform: translateY(-2px);
+  border-color: var(--vp-c-brand-2);
+  box-shadow: 0 12px 28px -14px rgba(91, 124, 250, 0.45);
+}
+
+.VPDoc h1,
+.VPDoc h2 {
+  letter-spacing: -0.01em;
+}
+
+.VPDoc h2 {
+  padding-top: 28px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc a {
+  text-underline-offset: 3px;
+}
+
+.vp-doc code {
+  font-size: 0.88em;
+}
+
+img {
+  border-radius: 8px;
+}
+
+/* Make blockquotes feel like modern callouts. */
+.vp-doc blockquote {
+  border-left: 4px solid var(--vp-c-brand-2);
+  background: var(--vp-c-brand-soft);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+}
