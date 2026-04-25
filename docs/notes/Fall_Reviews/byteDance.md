@@ -190,8 +190,8 @@ int   munmap(void *addr, size_t length);
 | -------- | --------------------------------------------------------------------------------------------------- |
 | `addr`   | 建议的映射起始地址，通常设为 `NULL` 让内核自动选择。                                                                      |
 | `length` | 要映射的字节长度，**必须**按页（通常 4 KiB）对齐。                                                                      |
-| `prot`   | 访问权限，按位或：<br>`PROT_READ` 读 / `PROT_WRITE` 写 / `PROT_EXEC` 可执行 / `PROT_NONE` 无权限                     |
-| `flags`  | 映射类型和选项，包括：<br>`MAP_SHARED`（写入同步回文件）<br>`MAP_PRIVATE`（写时拷贝）<br>`MAP_ANONYMOUS`（匿名映射，不关联文件，`fd` 忽略）等 |
+| `prot`   | 访问权限，按位或：<br />`PROT_READ` 读 / `PROT_WRITE` 写 / `PROT_EXEC` 可执行 / `PROT_NONE` 无权限                     |
+| `flags`  | 映射类型和选项，包括：<br />`MAP_SHARED`（写入同步回文件）<br />`MAP_PRIVATE`（写时拷贝）<br />`MAP_ANONYMOUS`（匿名映射，不关联文件，`fd` 忽略）等 |
 | `fd`     | 要映射的文件描述符；若 `flags` 包含 `MAP_ANONYMOUS`，则须设为 `-1`。                                                   |
 | `offset` | 文件偏移量，映射从文件的哪个字节开始；必须是页大小的整数倍。                                                                      |
 
