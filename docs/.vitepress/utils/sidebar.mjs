@@ -28,6 +28,34 @@ function toLink(absFile) {
   return '/' + rel.replace(/\.md$/i, '')
 }
 
+function dirHasMarkdown(absDir) {
+  if (!fs.existsSync(absDir)) return false
+  const stack = [absDir]
+  while (stack.length > 0) {
+    const cur = stack.pop()
+    let entries
+    try {
+      entries = fs.readdirSync(cur, { withFileTypes: true })
+    } catch {
+      continue
+    }
+    for (const e of entries) {
+      if (e.name.startsWith('.')) continue
+      if (e.isDirectory()) {
+        if (IGNORED_DIRS.has(e.name)) continue
+        stack.push(path.join(cur, e.name))
+      } else if (
+        e.isFile() &&
+        e.name.toLowerCase().endsWith('.md') &&
+        !IGNORED_FILES.has(e.name)
+      ) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 function walkDir(absDir) {
   if (!fs.existsSync(absDir)) return []
   const entries = fs
@@ -78,6 +106,7 @@ export function buildSidebar(notesRoot, categories) {
   for (const cat of categories) {
     const absCatDir = path.join(DOCS_ROOT, notesRoot, cat.dir)
     if (!fs.existsSync(absCatDir)) continue
+    if (!dirHasMarkdown(absCatDir)) continue
 
     const intro = path.join(absCatDir, 'index.md')
     const catItems = []
@@ -118,7 +147,7 @@ export function buildNav(notesRoot, categories) {
 
   for (const cat of top) {
     const absCatDir = path.join(DOCS_ROOT, notesRoot, cat.dir)
-    if (!fs.existsSync(absCatDir)) continue
+    if (!dirHasMarkdown(absCatDir)) continue
     nav.push({
       text: `${cat.emoji || ''} ${cat.text}`.trim(),
       link: `/${notesRoot}/${cat.dir}/`,
@@ -126,17 +155,19 @@ export function buildNav(notesRoot, categories) {
     })
   }
 
-  if (rest.length > 0) {
+  const moreItems = rest
+    .filter((cat) =>
+      dirHasMarkdown(path.join(DOCS_ROOT, notesRoot, cat.dir)),
+    )
+    .map((cat) => ({
+      text: `${cat.emoji || ''} ${cat.text}`.trim(),
+      link: `/${notesRoot}/${cat.dir}/`,
+    }))
+
+  if (moreItems.length > 0) {
     nav.push({
       text: MORE_LABEL,
-      items: rest
-        .filter((cat) =>
-          fs.existsSync(path.join(DOCS_ROOT, notesRoot, cat.dir)),
-        )
-        .map((cat) => ({
-          text: `${cat.emoji || ''} ${cat.text}`.trim(),
-          link: `/${notesRoot}/${cat.dir}/`,
-        })),
+      items: moreItems,
     })
   }
 
