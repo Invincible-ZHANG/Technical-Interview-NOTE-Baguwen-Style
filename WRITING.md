@@ -11,6 +11,7 @@
 | 成像链路、ISP、sensor、驱动侧的积累 | `docs/log/sensor/` | `/log/sensor/` Sensor 与成像 |
 | 构图、光、色彩、审美上的想法 | `docs/log/aesthetic/` | `/log/aesthetic/` 摄影美学 |
 | 旅行、读书、日常，跟技术无关 | `docs/life/` | `/life/` 生活记录 |
+| 游戏攻略、路线打法 | `docs/game/` | `/game/` 游戏 |
 | 以前的技术笔记，只是留个档 | `docs/notes/<分类>/` | `/notes/` 归档列表 |
 
 > ⚠️ **影像笔记必须放进 `sensor/` 或 `aesthetic/` 子目录。**
@@ -97,7 +98,6 @@ def exposure(iso, shutter):
 ---
 
 ## 七、往摄影页加一张照片
-
 这一步比写文章多一个环节，因为要先出三种尺寸的图：
 
 1. 把原图放进 `docs/assets/images/`（或任意位置）
@@ -160,3 +160,40 @@ git push
 | 页面出现两个大标题 | 正文里又写了一次 `# 标题` |
 | 图片显示不出来 | 用了相对路径，或图片没放进 `assets/` |
 | 中文网址 | 文件名用了中文，改成英文小写连字符 |
+
+---
+
+## 十一、改游戏地图
+
+地图用 Leaflet 1.9.4 做的（本地部署在 `docs/assets/vendor/leaflet/`），
+配 `CRS.Simple` 把一张图当坐标平面，所以能拖拽、缩放，点位是可以点的标记。
+
+三个文件各管一件事：
+
+| 文件 | 管什么 |
+|---|---|
+| `docs/assets/maps/space-base.svg` | 底图。区域色块、水渠、桥，纯图片 |
+| `docs/assets/js/space-map.js` | 开头的 `P` 对象：每个点位的坐标和文案 |
+| `docs/_includes/space-map.html` | 工具栏、地图容器、脚本引用 |
+
+**加点位只改 `P` 对象**，底图和 include 都不用动：
+
+```js
+newpoint: {
+    name: '点位全名',        // 面板标题
+    short: '短名',           // 地图上的标签；留空就只显示圆点
+    type: 'loot',           // loot 资源 / exit 撤离 / gate 通道，决定筛选归类和颜色
+    dir: 'r',               // 标签往哪边写：r 右 / l 左 / t 上 / b 下，用来避开邻居
+    x: 500, y: 400,         // 底图像素坐标，画布 1200 x 900，原点在左上
+    sub: '副标题，写在名字下面',
+    jm: '机密模式下的说明，可以带 <strong>',
+    js: '绝密模式下的说明'
+}
+```
+
+坐标怎么量：直接用浏览器打开 `space-base.svg`，按画布尺寸估就行。
+代码里会自动把 y 翻过来（`yx()` 那个函数），不用自己算。
+
+**换底图**：想要更真实的效果，把游戏内地图截图存成
+`docs/assets/maps/space-base.png`（或 .svg），改 include 里 `data-base` 的路径，
+再对着新图把 `P` 里的 x / y 重新量一遍。其余代码不用改。

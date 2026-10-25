@@ -9,7 +9,7 @@ layout: null
 {%- assign items = "" | split: "" -%}
 {%- for p in all_md -%}
 {%- assign seg0 = p.path | split: '/' | first -%}
-{%- if seg0 == 'notes' or seg0 == 'log' or seg0 == 'life' -%}
+{%- if seg0 == 'notes' or seg0 == 'log' or seg0 == 'life' or seg0 == 'game' -%}
 {%- if p.name != 'index.md' -%}{%- assign items = items | push: p -%}{%- endif -%}
 {%- endif -%}
 {%- endfor -%}

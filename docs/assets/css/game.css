@@ -1,0 +1,386 @@
+/* ============================================================
+   game.css —— 游戏栏目：航天基地互动地图
+   地图引擎用 Leaflet（本地部署，CRS.Simple + 图片底图），
+   底图是 assets/maps/space-base.svg，点位数据在 space-map.js。
+   ============================================================ */
+
+.sb {
+    margin: 2.2rem 0 0;
+}
+
+/* ─── 工具栏 ─── */
+.sb-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.4rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(255, 212, 121, 0.13);
+}
+
+.sb-toolgroup {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.sb-toolgroup-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 251, 231, 0.34);
+    margin-right: 0.3rem;
+}
+
+.sb-btn {
+    font-family: inherit;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: rgba(255, 251, 231, 0.62);
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 212, 121, 0.16);
+    border-radius: 999px;
+    padding: 0.34rem 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.sb-btn:hover {
+    color: var(--gold-100);
+    border-color: rgba(255, 212, 121, 0.34);
+}
+
+/* 选中态用 class，不用 [aria-pressed]：属性选择器在部分浏览器上
+   动态改属性后不重绘。aria-pressed 仍然保留给读屏。 */
+.sb-btn.is-on {
+    color: #1a1510;
+    background: var(--gold-200);
+    border-color: var(--gold-200);
+    font-weight: 600;
+}
+
+.sb-btn[data-mode="js"].is-on {
+    color: #ffe9e2;
+    background: #8c3a2e;
+    border-color: #a8483a;
+}
+
+/* ─── 布局：地图在上，面板在下 ─── */
+.sb-stage {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+}
+
+/* ─── 地图容器 ─── */
+.sb-mapwrap {
+    height: clamp(340px, 66vw, 620px);
+    border: 1px solid rgba(255, 212, 121, 0.14);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #14120f;
+    /* Leaflet 需要明确的 z-index 上下文，避免被站点其他层压住 */
+    position: relative;
+    z-index: 0;
+}
+
+.leaflet-container {
+    background: #14120f;
+    font-family: inherit;
+    outline: none;
+}
+
+/* 缩放控件暗色化 */
+.leaflet-bar a,
+.leaflet-bar a:hover {
+    background: rgba(26, 24, 21, 0.94);
+    color: var(--gold-200);
+    border-bottom-color: rgba(255, 212, 121, 0.14);
+    font-weight: 400;
+}
+
+.leaflet-bar a:hover {
+    background: rgba(255, 212, 121, 0.16);
+    color: #fff8e0;
+}
+
+.leaflet-bar {
+    border: 1px solid rgba(255, 212, 121, 0.22);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* 触屏设备上 Leaflet 会给容器加 .leaflet-touch，其默认控件样式
+   选择器优先级比上面那几条高，会把白色背景抢回去，这里压回来 */
+.leaflet-touch .leaflet-bar {
+    border: 1px solid rgba(255, 212, 121, 0.22);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-touch .leaflet-bar a,
+.leaflet-touch .leaflet-bar a:hover {
+    background: rgba(26, 24, 21, 0.94);
+    color: var(--gold-200);
+    border-bottom-color: rgba(255, 212, 121, 0.14);
+}
+
+.leaflet-touch .leaflet-bar a:hover {
+    background: rgba(255, 212, 121, 0.16);
+    color: #fff8e0;
+}
+
+/* 点位图标（divIcon，内容绝对定位，允许标签溢出不被裁） */
+.sb-pin {
+    background: none;
+    border: 0;
+}
+
+.sb-pin i {
+    position: absolute;
+    left: -6px;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e8c477;
+    border: 2px solid #14120f;
+    box-sizing: content-box;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.sb-pin b {
+    position: absolute;
+    left: 11px;
+    top: -11px;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: rgba(255, 251, 231, 0.82);
+    text-shadow: 0 1px 3px #000, 0 0 8px #000;
+    pointer-events: none;
+}
+
+/* 标签朝向，用来错开挤在一起的房间 */
+.sb-pin--l b { left: auto; right: 11px; }
+.sb-pin--t b { left: 50%; top: -28px; transform: translateX(-50%); }
+.sb-pin--b b { left: 50%; top: 10px; transform: translateX(-50%); }
+
+/* 类型配色 */
+.sb-pin--exit i { background: #6fd1a3; }
+.sb-pin--gate i { background: #9db4d0; }
+.sb-pin--gate b { color: rgba(198, 214, 232, 0.78); }
+
+/* 撤离点的名额角标（机密 3 / 绝密 1），跟着模式变 */
+.sb-pin .sb-slot {
+    position: absolute;
+    left: 7px;
+    top: -20px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    color: #10100e;
+    background: #6fd1a3;
+    border: 2px solid #14120f;
+    border-radius: 50%;
+    box-sizing: content-box;
+}
+
+/* 选中与悬停 */
+.sb-pin.is-active i {
+    background: #fff3cf;
+    transform: scale(1.5);
+    box-shadow: 0 0 0 5px rgba(255, 212, 121, 0.22);
+}
+
+.sb-pin.is-active b {
+    color: #fff8e0;
+    font-weight: 600;
+}
+
+.sb-pin:hover i {
+    transform: scale(1.3);
+}
+
+/* 按类型筛选时压暗（类型 class 直接写在 icon 上，见 space-map.js） */
+.sb-mapwrap[data-filter="loot"] .sb-pin:not(.sb-t-loot),
+.sb-mapwrap[data-filter="exit"] .sb-pin:not(.sb-t-exit),
+.sb-mapwrap[data-filter="gate"] .sb-pin:not(.sb-t-gate) {
+    opacity: 0.15;
+}
+
+/* ─── 右侧/下方面板 ─── */
+.sb-panel {
+    border: 1px solid rgba(255, 212, 121, 0.14);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1.1rem 1.25rem 1.2rem;
+}
+
+.sb-note,
+.sb-panel-sub {
+    max-width: 64ch;
+}
+
+.sb-panel-type {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-400);
+    border: 1px solid rgba(255, 212, 121, 0.24);
+    border-radius: 4px;
+    padding: 0.12rem 0.45rem;
+}
+
+.sb-panel-name {
+    display: block;
+    font-size: 1.24rem;
+    font-weight: 500;
+    color: var(--cream);
+    margin: 0.6rem 0 0.15rem;
+    line-height: 1.4;
+}
+
+.sb-panel-sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: var(--cream-faint);
+    margin: 0;
+}
+
+.sb-panel-body {
+    margin-top: 0.95rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sb-mode-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.sb-mode-chip {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    background: rgba(255, 212, 121, 0.16);
+    color: var(--gold-200);
+}
+
+.sb-mode-chip--js {
+    background: rgba(168, 72, 58, 0.28);
+    color: #ffb9a8;
+}
+
+.sb-note {
+    font-size: 0.86rem;
+    line-height: 1.85;
+    color: rgba(255, 251, 231, 0.62);
+    margin: 0 0 0.7rem;
+}
+
+.sb-note strong {
+    color: var(--gold-200);
+    font-weight: 600;
+}
+
+.sb-note--alt {
+    font-size: 0.79rem;
+    color: rgba(255, 251, 231, 0.34);
+    border-left: 2px solid rgba(255, 255, 255, 0.08);
+    padding-left: 0.7rem;
+    margin-top: 0.9rem;
+}
+
+/* ─── 图例 ─── */
+.sb-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    margin-top: 0.75rem;
+    padding: 0 0.2rem;
+}
+
+.sb-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+    color: rgba(255, 251, 231, 0.4);
+}
+
+.sb-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e8c477;
+}
+
+.sb-legend-dot--exit { background: #6fd1a3; }
+.sb-legend-dot--gate { background: #9db4d0; }
+
+/* 窄屏提示：默认隐藏 */
+.sb-swipe-hint {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: rgba(255, 251, 231, 0.34);
+    margin: 0 0 0.5rem;
+}
+
+/* ─── 响应式 ─── */
+@media (max-width: 640px) {
+    .sb-mapwrap {
+        height: 70vw;
+        min-height: 340px;
+    }
+
+    .sb-swipe-hint {
+        display: block;
+    }
+
+    /* 小屏上地图缩放后点位间距只剩二十来像素，标签会叠成一团。
+       所以默认只留圆点，点开哪个再显示哪个名字。 */
+    .sb-pin b {
+        display: none;
+    }
+
+    .sb-pin.is-active b {
+        display: block;
+        font-size: 11.5px;
+    }
+}
+
+@media (max-width: 560px) {
+    .sb-toolbar {
+        gap: 0.5rem 0.9rem;
+    }
+
+    .sb-btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.72rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sb-btn,
+    .sb-pin i {
+        transition: none !important;
+    }
+}

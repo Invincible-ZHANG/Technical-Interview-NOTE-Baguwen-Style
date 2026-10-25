@@ -67,6 +67,8 @@
                     {%- assign lsub = page.path | split: '/' | slice: 1, 1 | first -%}
                     {%- assign lsec = site.data.log_sections | where: "key", lsub | first -%}
                     <span>✍ {{ lsec.title | default: '影像笔记' }}</span>
+                    {%- elsif seg0 == 'game' -%}
+                    <span>🎮 游戏</span>
                     {%- elsif page.dir -%}
                     {%- assign cat = page.path | split: '/' | slice: 1, 1 | first -%}
                     <span>📁 {{ site.data.categories[cat].name | default: cat }}</span>

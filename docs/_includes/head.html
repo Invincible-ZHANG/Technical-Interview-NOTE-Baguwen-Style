@@ -28,3 +28,7 @@
 <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
 <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}">
 <link rel="stylesheet" href="{{ '/assets/css/log.css' | relative_url }}">
+{%- if page.url contains '/game/' %}
+<link rel="stylesheet" href="{{ '/assets/vendor/leaflet/leaflet.css' | relative_url }}">
+{%- endif %}
+<link rel="stylesheet" href="{{ '/assets/css/game.css' | relative_url }}">

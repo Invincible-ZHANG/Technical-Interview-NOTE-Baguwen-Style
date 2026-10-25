@@ -32,6 +32,10 @@ defaults:
       path: "life"
     values:
       layout: "note"
+  - scope:
+      path: "game"
+    values:
+      layout: "note"
 
 
 kramdown:

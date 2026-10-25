@@ -1,0 +1,46 @@
+<!-- ══════════════════════════════════════════════════════════
+     航天基地互动地图（_includes/space-map.html）
+     引擎：Leaflet 1.9.4（本地部署，CRS.Simple + 图片底图）
+     底图：assets/maps/space-base.svg
+     点位与文案：assets/js/space-map.js
+     ══════════════════════════════════════════════════════════ -->
+
+<div class="sb" id="sb">
+
+    <div class="sb-toolbar">
+        <div class="sb-toolgroup" role="group" aria-label="难度模式">
+            <span class="sb-toolgroup-label">模式</span>
+            <button type="button" class="sb-btn" data-mode="jm" aria-pressed="true">机密</button>
+            <button type="button" class="sb-btn" data-mode="js" aria-pressed="false">绝密</button>
+        </div>
+        <div class="sb-toolgroup" role="group" aria-label="点位筛选">
+            <span class="sb-toolgroup-label">显示</span>
+            <button type="button" class="sb-btn" data-filter="all" aria-pressed="true">全部</button>
+            <button type="button" class="sb-btn" data-filter="loot" aria-pressed="false">资源点</button>
+            <button type="button" class="sb-btn" data-filter="exit" aria-pressed="false">撤离点</button>
+            <button type="button" class="sb-btn" data-filter="gate" aria-pressed="false">通道</button>
+        </div>
+    </div>
+
+    <p class="sb-swipe-hint">双指缩放 · 单指拖拽</p>
+
+    <div class="sb-stage">
+        <div class="sb-mapwrap" id="sbMap" data-filter="all" data-mode="jm"
+             data-base="{{ '/assets/maps/space-base.svg' | relative_url }}"></div>
+
+        <aside class="sb-panel" id="sbPanel" aria-live="polite">
+            <!-- 由 JS 填充 -->
+        </aside>
+    </div>
+
+    <div class="sb-legend">
+        <span class="sb-legend-item"><span class="sb-legend-dot"></span>资源点</span>
+        <span class="sb-legend-item"><span class="sb-legend-dot sb-legend-dot--exit"></span>撤离点</span>
+        <span class="sb-legend-item"><span class="sb-legend-dot sb-legend-dot--gate"></span>通道 / 入口</span>
+        <span class="sb-legend-item">点圆点看打法 · 可缩放拖拽</span>
+    </div>
+
+</div>
+
+<script src="{{ '/assets/vendor/leaflet/leaflet.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/space-map.js' | relative_url }}" defer></script>
