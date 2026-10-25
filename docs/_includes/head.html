@@ -1,10 +1,30 @@
-﻿<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
-<!-- 自定义样式 -->
-<!-- 先加载原有的 custom.css -->
-<link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
-<link rel="stylesheet" href="{{ '/assets/css/code_style.css' | relative_url }}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="icon"
-      type="image/x-icon"
-      href="{{ '/favicon.ico' | relative_url }}">
+{% assign meta_desc = page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape %}
+{% assign meta_title = page.title | default: site.title | escape %}
+<meta name="description" content="{{ meta_desc }}">
+<meta name="author" content="{{ site.author }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="{% if page.title and page.url != '/' %}article{% else %}website{% endif %}">
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:title" content="{{ meta_title }}">
+<meta property="og:description" content="{{ meta_desc }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ meta_title }}">
+<meta name="twitter:description" content="{{ meta_desc }}">
+
+<link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+
+<!-- 样式加载顺序：基础 → 代码高亮 → 主题美化 → 个人站布局（后者可覆盖前者） -->
+<link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/prism-theme.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/design.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/log.css' | relative_url }}">

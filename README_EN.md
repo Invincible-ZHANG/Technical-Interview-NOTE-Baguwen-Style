@@ -1,7 +1,7 @@
 ﻿[中文](./README.md) | English
 # Technical Interview Notes 📚
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![GitHub Pages](https://img.shields.io/badge/Pages-📖%20Online-blue)](https://invincible-zhang.github.io/Technical-Interview-NOTE-Baguwen-Style/) [![Languages](https://img.shields.io/badge/Langs-C%2B%2B%20%7C%20Python%20%7C%20CUDA-lightgrey)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![GitHub Pages](https://img.shields.io/badge/Pages-📖%20Online-blue)](https://www.zhangzijian.cn/) [![Languages](https://img.shields.io/badge/Langs-C%2B%2B%20%7C%20Python%20%7C%20CUDA-lightgrey)]()
 
 > Embedded Systems · Software Engineering · GPU/CUDA · Algorithms
 
@@ -80,7 +80,7 @@ bundle exec jekyll serve --port 4000
 
 ## Examples
 
-* **Live Site**: [GitHub Pages](https://invincible-zhang.github.io/Technical-Interview-NOTE-Baguwen-Style/)
+* **Live Site**: [GitHub Pages](https://www.zhangzijian.cn/)
 * **Sample Notes**: Embedded [RTOS Basics](/embedded/rtos-basics.html), GPU/CUDA [Parallel Model](/gpu-cuda/cuda-intro.html)
 
 ---

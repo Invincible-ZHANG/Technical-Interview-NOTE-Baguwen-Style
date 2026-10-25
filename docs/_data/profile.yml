@@ -1,0 +1,72 @@
+# ══════════════════════════════════════════════════════════
+#  个人信息配置 —— 首页、页脚、SEO 都从这里取
+#  改文案只需要动这个文件，不用碰模板
+# ══════════════════════════════════════════════════════════
+
+name: 张子健
+handle: K1n
+avatar: /assets/images/logo2.png
+
+# 一句话介绍，出现在名字下面
+tagline: 拍照，也拆开看它怎么成像。
+
+# 更小的一行补充信息
+meta_line: 摄像头驱动工程师 · 北京
+
+# 摄影页顶部那行统计里追加的器材说明
+gear_line: 手机为主 · 慢慢加相机
+
+# ─── 左侧锚点导航（对应右侧各区块 id）───
+anchors:
+  - id: about
+    label: 关于
+  - id: now
+    label: 最近
+  - id: photos
+    label: 照片
+  - id: log
+    label: 影像笔记
+  - id: notes
+    label: 笔记
+
+# ─── 联系方式（纯文字链接，按需增删）───
+socials:
+  - label: GitHub
+    url: https://github.com/Invincible-ZHANG
+  - label: RSS
+    url: /feed.xml
+  # 想加邮箱 / 图虫 / Instagram 就照着上面两行的格式追加
+
+# ─── 关于我（每项一段，支持 Markdown 行内语法）───
+about:
+  - 工作是写摄像头驱动——每天和传感器、ISP、MIPI 打交道，盯着寄存器把一帧画面从光电转换一路送到屏幕上。这块还算熟。
+  - 拍照是刚起的头，在北京，还在学。白天在代码里追一帧为什么暗、为什么会糊；晚上试着把它拍好看一点，废片率仍然很高。
+  - 这个站用来放两样东西：拍下来的照片，以及拍完之后想明白的那点事。拍得不怎么样也照放，算是留个过程。
+  - 本科在西安电子科技大学，硕士在 RWTH Aachen 读计算机工程，之后到北京工作。骑行、F1、健身都还在，只是相机还没买。
+
+# ─── 最近在做什么（首页 "Now" 区块）───
+now_updated: 2026-10
+now:
+  - label: 拍摄
+    text: 走到哪拍到哪，最近在练北京的傍晚和楼缝里的光，还在学构图。
+  - label: 研究
+    text: 系统地把手机摄影的链路捋一遍：从 sensor 到 JPEG 里到底发生了什么。
+  - label: 器材
+    text: 在挑第一台认真用的相机，标准是能塞进通勤包。
+  - label: 这个站
+    text: 从技术笔记站改成摄影为主，旧笔记全部降到归档区。
+
+# ─── 精选文章（手挑，不随更新变化；改这里就能换）───
+featured:
+  - title: 手机夜景为什么「涂抹」
+    url: /log/sensor/phone-night-smoothing.html
+    desc: 从驱动视角拆一遍：一帧夜景在出图前经历了什么。
+  - title: 一张照片的十六毫秒
+    url: /log/sensor/one-frame-sixteen-ms.html
+    desc: 曝光、读出、处理、上屏，一帧画面在硬件里的完整行程。
+  - title: 比利时两日自驾
+    url: /life/belgium-road-trip.html
+    desc: 亚琛出发，两天五城的路线与照片。
+
+# ─── 页脚 ───
+footer_note: 用 Jekyll 手搓，照片是自己的，托管在 GitHub Pages。

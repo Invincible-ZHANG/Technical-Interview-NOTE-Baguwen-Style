@@ -1,4 +1,4 @@
-﻿
+
 
 .code-wrapper {
     position: relative;
@@ -110,6 +110,6 @@ pre code {
   padding: 0;
   box-shadow: none;
 }
-    pre code span.token {
-        all: unset;
-    }
+
+/* 注意：不要对 span.token 使用 all: unset，
+   那会把 Prism 的语法着色全部清掉（配色由 prism-theme.css 提供） */

@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "链表C++"
 date: 2025-07-28

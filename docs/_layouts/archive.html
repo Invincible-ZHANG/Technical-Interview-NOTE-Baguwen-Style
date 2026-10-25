@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
+<head>
+
+    {% if site.ga4_measurement_id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga4_measurement_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+        gtag('config', '{{ site.ga4_measurement_id }}');
+    </script>
+    {% endif %}
+
+    {%- include head.html -%}
+    <title>{{ page.title | default: '笔记归档' }} · {{ site.title }}</title>
+</head>
+
+<body class="page-body">
+
+    <div class="reading-progress" aria-hidden="true"><div class="reading-progress-bar"></div></div>
+    <script src="{{ '/assets/js/mobile-tip.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/ui-enhance.js' | relative_url }}" defer></script>
+
+    {% include nav.html %}
+
+    {%- comment -%} 收集 notes/ 下的全部条目（排除各层 index.md） {%- endcomment -%}
+    {%- assign all_md = site.pages | where_exp: "q", "q.path contains '.md'" -%}
+    {%- assign note_pages = "" | split: "" -%}
+    {%- for q in all_md -%}
+    {%- assign fn = q.path | split: '/' | last -%}
+    {%- assign seg0 = q.path | split: '/' | first -%}
+    {%- if seg0 == 'notes' and fn != 'index.md' -%}
+    {%- assign note_pages = note_pages | push: q -%}
+    {%- endif -%}
+    {%- endfor -%}
+
+    {%- comment -%} 按一级目录分组，顺序跟随 _data/categories.yml {%- endcomment -%}
+    {%- assign groups = "" | split: "" -%}
+    {%- for q in note_pages -%}
+    {%- assign g = q.path | split: '/' | slice: 1, 1 | first -%}
+    {%- unless groups contains g -%}{%- assign groups = groups | push: g -%}{%- endunless -%}
+    {%- endfor -%}
+    {%- assign ordered = "" | split: "" -%}
+    {%- for c in site.data.categories -%}
+    {%- if groups contains c[0] -%}{%- assign ordered = ordered | push: c[0] -%}{%- endif -%}
+    {%- endfor -%}
+    {%- for g in groups -%}
+    {%- unless ordered contains g -%}{%- assign ordered = ordered | push: g -%}{%- endunless -%}
+    {%- endfor -%}
+
+    <main class="page-wrap">
+
+        <header class="page-head">
+            <h1 class="page-title">{{ page.title | default: '笔记归档' }}</h1>
+            <p class="page-lede">{{ page.description | default: '这里是全部旧笔记。当年为了面试和毕设写的，质量参差，按需自取。' }}</p>
+            <p class="page-count">{{ note_pages.size }} 篇 · {{ ordered.size }} 个分类</p>
+        </header>
+
+        {{ content }}
+
+        <!-- 分类快捷跳转 -->
+        <nav class="arch-chips" aria-label="分类跳转">
+            {%- for g in ordered -%}
+            {%- assign meta = site.data.categories[g] -%}
+            <a class="arch-chip" href="#g-{{ g | slugify }}">{{ meta.name | default: g }}</a>
+            {%- endfor -%}
+        </nav>
+
+        {%- for g in ordered %}
+        {%- assign meta = site.data.categories[g] -%}
+        {%- assign items = "" | split: "" -%}
+        {%- for q in note_pages -%}
+        {%- assign qg = q.path | split: '/' | slice: 1, 1 | first -%}
+        {%- if qg == g -%}{%- assign items = items | push: q -%}{%- endif -%}
+        {%- endfor -%}
+        {%- assign items = items | sort: "date" | reverse -%}
+
+        <section class="arch-group" id="g-{{ g | slugify }}">
+            <header class="arch-group-head">
+                <h2 class="arch-group-title">{{ meta.name | default: g }}<span class="arch-group-count">{{ items.size }}</span></h2>
+                {%- if meta.desc %}<p class="arch-group-desc">{{ meta.desc }}</p>{% endif %}
+            </header>
+            <ul class="arch-list">
+                {%- for item in items %}
+                {%- assign fname = item.path | split: '/' | last | replace: '.md', '' -%}
+                <li class="arch-item">
+                    <a class="arch-link" href="{{ item.url | relative_url }}">{{ item.title | default: fname }}</a>
+                    <time class="arch-date">{% if item.date %}{{ item.date | date: "%Y.%m" }}{% endif %}</time>
+                </li>
+                {%- endfor %}
+            </ul>
+        </section>
+        {%- endfor %}
+
+        <footer class="page-footer">
+            <a href="{{ '/' | relative_url }}">← 回首页</a>
+            <a href="{{ '/gallery/' | relative_url }}">看照片 →</a>
+        </footer>
+
+    </main>
+
+</body>
+</html>

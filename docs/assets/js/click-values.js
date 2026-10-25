@@ -5,37 +5,37 @@
         "Serenity", "Grace", "Kindness",
         "Courage", "Passion", "Freedom"
     ];
-    // Ò»×éÈáºÍµÄ¡°·Û²Ê¡±É«
+    // ä¸€ç»„æŸ”å’Œçš„â€œç²‰å½©â€è‰²
     const colors = [
         "#FFD1DC", "#FFE4B5", "#E0FFFF",
         "#E6E6FA", "#FFFACD", "#F0FFF0"
     ];
-    // Ò»×é¿ÉÑ¡×ÖÌå´óÐ¡£¨px£©
+    // ä¸€ç»„å¯é€‰å­—ä½“å¤§å°ï¼ˆpxï¼‰
     const sizes = [16, 18, 20, 22, 24];
 
     document.addEventListener('click', function (e) {
         const txt = values[Math.floor(Math.random() * values.length)];
         const color = colors[Math.floor(Math.random() * colors.length)];
         const size = sizes[Math.floor(Math.random() * sizes.length)];
-        const angle = (Math.random() - 0.5) * 30;       // -15¡ã µ½ +15¡ã Ëæ»úÐý×ª
-        const dx = (Math.random() - 0.5) * 40;       // -20px µ½ +20px Ëæ»úºáÒÆ
+        const angle = (Math.random() - 0.5) * 30;       // -15Â° åˆ° +15Â° éšæœºæ—‹è½¬
+        const dx = (Math.random() - 0.5) * 40;       // -20px åˆ° +20px éšæœºæ¨ªç§»
 
         const span = document.createElement('span');
         span.className = 'click-text';
         span.textContent = txt;
 
-        // ×¢ÈëÑùÊ½±äÁ¿
+        // æ³¨å…¥æ ·å¼å˜é‡
         span.style.setProperty('--rotate', `${angle}deg`);
         span.style.setProperty('--dx', `${dx}px`);
         span.style.color = color;
         span.style.fontSize = `${size}px`;
 
-        // ¶¨Î»µ½µã»÷Î»ÖÃ£¨×öÒ»ÏÂË®Æ½/´¹Ö±¾ÓÖÐÆ«ÒÆ£©
+        // å®šä½åˆ°ç‚¹å‡»ä½ç½®ï¼ˆåšä¸€ä¸‹æ°´å¹³/åž‚ç›´å±…ä¸­åç§»ï¼‰
         span.style.left = `${e.pageX - size * txt.length * 0.15}px`;
         span.style.top = `${e.pageY - size * 0.6}px`;
 
         document.body.appendChild(span);
-        // ¶¯»­½áÊøºóÒÆ³ýÔªËØ
+        // åŠ¨ç”»ç»“æŸåŽç§»é™¤å…ƒç´ 
         span.addEventListener('animationend', () => span.remove());
     });
 })();

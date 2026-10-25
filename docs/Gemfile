@@ -1,3 +1,6 @@
 source "https://rubygems.org"
 
 gem 'github-pages', group: :jekyll_plugins
+
+# Windows 无系统 zoneinfo 数据库，Jekyll 的 timezone 设置需要它（仅 Windows 平台生效）
+gem 'tzinfo-data', platforms: [:mingw, :x64_mingw, :mswin]

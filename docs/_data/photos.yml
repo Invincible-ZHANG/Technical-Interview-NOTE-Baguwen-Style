@@ -1,0 +1,92 @@
+# ══════════════════════════════════════════════════════════
+#  照片清单 —— 摄影页和首页的照片都从这里取
+#
+#  加一张照片只要两步：
+#    1. 把原图登记到 docs/_tools/make_photos.py 的 SOURCES 里，
+#       跑一次 `python _tools/make_photos.py` 生成三种宽度
+#    2. 在下面追加一条，slug 和 SOURCES 里的键保持一致
+#
+#  camera / settings 按你当时实际的器材和参数改，写不准就留空，
+#  页面上会自动省略那一行。
+# ══════════════════════════════════════════════════════════
+
+- slug: cologne-dome-night
+  title: 科隆，夜里十点
+  date: 2025-11-08
+  place: 科隆 · 德国
+  series: 夜行
+  camera: 手机 · 主摄
+  settings: 24mm · f/1.8 · 1/15s · ISO 3200
+  ratio: "4/3"
+  featured: true
+  tags: [夜景, 建筑, 手持]
+  note: >
+    从桥对岸拍过去，教堂被泛光灯打成暖金色，天空还留一点蓝。
+    手持 1/15s，靠栏杆稳住，噪点明显但氛围对了。
+
+- slug: eiffel-night
+  title: 铁塔与梧桐
+  date: 2025-10-03
+  place: 巴黎 · 法国
+  series: 夜行
+  camera: 手机 · 主摄
+  settings: 24mm · f/1.8 · 1/10s · ISO 2500
+  ratio: "3/4"
+  featured: true
+  tags: [夜景, 城市, 竖构图]
+  note: >
+    站在树下往上仰，让梧桐的枝叶把塔身框住。
+    满屏的金色网格是整趟旅行里最想留下的一张。
+
+- slug: beach-dusk
+  title: 退潮
+  date: 2025-08-17
+  place: 海边
+  series: 光
+  camera: 手机 · 主摄
+  settings: 26mm · f/1.8 · 1/500s · ISO 50
+  ratio: "1/1"
+  featured: true
+  tags: [日落, 海, 极简]
+  note: >
+    方画幅裁掉了天空和远岸，只留浪线上那一道反光。
+    日落前二十分钟，光变得很软，颜色全在湿沙的镜面上。
+
+- slug: brussels-grand-place
+  title: 大广场，黄昏
+  date: 2025-07-20
+  place: 布鲁塞尔 · 比利时
+  series: 路上
+  camera: 手机 · 主摄
+  settings: 24mm · f/1.8 · 1/120s · ISO 200
+  ratio: "2/1"
+  tags: [建筑, 旅行, 广角]
+  note: >
+    公会大楼的金色立面在黄昏会自己发光。
+    退到广场边角用超广视角横切，才装得下这一圈。
+
+- slug: antwerp-cathedral
+  title: 圣母大教堂
+  date: 2025-07-20
+  place: 安特卫普 · 比利时
+  series: 路上
+  camera: 手机 · 主摄
+  settings: 26mm · f/1.8 · 1/800s · ISO 64
+  ratio: "3/2"
+  tags: [建筑, 哥特, 旅行]
+  note: >
+    正午顶光其实是最难拍的时段，靠后期把高光压回来一点，
+    才看得清塔身的砖缝。
+
+- slug: antwerp-central
+  title: 中央车站
+  date: 2025-07-20
+  place: 安特卫普 · 比利时
+  series: 路上
+  camera: 手机 · 主摄
+  settings: 26mm · f/1.8 · 1/640s · ISO 64
+  ratio: "13/10"
+  tags: [建筑, 旅行, 对称]
+  note: >
+    被叫作「世界最美火车站」的那座。
+    站在广场正中轴线上，等前面的人走开才按快门。

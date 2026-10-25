@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "嵌入式基础知识"
 date: 2025-07-26

@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "LeetCode"
 date: 2025-07-30

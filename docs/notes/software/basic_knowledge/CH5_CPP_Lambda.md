@@ -1,4 +1,4 @@
-﻿---
+---
 title: "匿名函数"
 layout: note
 date: 2025-08-07

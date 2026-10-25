@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "STL"
 date: 2025-07-28

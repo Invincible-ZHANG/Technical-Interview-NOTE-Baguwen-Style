@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "AI INFRA LEARNING MAP"
 date: 2025-08-05

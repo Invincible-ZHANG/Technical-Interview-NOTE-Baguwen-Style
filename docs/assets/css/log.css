@@ -1,0 +1,317 @@
+/* ============================================================
+   log.css —— 摄影手记列表（_layouts/log.html）
+   极简编年体：年份做轴，每篇一行
+   ============================================================ */
+
+.log-timeline {
+    margin-top: 2.4rem;
+}
+
+.log-year {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 0 1.6rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(255, 212, 121, 0.14);
+    margin-bottom: 2.2rem;
+}
+
+.log-year:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.log-year-num {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--gold-200);
+    margin: 0;
+    padding-top: 0.55rem;
+    position: sticky;
+    top: calc(var(--nav-h) + 1.4rem);
+    align-self: start;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+}
+
+.log-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.log-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.log-item:last-child {
+    border-bottom: 0;
+}
+
+.log-link {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) 22px;
+    gap: 0 1.1rem;
+    align-items: baseline;
+    padding: 1.15rem 0.2rem;
+    text-decoration: none;
+    transition: padding 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.log-link:hover {
+    padding-left: 0.6rem;
+}
+
+.log-date {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--cream-faint);
+    padding-top: 0.28rem;
+}
+
+.log-body {
+    display: block;
+    min-width: 0;
+}
+
+.log-title {
+    display: block;
+    font-size: 1.08rem;
+    font-weight: 500;
+    color: var(--cream);
+    letter-spacing: 0.005em;
+    line-height: 1.5;
+    transition: color 0.2s;
+}
+
+.log-link:hover .log-title {
+    color: var(--gold-200);
+}
+
+.log-excerpt {
+    display: block;
+    font-size: 0.84rem;
+    line-height: 1.72;
+    color: var(--cream-faint);
+    margin-top: 0.34rem;
+}
+
+.log-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.log-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    color: rgba(255, 212, 121, 0.62);
+    border: 1px solid rgba(255, 212, 121, 0.16);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+}
+
+.log-arrow {
+    font-size: 0.9rem;
+    color: var(--gold-400);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.25s, transform 0.25s;
+    align-self: center;
+}
+
+.log-link:hover .log-arrow,
+.log-link:focus-visible .log-arrow {
+    opacity: 1;
+    transform: none;
+}
+
+@media (max-width: 860px) {
+    .log-year {
+        grid-template-columns: 1fr;
+        gap: 0.7rem;
+    }
+
+    .log-year-num {
+        position: static;
+        padding-top: 0;
+    }
+
+    .log-link {
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 0 0.8rem;
+    }
+
+    .log-arrow {
+        display: none;
+    }
+
+    .log-title {
+        font-size: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .log-link,
+    .log-title,
+    .log-arrow {
+        transition: none !important;
+    }
+}
+
+/* ============================================================
+   影像笔记总览：两个分区并排（_layouts/log.html 总览分支）
+   ============================================================ */
+
+.page-back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: var(--cream-faint);
+    text-decoration: none;
+    margin-bottom: 0.85rem;
+    transition: color 0.2s;
+}
+
+.page-back:hover {
+    color: var(--gold-400);
+}
+
+.log-sections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.3rem;
+    margin-top: 2.2rem;
+}
+
+.log-sec {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 1.3rem;
+    border: 1px solid rgba(255, 212, 121, 0.13);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.018);
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.log-sec:hover {
+    border-color: rgba(255, 212, 121, 0.26);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.log-sec-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+.log-sec-icon {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--gold-400);
+}
+
+.log-sec-heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.log-sec-title {
+    font-size: 1.14rem;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+}
+
+.log-sec-title a {
+    color: var(--cream);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.log-sec-title a:hover {
+    color: var(--gold-200);
+}
+
+.log-sec-en {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--cream-faint);
+    margin: 0.28rem 0 0;
+}
+
+.log-sec-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--cream-faint);
+    white-space: nowrap;
+    padding-top: 0.2rem;
+}
+
+.log-sec-desc {
+    font-size: 0.85rem;
+    line-height: 1.85;
+    color: rgba(255, 251, 231, 0.55);
+    margin: 0.95rem 0 1.05rem;
+}
+
+.log-sec-list {
+    margin: 0 0 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.log-sec-list .log-link {
+    grid-template-columns: 42px minmax(0, 1fr) 18px;
+    gap: 0 0.7rem;
+    padding: 0.8rem 0.1rem;
+}
+
+.log-sec-list .log-link:hover {
+    padding-left: 0.35rem;
+}
+
+.log-sec-list .log-title {
+    font-size: 0.94rem;
+}
+
+.log-sec-more {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--gold-400);
+    text-decoration: none;
+    align-self: flex-start;
+    padding-bottom: 0.12rem;
+    border-bottom: 1px solid rgba(255, 212, 121, 0.28);
+    transition: border-color 0.25s;
+    margin-top: auto;
+}
+
+.log-sec-more:hover {
+    border-bottom-color: var(--gold-400);
+}
+
+.log-sec-hint {
+    font-size: 0.71rem;
+    color: rgba(255, 251, 231, 0.4);
+    margin: 0.7rem 0 0;
+}
+
+@media (max-width: 860px) {
+    .log-sections {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .log-sec {
+        padding: 1.25rem 1.15rem 1.1rem;
+    }
+}

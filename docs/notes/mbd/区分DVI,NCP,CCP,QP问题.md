@@ -1,4 +1,4 @@
-﻿---
+---
 title: 一文告诉你区分DVI,NCP,CCP,QP问题
 date: 2025-09-29
 layout: note

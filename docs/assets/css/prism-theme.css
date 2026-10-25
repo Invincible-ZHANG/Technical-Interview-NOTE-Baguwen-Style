@@ -1,0 +1,145 @@
+/* ============================================================
+   Prism 语法高亮主题 —— 「暖金・夜航」
+   与站点背景（暖金玻璃拟态）统一，代码块沿用 .code-wrapper 的容器样式
+   ============================================================ */
+
+:root {
+    --code-bg: #191720;
+    --code-fg: #e9e4d4;
+    --code-comment: #837f70;
+    --code-keyword: #ffcf70;
+    --code-string: #9fe0c4;
+    --code-number: #f2a15d;
+    --code-function: #8ec5ff;
+    --code-class: #ffd9a0;
+    --code-operator: #cab98a;
+    --code-variable: #ffb4a2;
+    --code-tag: #ff9d8a;
+    --code-attr: #ffd479;
+}
+
+/* 容器与代码块本体：背景交给 .code-wrapper，pre 只负责内边距与滚动 */
+pre[class*="language-"],
+code[class*="language-"] {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'SFMono-Regular', 'Menlo', monospace;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    tab-size: 4;
+    hyphens: none;
+    color: var(--code-fg);
+    text-shadow: none;
+}
+
+pre[class*="language-"] {
+    padding: 1.1em 1.25em;
+    margin: 0;
+    overflow: auto;
+    background: transparent;
+    border-radius: 0;
+}
+
+:not(pre) > code[class*="language-"] {
+    padding: 0.18em 0.42em;
+    border-radius: 6px;
+    background: rgba(255, 212, 121, 0.14);
+    color: #ffe6a8;
+    white-space: normal;
+}
+
+/* ─── Token 配色 ─── */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: var(--code-comment);
+    font-style: italic;
+}
+
+.token.punctuation {
+    color: #a49d8c;
+}
+
+.token.namespace {
+    opacity: 0.75;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: var(--code-tag);
+}
+
+.token.boolean,
+.token.number {
+    color: var(--code-number);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: var(--code-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: var(--code-operator);
+    background: transparent;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: var(--code-keyword);
+    font-weight: 600;
+}
+
+.token.function,
+.token.method {
+    color: var(--code-function);
+}
+
+.token.class-name,
+.token.maybe-class-name {
+    color: var(--code-class);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: var(--code-variable);
+}
+
+.token.important,
+.token.bold {
+    font-weight: 700;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+/* ─── 差异块（diff 语法）─── */
+.token.inserted:not(.prefix) {
+    background: rgba(159, 224, 196, 0.12);
+}
+
+.token.deleted:not(.prefix) {
+    background: rgba(255, 157, 138, 0.12);
+}

@@ -1,11 +1,37 @@
-﻿title: K1n's blog
-description: "K1n's blog"
-url: "https://blog.k1n.asia"
+title: 张子健 · K1n
+description: "张子健（K1n）的个人网站 —— 拍照，也拆开看它怎么成的像。手机摄影、相机、摄像头驱动视角下的成像。"
+url: "https://www.zhangzijian.cn"
 baseurl: ""
 author: kin
+lang: zh-CN
+timezone: Asia/Shanghai
 
 
 encoding: "utf-8"
+
+
+# ─── 构建插件（均在 GitHub Pages 白名单内）───
+# 说明：不用 jekyll-feed —— 它只收 _posts，而本站文章都在 notes/ 下的 pages 里，
+# 会产出一个空壳 feed。feed.xml 改为手写 Atom 模板（docs/feed.xml）。
+plugins:
+  - jekyll-sitemap
+
+
+# ─── 统一兜底：notes/、log/ 与 life/ 下的 .md 默认使用 note 布局 ───
+# 已有 front matter 显式写 layout 的文件不受影响（不会被覆盖）
+defaults:
+  - scope:
+      path: "notes"
+    values:
+      layout: "note"
+  - scope:
+      path: "log"
+    values:
+      layout: "note"
+  - scope:
+      path: "life"
+    values:
+      layout: "note"
 
 
 kramdown:
@@ -16,6 +42,9 @@ kramdown:
     disable : true
 
 
-
-# Google Analytics 4 配置（留空则不注入脚本）
+# 站点统计/评论等
 ga4_measurement_id: G-WNZR555V1D
+giscus_repo: Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style
+giscus_repo_id: R_kgDOPIZeAQ
+giscus_category: Comments
+giscus_category_id: DIC_kwDOPIZeAc4Ct2gH

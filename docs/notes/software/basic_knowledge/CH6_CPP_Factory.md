@@ -1,4 +1,4 @@
-﻿---
+---
 title: "工厂模式"
 layout: note
 date: 2025-08-13

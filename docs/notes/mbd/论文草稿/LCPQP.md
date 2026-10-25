@@ -1,4 +1,4 @@
-﻿---
+---
 title: 多体系统LCP模型转换为QP的严格性分析
 date: 2025-08-08
 layout: note

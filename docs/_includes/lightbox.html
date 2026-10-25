@@ -1,0 +1,23 @@
+<!-- _includes/lightbox.html  照片灯箱（摄影页与首页共用）
+     页面里任何带 data-full 的元素都会成为打开入口 -->
+<div class="lightbox" id="lightbox" hidden>
+    <div class="lb-backdrop" data-lb-close></div>
+    <div class="lb-stage" role="dialog" aria-modal="true" aria-label="照片查看">
+        <button class="lb-close" type="button" data-lb-close aria-label="关闭">✕</button>
+        <button class="lb-nav lb-prev" type="button" data-lb-prev aria-label="上一张">←</button>
+        <button class="lb-nav lb-next" type="button" data-lb-next aria-label="下一张">→</button>
+
+        <figure class="lb-figure">
+            <img class="lb-img" id="lbImg" src="" alt="">
+            <figcaption class="lb-cap">
+                <div class="lb-cap-main">
+                    <h2 class="lb-title" id="lbTitle"></h2>
+                    <p class="lb-place" id="lbPlace"></p>
+                    <p class="lb-note" id="lbNote"></p>
+                    <p class="lb-exif" id="lbExif"></p>
+                </div>
+                <div class="lb-count" id="lbCount"></div>
+            </figcaption>
+        </figure>
+    </div>
+</div>

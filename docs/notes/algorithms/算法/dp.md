@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "c++动态规划"
 date: 2025-08-08

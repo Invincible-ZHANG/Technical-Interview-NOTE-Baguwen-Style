@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Jekyll"
 date: 2025-07-08
 categories: web

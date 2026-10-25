@@ -1,4 +1,4 @@
-﻿---
+---
 title: Master论文草稿
 date: 2025-07-28
 layout: note

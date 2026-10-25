@@ -12,125 +12,239 @@
     {% endif %}
 
     {%- include head.html -%}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--移动端提示-->
-    <script src="/assets/js/mobile-alert.js" defer></script>
     <title>{{ site.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/background.css' | relative_url }}">
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
-    <!--<link rel="stylesheet" href="assets/css/background.css">-->
-    <!--<link rel="stylesheet" href="assets/css/click-values.css">-->
-    {{ content_for_header }}
 </head>
 
-<body class="dashboard">
-    <script src="{{ '/assets/js/click-values.js' | relative_url }}" defer></script>
-    <!-- 吸顶导航（公用 include，支持多级下拉） -->
+{%- assign p = site.data.profile -%}
+{%- assign photos = site.data.photos | sort: "date" | reverse -%}
+
+<body class="home-body">
+
     {% include nav.html %}
-    <div class="dashboard-bg"></div>
-    <div class="dashboard-container">
 
+    <div class="home-shell">
 
-        <!-- 顶部：标题+一言/时钟 -->
-        <header class="header-flex">
-            <div class="main-title-block">
-                <h1 class="main-title">K1n随意写点东西的地方</h1>
-                <p class="main-title-desc">“学习新思想，争做新青年。”</p>
-                <!-- 在这里添加你的 logo -->
-                <div class="personal-logo-container">
-                    <!--<img src="/assets/images/logo2.png" alt="个人 Logo" class="personal-logo">-->
-                    <a href="/notes/Fall_Reviews/" title="彩蛋：秋招页面">
-                        <img src="/assets/images/logo2.png" alt="个人 Logo" class="personal-logo">
+        <!-- ══════════ 左栏：身份卡（桌面端吸附） ══════════ -->
+        <aside class="home-side">
+            <div class="side-inner">
+
+                {%- if p.avatar %}
+                <a class="side-avatar" href="{{ '/' | relative_url }}" aria-label="首页">
+                    <img src="{{ p.avatar | relative_url }}" alt="{{ p.name }}">
+                </a>
+                {%- endif %}
+
+                <h1 class="side-name">{{ p.name }}</h1>
+                {%- if p.handle %}<p class="side-handle">{{ p.handle }}</p>{% endif %}
+                <p class="side-tagline">{{ p.tagline }}</p>
+                {%- if p.meta_line %}<p class="side-metaline">{{ p.meta_line }}</p>{% endif %}
+
+                <nav class="side-anchors" aria-label="页面内导航">
+                    {%- for a in p.anchors %}
+                    <a class="side-anchor" href="#{{ a.id }}" data-anchor="{{ a.id }}">
+                        <span class="side-anchor-line"></span>
+                        <span class="side-anchor-text">{{ a.label }}</span>
                     </a>
-                </div>
-                <!--daymatter-->
-                <div id="daymatter-card">
-                    <div class="daymatter-title">我在德国的第</div>
-                    <div id="daymatter-num" class="daymatter-num">000</div>
-                    <div class="daymatter-unit">天</div>
+                    {%- endfor %}
+                </nav>
+
+                <div class="side-socials">
+                    {%- for s in p.socials %}
+                    <a class="side-social" href="{{ s.url | relative_url }}"{% if s.url contains '://' %} target="_blank" rel="noopener"{% endif %}>{{ s.label }}<span class="side-social-arrow">↗</span></a>
+                    {%- endfor %}
                 </div>
 
             </div>
+        </aside>
 
+        <!-- ══════════ 右栏：正文 ══════════ -->
+        <main class="home-main">
 
-            <div class="right-top-cards">
-                <div class="card quote-card">
-                    <blockquote id="hitokoto_text">“加载中…”</blockquote>
-                    <cite id="hitokoto_source">— 获取中…</cite>
-                </div>
-                <div class="card clock-card">
-                    <div id="time"></div>
-                    <div id="date"></div>
-                </div>
-            </div>
-        </header>
-        <!-- 中间：正文区域（index.md 内容） -->
-        <!--正文-->
-        <main class="main-content">
             {{ content }}
+
+            <!-- ─── 关于 ─── -->
+            <section class="home-section" id="about">
+                <h2 class="home-h2"><span class="h2-num">01</span>关于</h2>
+                <div class="home-prose">
+                    {%- for para in p.about %}
+                    <p>{{ para }}</p>
+                    {%- endfor %}
+                </div>
+            </section>
+
+            <!-- ─── 照片 ─── -->
+            {%- if photos.size > 0 %}
+            <section class="home-section" id="photos">
+                <h2 class="home-h2">
+                    <span class="h2-num">02</span>照片
+                    <a class="h2-side h2-side-link" href="{{ '/gallery/' | relative_url }}">全部 {{ photos.size }} 张 →</a>
+                </h2>
+                <div class="hp-shots">
+                    {%- for ph in photos limit: 5 %}
+                    {%- assign full = '/assets/photos/' | append: ph.slug | append: '-w1800.jpg' | relative_url -%}
+                    <button class="hp-shot" type="button"
+                            data-full="{{ full }}"
+                            data-title="{{ ph.title }}"
+                            data-place="{{ ph.place }}"
+                            data-camera="{{ ph.camera }}"
+                            data-settings="{{ ph.settings }}"
+                            data-note="{{ ph.note | strip_html | normalize_whitespace | escape }}"
+                            aria-label="查看大图：{{ ph.title }}">
+                        <img src="{{ '/assets/photos/' | append: ph.slug | append: '-w960.jpg' | relative_url }}"
+                             srcset="{{ '/assets/photos/' | append: ph.slug | append: '-w480.jpg' | relative_url }} 480w,
+                                     {{ '/assets/photos/' | append: ph.slug | append: '-w960.jpg' | relative_url }} 960w"
+                             sizes="(max-width: 560px) 46vw, 25vw"
+                             alt="{{ ph.title }}" loading="lazy" decoding="async">
+                        <span class="hp-shot-cap">{{ ph.title }}{% if ph.place %} · {{ ph.place }}{% endif %}</span>
+                    </button>
+                    {%- endfor %}
+                </div>
+                <p class="hp-foot">
+                    <a class="inline-link" href="{{ '/gallery/' | relative_url }}">进摄影页看全部，可按系列筛 →</a>
+                </p>
+            </section>
+            {%- endif %}
+
+            <!-- ─── 最近 ─── -->
+            {%- if p.now.size > 0 %}
+            <section class="home-section" id="now">
+                <h2 class="home-h2">
+                    <span class="h2-num">03</span>最近
+                    {%- if p.now_updated %}<span class="h2-side">{{ p.now_updated }}</span>{% endif %}
+                </h2>
+                <ul class="now-list">
+                    {%- for item in p.now %}
+                    <li class="now-item">
+                        <span class="now-label">{{ item.label }}</span>
+                        <span class="now-text">{{ item.text }}</span>
+                    </li>
+                    {%- endfor %}
+                </ul>
+            </section>
+            {%- endif %}
+
+            <!-- ─── 影像笔记（log 两个分区 + life 混合，按日期倒序）─── -->
+            {%- comment -%} Jekyll 3.10 的 where_exp 不支持 and/or，统一用 for + if 手工筛 {%- endcomment -%}
+            {%- assign all_md = site.pages | where_exp: "q", "q.path contains '.md'" -%}
+            {%- assign jitems = "" | split: "" -%}
+            {%- for q in all_md -%}
+            {%- assign seg0 = q.path | split: '/' | first -%}
+            {%- assign fn = q.path | split: '/' | last -%}
+            {%- if seg0 == 'log' or seg0 == 'life' -%}
+            {%- unless fn == 'index.md' -%}{%- assign jitems = jitems | push: q -%}{%- endunless -%}
+            {%- endif -%}
+            {%- endfor -%}
+            {%- assign jitems = jitems | sort: "date" | reverse -%}
+
+            {%- if jitems.size > 0 %}
+            <section class="home-section" id="log">
+                <h2 class="home-h2">
+                    <span class="h2-num">04</span>影像笔记
+                    <a class="h2-side h2-side-link" href="{{ '/log/' | relative_url }}">全部 →</a>
+                </h2>
+                <ul class="timeline">
+                    {%- for item in jitems limit: 4 %}
+                    {%- assign seg0 = item.path | split: '/' | first -%}
+                    {%- assign item_sec = item.path | split: '/' | slice: 1, 1 | first -%}
+                    <li class="tl-item">
+                        <span class="tl-date">{{ item.date | date: "%Y.%m" }}</span>
+                        <div class="tl-body">
+                            <a class="tl-title" href="{{ item.url | relative_url }}">{{ item.title | default: item.name | replace: '.md', '' }}</a>
+                            {%- if item.excerpt %}
+                            <p class="tl-excerpt">{{ item.excerpt | strip_html | normalize_whitespace | truncate: 86 }}</p>
+                            {%- endif %}
+                            <span class="tl-kind">{% if seg0 == 'life' %}路上{% elsif item_sec == 'sensor' %}成像{% elsif item_sec == 'aesthetic' %}美学{% else %}笔记{% endif %}</span>
+                        </div>
+                    </li>
+                    {%- endfor %}
+                </ul>
+            </section>
+            {%- endif %}
+
+            <!-- ─── 笔记（只留一条入口 + 最近几条纯文本）─── -->
+            {%- assign note_pages = "" | split: "" -%}
+            {%- for q in all_md -%}
+            {%- assign pfx = q.path | slice: 0, 6 -%}
+            {%- if pfx == 'notes/' -%}
+            {%- assign fn = q.path | split: '/' | last -%}
+            {%- unless fn == 'index.md' -%}{%- if q.date -%}{%- assign note_pages = note_pages | push: q -%}{%- endif -%}{%- endunless -%}
+            {%- endif -%}
+            {%- endfor -%}
+            {%- assign note_pages = note_pages | sort: "date" | reverse -%}
+
+            <section class="home-section home-section--plain" id="notes">
+                <h2 class="home-h2">
+                    <span class="h2-num">05</span>笔记
+                    <span class="h2-side">{{ note_pages.size }} 篇 · 归档</span>
+                </h2>
+                <p class="home-note-intro">
+                    做摄像头之前留下的东西：多体动力学、嵌入式、算法、秋招。跟摄影没关系了，纯当存档。
+                    <a class="inline-link" href="{{ '/notes/' | relative_url }}">全部笔记 →</a>
+                </p>
+                <ul class="minilist">
+                    {%- for note in note_pages limit: 5 %}
+                    <li class="minilist-item">
+                        <a href="{{ note.url | relative_url }}">{{ note.title | default: note.name | replace: '.md', '' }}</a>
+                        <time>{{ note.date | date: "%Y.%m" }}</time>
+                    </li>
+                    {%- endfor %}
+                </ul>
+            </section>
+
+            <!-- ─── 页脚 ─── -->
+            <footer class="home-footer">
+                <p>{{ p.footer_note }}</p>
+                <p class="home-footer-meta">© {{ site.time | date: "%Y" }} {{ p.name }} · <a href="{{ '/feed.xml' | relative_url }}">RSS</a> · <a href="{{ '/search.html' | relative_url }}">搜索</a></p>
+            </footer>
+
         </main>
-
-
-        <!-- ====== 评论区（放在正文下方、页面最底） ====== -->
-        <div id="comments" class="giscus"></div>
-        <script src="https://giscus.app/client.js"
-                data-repo="Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style"
-                data-repo-id="R_kgDOPIZeAQ"
-                data-category="Comments"
-                data-category-id="DIC_kwDOPIZeAc4Ct2gH"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="noborder_dark"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-        </script>
-        <!-- ====== 评论区结束 ====== -->
-
     </div>
-    {{ content_for_footer }}
 
+    {% include lightbox.html %}
+
+    <!-- 滚动高亮：左栏锚点跟随右侧区块 -->
     <script>
-        // 实时时钟
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('time').textContent = now.toLocaleTimeString();
-            document.getElementById('date').textContent = now.toLocaleDateString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-        // 一言API
-        async function fetchHitokotoLiterature() {
-            try {
-                const resp = await fetch('https://v1.hitokoto.cn?c=d');
-                const data = await resp.json();
-                document.getElementById('hitokoto_text').textContent = `“${data.hitokoto}”`;
-                document.getElementById('hitokoto_text').onclick = () =>
-                    window.open(`https://hitokoto.cn/?uuid=${data.uuid}`, '_blank');
-                let parts = [];
-                if (data.from_who) parts.push(data.from_who);
-                if (data.from) parts.push(`《${data.from}》`);
-                document.getElementById('hitokoto_source').textContent = parts.length ? `— ${parts.join('，')}` : '';
-            } catch (e) {
-                document.getElementById('hitokoto_text').textContent = '“加载失败，请稍后重试。”';
-                document.getElementById('hitokoto_source').textContent = '';
-            }
-        }
-        document.addEventListener('DOMContentLoaded', fetchHitokotoLiterature);
+    (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('.side-anchor'));
+        var targets = links.map(function (l) {
+            return document.getElementById(l.getAttribute('data-anchor'));
+        });
+        if (!links.length || !window.IntersectionObserver) return;
+
+        var visible = {};
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0;
+            });
+            var bestId = null, best = 0;
+            Object.keys(visible).forEach(function (id) {
+                if (visible[id] > best) { best = visible[id]; bestId = id; }
+            });
+            if (!bestId) return;
+            links.forEach(function (l) {
+                l.classList.toggle('is-active', l.getAttribute('data-anchor') === bestId);
+            });
+        }, { rootMargin: '-20% 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] });
+
+        targets.forEach(function (t) { if (t) io.observe(t); });
+
+        // 平滑滚动（尊重系统的减少动效偏好）
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        links.forEach(function (l) {
+            l.addEventListener('click', function (ev) {
+                var t = document.getElementById(l.getAttribute('data-anchor'));
+                if (!t) return;
+                ev.preventDefault();
+                t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+                history.replaceState(null, '', '#' + t.id);
+            });
+        });
+    })();
     </script>
 
-
-    <script>
-        var startDate = new Date('2023-03-29');
-        var today = new Date();
-        var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
-        document.getElementById('daymatter-num').innerText = diffDays;
-    </script>
+    <script src="{{ '/assets/js/lightbox.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/mobile-tip.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/ui-enhance.js' | relative_url }}" defer></script>
 
 </body>
 </html>

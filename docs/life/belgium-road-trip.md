@@ -1,4 +1,4 @@
-﻿---
+---
 title: 比利时两日自驾游攻略
 date: 2025-07-20
 author: 张子健
@@ -6,6 +6,8 @@ layout: note
 categories: [旅行, 比利时]
 tags: [自驾, 布鲁日, 根特, 亚琛出发]
 excerpt: 亚琛出发，两天自驾游览比利时五城的详细攻略，包括路线、美食、停车和景点讲解。
+place: 比利时
+cover: /life/image/GrandPlace.png
 
 ---
 

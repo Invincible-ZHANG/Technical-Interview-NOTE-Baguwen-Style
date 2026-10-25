@@ -1,4 +1,4 @@
-﻿---
+---
 title: chrono建模与投影浅谈
 date: 2025-08-20
 excerpt: "Chrono 有两大接触建模路线（NSC/SMC），NSC 路线下也不是只有一种求解器，CCP 只是 NSC 的数学形式之一。"

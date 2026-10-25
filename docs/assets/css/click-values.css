@@ -4,11 +4,11 @@
     position: absolute;
     white-space: nowrap;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 10px; /* Ä¬ÈÏ´óĞ¡£¬JS »á¸²¸Ç */
-    color: #ff8c69; /* Ä¬ÈÏÑÕÉ«£¬JS »á¸²¸Ç */
+    font-size: 10px; /* é»˜è®¤å¤§å°ï¼ŒJS ä¼šè¦†ç›– */
+    color: #ff8c69; /* é»˜è®¤é¢œè‰²ï¼ŒJS ä¼šè¦†ç›– */
     user-select: none;
     pointer-events: none;
-    /* ÏÈÓ¦ÓÃ³õÊ¼ transform£¬È»ºóÖ´ĞĞ¶¯»­ */
+    /* å…ˆåº”ç”¨åˆå§‹ transformï¼Œç„¶åæ‰§è¡ŒåŠ¨ç”» */
     transform: rotate(var(--rotate)) translateX(var(--dx)) translateY(0);
     animation: floatUp 2s ease-out forwards;
 }

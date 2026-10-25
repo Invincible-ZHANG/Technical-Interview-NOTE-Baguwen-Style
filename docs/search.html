@@ -1,0 +1,148 @@
+---
+layout: default
+title: 搜索
+description: 站内全文搜索
+comments: false
+---
+
+<div class="search-page">
+    <header class="page-head">
+        <h1 class="page-title">搜索</h1>
+        <p class="page-lede">成像技术、摄影美学、旅途记录和旧技术笔记都在这里，标题、摘要和分类都能匹配。</p>
+    </header>
+
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="search" placeholder="输入关键词，例如 降噪、卷帘快门、RAW、比利时、CUDA…" autocomplete="off" aria-label="站内搜索">
+        <button id="search-clear" type="button" class="search-clear" aria-label="清空">×</button>
+    </div>
+
+    <div class="search-hot" id="search-hot">
+        <span class="search-hot-label">常搜</span>
+        <button type="button" class="search-chip" data-q="降噪">降噪</button>
+        <button type="button" class="search-chip" data-q="快门">快门</button>
+        <button type="button" class="search-chip" data-q="RAW">RAW</button>
+        <button type="button" class="search-chip" data-q="比利时">比利时</button>
+        <button type="button" class="search-chip" data-q="ISP">ISP</button>
+        <button type="button" class="search-chip" data-q="CUDA">CUDA</button>
+    </div>
+
+    <p id="search-status" class="search-status">正在建立索引…</p>
+    <div id="search-results" class="search-results"></div>
+</div>
+
+<script>
+(function () {
+    var input = document.getElementById('search-input');
+    var results = document.getElementById('search-results');
+    var status = document.getElementById('search-status');
+    var clearBtn = document.getElementById('search-clear');
+    var index = [];
+
+    function escapeHtml(s) {
+        return (s || '').replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function highlight(text, q) {
+        var safe = escapeHtml(text);
+        if (!q) return safe;
+        var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+        return safe.replace(re, function (m) { return '<mark>' + m + '</mark>'; });
+    }
+
+    function sectionLabel(item) {
+        if (item.section === 'life') return '生活';
+        if (item.section === 'log') {
+            if (item.group === 'sensor') return 'Sensor 与成像';
+            if (item.group === 'aesthetic') return '摄影美学';
+            return '影像笔记';
+        }
+        var map = {
+            mbd: '多体动力学', software: '嵌入式与系统', algorithms: '算法',
+            Fall_Reviews: '秋招记录', AI_Infra: 'AI 基础设施', LLM: '大模型',
+            gpu_cuda: 'GPU / CUDA', Linux: 'Linux', English: '英语', web: '前端'
+        };
+        return map[item.group] || item.group || '笔记';
+    }
+
+    function render(list, q) {
+        if (!list.length) {
+            results.innerHTML = '<p class="search-empty">没有匹配的内容，换个关键词试试？</p>';
+            status.textContent = '共 0 条结果';
+            return;
+        }
+        status.textContent = '共 ' + list.length + ' 条结果';
+        results.innerHTML = '<ul class="arch-list">' + list.map(function (item) {
+            return '<li class="arch-item arch-item--search">' +
+                '<a class="arch-link" href="' + item.url + '">' +
+                    '<span class="search-hit-title">' + highlight(item.title || '(无标题)', q) + '</span>' +
+                    (item.excerpt ? '<span class="search-snippet">' + highlight(item.excerpt.slice(0, 120), q) + '</span>' : '') +
+                '</a>' +
+                '<span class="search-tag">' + escapeHtml(sectionLabel(item)) + '</span>' +
+                '<time class="arch-date">' + (item.date || '') + '</time>' +
+                '</li>';
+        }).join('') + '</ul>';
+    }
+
+    function search(q) {
+        var query = q.trim().toLowerCase();
+        var hot = document.getElementById('search-hot');
+        if (hot) hot.style.display = query ? 'none' : '';
+        if (!query) {
+            results.innerHTML = '';
+            status.textContent = '输入关键词开始搜索，共 ' + index.length + ' 篇内容';
+            return;
+        }
+        var hits = index.filter(function (item) {
+            var hay = ((item.title || '') + ' ' + (item.excerpt || '') + ' ' + (item.group || '')).toLowerCase();
+            return hay.indexOf(query) !== -1;
+        });
+        // 标题命中优先
+        hits.sort(function (a, b) {
+            var at = (a.title || '').toLowerCase().indexOf(query) === -1 ? 1 : 0;
+            var bt = (b.title || '').toLowerCase().indexOf(query) === -1 ? 1 : 0;
+            return at - bt;
+        });
+        render(hits, query);
+    }
+
+    var timer = null;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        var v = input.value;
+        timer = setTimeout(function () { search(v); }, 160);
+    });
+    clearBtn.addEventListener('click', function () {
+        input.value = '';
+        search('');
+        input.focus();
+    });
+
+    // 常搜关键词：点一下直接填进输入框
+    Array.prototype.forEach.call(document.querySelectorAll('.search-chip'), function (chip) {
+        chip.addEventListener('click', function () {
+            input.value = chip.getAttribute('data-q') || '';
+            search(input.value);
+            input.focus();
+        });
+    });
+
+    var base = '{{ "/search.json" | relative_url }}';
+    fetch(base)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            index = (data || []).filter(function (i) { return i.url; });
+            search(input.value);
+        })
+        .catch(function () {
+            status.textContent = '索引加载失败，请刷新重试。';
+        });
+
+    // 支持 /search.html?q=关键词 直接进入
+    var params = new URLSearchParams(location.search);
+    var q0 = params.get('q');
+    if (q0) { input.value = q0; }
+})();
+</script>

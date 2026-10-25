@@ -1,4 +1,4 @@
-﻿---
+---
 title: MA周工作记录
 date: 2025-08-27
 layout: note

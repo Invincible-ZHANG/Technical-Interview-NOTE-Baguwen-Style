@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
+<head>
+
+    {% if site.ga4_measurement_id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga4_measurement_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+        gtag('config', '{{ site.ga4_measurement_id }}');
+    </script>
+    {% endif %}
+
+    {%- include head.html -%}
+    <title>{{ page.title | default: '影像笔记' }} · {{ site.title }}</title>
+</head>
+
+<body class="page-body">
+
+    <div class="reading-progress" aria-hidden="true"><div class="reading-progress-bar"></div></div>
+    <script src="{{ '/assets/js/mobile-tip.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/ui-enhance.js' | relative_url }}" defer></script>
+
+    {% include nav.html %}
+
+    {%- comment -%}
+      收集 log/ 下全部条目（含 sensor/、aesthetic/ 等子目录），排除各级 index.md。
+      Jekyll 3.10 的 where_exp 不支持 and / or，只能用 for + if 手筛。
+    {%- endcomment -%}
+    {%- assign all_md = site.pages | where_exp: "q", "q.path contains '.md'" -%}
+    {%- assign items = "" | split: "" -%}
+    {%- for q in all_md -%}
+    {%- assign seg0 = q.path | split: '/' | first -%}
+    {%- if seg0 == 'log' -%}
+    {%- assign fn = q.path | split: '/' | last -%}
+    {%- unless fn == 'index.md' -%}{%- assign items = items | push: q -%}{%- endunless -%}
+    {%- endif -%}
+    {%- endfor -%}
+    {%- assign items = items | sort: "date" | reverse -%}
+
+    {%- comment -%} 子页面（page.section 有值）只保留该分区 {%- endcomment -%}
+    {%- if page.section -%}
+    {%- assign scoped = "" | split: "" -%}
+    {%- for it in items -%}
+    {%- assign it_sec = it.path | split: '/' | slice: 1, 1 | first -%}
+    {%- if it_sec == page.section -%}{%- assign scoped = scoped | push: it -%}{%- endif -%}
+    {%- endfor -%}
+    {%- assign items = scoped -%}
+    {%- endif -%}
+
+    <main class="page-wrap">
+
+        <header class="page-head">
+            {%- if page.section -%}
+            <a class="page-back" href="{{ '/log/' | relative_url }}">← 影像笔记</a>
+            {%- else -%}
+            <p class="page-kicker">Notes on making pictures</p>
+            {%- endif %}
+            <h1 class="page-title">{{ page.title | default: '影像笔记' }}</h1>
+            <p class="page-lede">{{ page.description | default: '拍完之后想明白的那点事。' }}</p>
+            <p class="page-count">{{ items.size }} 篇</p>
+        </header>
+
+        {{ content }}
+
+        {%- if page.section -%}
+
+        {%- comment -%} ══════ 单个分区：编年列表 ══════ {%- endcomment -%}
+        {%- assign years = "" | split: "" -%}
+        {%- for it in items -%}
+        {%- assign y = it.date | date: "%Y" -%}
+        {%- unless years contains y -%}{%- assign years = years | push: y -%}{%- endunless -%}
+        {%- endfor -%}
+
+        {%- if items.size > 0 %}
+        <div class="log-timeline">
+            {%- for y in years %}
+            <section class="log-year">
+                <h2 class="log-year-num">{{ y }}</h2>
+                <ol class="log-list">
+                    {%- for it in items -%}
+                    {%- assign iy = it.date | date: "%Y" -%}
+                    {%- if iy == y %}
+                    {%- assign fname = it.path | split: '/' | last | replace: '.md', '' %}
+                    <li class="log-item">
+                        <a class="log-link" href="{{ it.url | relative_url }}">
+                            <time class="log-date">{{ it.date | date: "%m.%d" }}</time>
+                            <span class="log-body">
+                                <span class="log-title">{{ it.title | default: fname }}</span>
+                                {%- if it.excerpt %}
+                                <span class="log-excerpt">{{ it.excerpt | strip_html | normalize_whitespace | truncate: 96 }}</span>
+                                {%- endif %}
+                                {%- if it.tags %}
+                                <span class="log-tags">
+                                    {%- for t in it.tags %}<span class="log-tag">{{ t }}</span>{% endfor %}
+                                </span>
+                                {%- endif %}
+                            </span>
+                            <span class="log-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    {%- endif -%}
+                    {%- endfor %}
+                </ol>
+            </section>
+            {%- endfor %}
+        </div>
+        {%- else %}
+        <p class="page-empty">这个分区还没有内容。在 <code>docs/log/{{ page.section }}/</code> 下新建一个 .md 就会出现在这里。</p>
+        {%- endif %}
+
+        <footer class="page-footer">
+            <a href="{{ '/log/' | relative_url }}">← 影像笔记</a>
+            <a href="{{ '/gallery/' | relative_url }}">看照片 →</a>
+        </footer>
+
+        {%- else -%}
+
+        {%- comment -%} ══════ 总览：两个分区各拉最近几篇 ══════ {%- endcomment -%}
+        <div class="log-sections">
+            {%- for s in site.data.log_sections %}
+            {%- assign sec_items = "" | split: "" -%}
+            {%- for it in items -%}
+            {%- assign it_sec = it.path | split: '/' | slice: 1, 1 | first -%}
+            {%- if it_sec == s.key -%}{%- assign sec_items = sec_items | push: it -%}{%- endif -%}
+            {%- endfor %}
+
+            <section class="log-sec">
+                <header class="log-sec-head">
+                    <span class="log-sec-icon" aria-hidden="true">{{ s.icon }}</span>
+                    <div class="log-sec-heading">
+                        <h2 class="log-sec-title">
+                            <a href="{{ s.url | relative_url }}">{{ s.title }}</a>
+                        </h2>
+                        <p class="log-sec-en">{{ s.en }}</p>
+                    </div>
+                    <span class="log-sec-count">{{ sec_items.size }} 篇</span>
+                </header>
+
+                <p class="log-sec-desc">{{ s.desc }}</p>
+
+                {%- if sec_items.size > 0 %}
+                <ol class="log-list log-sec-list">
+                    {%- for it in sec_items limit: 3 %}
+                    {%- assign fname = it.path | split: '/' | last | replace: '.md', '' %}
+                    <li class="log-item">
+                        <a class="log-link" href="{{ it.url | relative_url }}">
+                            <time class="log-date">{{ it.date | date: "%m.%d" }}</time>
+                            <span class="log-body">
+                                <span class="log-title">{{ it.title | default: fname }}</span>
+                            </span>
+                            <span class="log-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    {%- endfor %}
+                </ol>
+                {%- endif %}
+
+                <a class="log-sec-more" href="{{ s.url | relative_url }}">
+                    全部 {{ sec_items.size }} 篇 <span aria-hidden="true">→</span>
+                </a>
+                <p class="log-sec-hint">{{ s.hint }}</p>
+            </section>
+            {%- endfor %}
+        </div>
+
+        <footer class="page-footer">
+            <a href="{{ '/' | relative_url }}">← 回首页</a>
+            <a href="{{ '/gallery/' | relative_url }}">看照片 →</a>
+        </footer>
+
+        {%- endif -%}
+
+    </main>
+
+</body>
+</html>

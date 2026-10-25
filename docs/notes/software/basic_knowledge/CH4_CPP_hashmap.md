@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Hash map"
 layout: note
 date: 2025-08-04

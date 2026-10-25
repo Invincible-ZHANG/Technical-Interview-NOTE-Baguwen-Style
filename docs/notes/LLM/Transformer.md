@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Transformer"
 layout: note
 date: 2025-08-20 

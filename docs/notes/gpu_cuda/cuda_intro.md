@@ -1,4 +1,4 @@
-﻿---
+---
 title: "CUDA 编程入门"
 date: 2025-07-09
 categories: gpu_cuda

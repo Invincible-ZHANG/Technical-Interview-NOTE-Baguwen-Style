@@ -1,7 +1,7 @@
 中文 | [English](./README_EN.md)
-# 个人博客 📚
+# K1n · 摄影与成像笔记 📷
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![GitHub Pages](https://img.shields.io/badge/Pages-📖%20Online-blue)](https://invincible-zhang.github.io/Technical-Interview-NOTE-Baguwen-Style/) [![Languages](https://img.shields.io/badge/Langs-C%2B%2B%20%7C%20Python%20%7C%20CUDA-lightgrey)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![GitHub Pages](https://img.shields.io/badge/Pages-📖%20Online-blue)](https://www.zhangzijian.cn/) [![Type](https://img.shields.io/badge/Site-Photography-lightgrey)]()
 
 > 自己的随手写
 
@@ -22,7 +22,9 @@
 
 ## 简介
 
-「个人Blog」是一个面向嵌入式系统、多体动力学、求解器/优化算法以及 GPU/CUDA 并行计算的技术知识库，采用 **Markdown** 撰写，**Jekyll + GitHub Pages** 自动部署，支持本地预览与 CI/CD。
+个人站点，主题是摄影。`/gallery/` 是照片墙（瀑布流 + 灯箱 + 按系列筛选），`/log/` 是影像笔记，分成两路：「Sensor 与成像」记工作里攒下的成像技术，「摄影美学」记构图、光线和审美的练习；`/life/` 放旅行记录，`/notes/` 把过去几年写的技术笔记整理成归档。采用 **Markdown** 撰写，**Jekyll + GitHub Pages** 自动部署，支持本地一键构建与预览。
+
+照片走一套轻量的静态流程：原图登记在 `docs/_tools/make_photos.py`，跑一次脚本生成 480 / 960 / 1800 三档宽度，元数据写在 `docs/_data/photos.yml`，页面自动渲染，不用手拼 HTML。
 
 ---
 
@@ -63,19 +65,17 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 ---
 
 ## 核心特性
-🚀 领域覆盖：嵌入式开发 · 软件工程 · GPU/CUDA 加速 · 算法与数值求解
+📷 照片墙：瀑布流布局、全屏灯箱（键盘 / 滑动翻页）、按系列筛选
 
-✍️ Markdown 笔记：统一格式、YAML Front Matter、自动生成导航和索引
+✍️ 三种内容形态：影像笔记 `/log/`（Sensor 与成像 / 摄影美学）、旅记 `/life/`、旧笔记归档 `/notes/`
 
-🔄 Jekyll 构建：docs/ 目录 + Minima 主题 + 自定义 home.html 布局
+🔍 纯前端搜索：`search.json` 静态索引，无后端依赖
+
+🌙 暗色暖金主题：手写 CSS，无 UI 框架，支持自适应与动效降级
+
+🖼️ 图片流程脚本化：`_tools/make_photos.py` 一键生成多档尺寸
 
 🔧 GitHub Actions：自动化构建与部署到 GitHub Pages
-
-📦 Docker 预览：无需本地 Ruby 环境，容器中一键启动
-
-🔗 名言模块：Hitokoto API 动态加载并附带出处链接
-
-📱 响应式布局：手机/平板/PC 三档自适应
 
 ---
 
@@ -109,7 +109,14 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 │   │   │   └── 论文草稿/             
 │   │   ├── travel/image/                # 旅行笔记及图片
 │   │   └── web/                         # Web 开发相关
-│   ├── _data/                  # Jekyll 数据文件
+│   ├── gallery/                # 摄影页（照片墙 / 灯箱）
+│   ├── log/                    # 影像笔记（总览）
+│   │   ├── sensor/             #   └ Sensor 与成像：成像链路、ISP、驱动侧积累
+│   │   └── aesthetic/          #   └ 摄影美学：构图、光线、审美练习
+│   ├── life/                   # 旅记与生活记录
+│   ├── assets/photos/          # 由脚本生成的网页尺寸照片
+│   ├── _tools/                 # 图片处理脚本（make_photos.py）
+│   ├── _data/                  # Jekyll 数据文件（profile / photos / navigation）
 │   ├── _includes/              # Jekyll 可重用片段
 │   └── _layouts/               # Jekyll 布局模板
 ├── examples/                  # 示例代码项目
@@ -127,7 +134,7 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 
 ## 示例 
 
-* **在线浏览**： [GitHub Pages 站点](https://invincible-zhang.github.io/Technical-Interview-NOTE-Baguwen-Style/)
+* **在线浏览**： [GitHub Pages 站点](https://www.zhangzijian.cn/)
 * **示例笔记**：嵌入式 [RTOS 基础](/embedded/rtos-basics.html)、GPU/CUDA [并行模型](/gpu-cuda/cuda-intro.html)
 
 ---
@@ -163,7 +170,7 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 
 🔧 **纯静态部署**：主页构建后产出纯 HTML/CSS/JS，可部署在 GitHub Pages 或任意静态服务器。
 
-📁 **主站入口地址**：[https://invincible-zhang.github.io/blog](https://invincible-zhang.github.io/blog)
+📁 **主站入口地址**：[https://www.zhangzijian.cn/](https://www.zhangzijian.cn/)
 
 ---
 ## 未来展望

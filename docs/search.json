@@ -1,0 +1,30 @@
+---
+layout: null
+---
+{%- comment -%}
+  Jekyll 3.10 的 where_exp 不支持 and / or 组合，故用 for + if 手工筛选。
+  收录 notes/、log/ 与 life/ 下的 .md，排除各目录的 index.md（索引页本身不该进搜索结果）。
+{%- endcomment -%}
+{%- assign all_md = site.pages | where_exp: "p", "p.path contains '.md'" -%}
+{%- assign items = "" | split: "" -%}
+{%- for p in all_md -%}
+{%- assign seg0 = p.path | split: '/' | first -%}
+{%- if seg0 == 'notes' or seg0 == 'log' or seg0 == 'life' -%}
+{%- if p.name != 'index.md' -%}{%- assign items = items | push: p -%}{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+[
+{% for p in items %}
+{%- comment -%} 摘要去掉 Markdown/行内公式符号，避免搜索结果里出现一串 ## 和 $$ {%- endcomment -%}
+{%- assign plain = p.content | strip_html | normalize_whitespace -%}
+{%- assign plain = plain | replace: '#', '' | replace: '*', '' | replace: '$', '' | replace: '`', '' | replace: '|', ' ' | replace: '>', ' ' | normalize_whitespace | truncate: 240 -%}
+  {
+    "title": {{ p.title | default: "" | jsonify }},
+    "url": {{ p.url | jsonify }},
+    "section": {{ p.path | split: '/' | first | jsonify }},
+    "group": {{ p.path | split: '/' | slice: 1, 1 | first | jsonify }},
+    "date": {{ p.date | date: "%Y-%m-%d" | default: "" | jsonify }},
+    "excerpt": {{ plain | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]

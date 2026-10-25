@@ -1,4 +1,4 @@
-﻿---
+---
 title: Linux map
 date: 2025-08-13
 layout: note

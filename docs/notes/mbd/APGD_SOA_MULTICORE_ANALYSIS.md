@@ -1,3 +1,8 @@
+---
+title: "APGD、SOA 与 Multicore 求解器代码分析报告"
+date: 2025-11-28
+---
+
 # APGD、SOA 与 Multicore 求解器代码分析报告
 
 ## 目录

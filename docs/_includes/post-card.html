@@ -1,0 +1,14 @@
+{%- assign n = include.note -%}
+{%- assign fname = n.path | split: '/' | last | replace: '.md', '' -%}
+{%- assign card_title = n.title | default: fname -%}
+<article class="post-card">
+    <h3 class="post-title">
+        <a href="{{ n.url | relative_url }}">{{ card_title }}</a>
+    </h3>
+    {%- if n.excerpt %}
+    <p class="post-excerpt">{{ n.excerpt | strip_html | normalize_whitespace | truncate: 70 }}</p>
+    {%- endif %}
+    <div class="post-meta">
+        {%- if n.date %}<time class="post-date">🕒 {{ n.date | date: "%Y-%m-%d" }}</time>{%- endif %}
+    </div>
+</article>

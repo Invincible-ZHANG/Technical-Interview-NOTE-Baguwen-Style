@@ -1,4 +1,4 @@
-﻿// assets/js/image-zoom.js
+// assets/js/image-zoom.js
 (() => {
     const CONTENT_SELECTOR = '.post-content, .subpage-container, .main-content';
     const imgs = Array.from(document.querySelectorAll(`${CONTENT_SELECTOR} img:not(.no-zoom)`));

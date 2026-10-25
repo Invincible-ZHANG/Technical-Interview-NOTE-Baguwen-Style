@@ -1,6 +1,17 @@
 ﻿# ─── 静态站点输出 ──────────────────────────
 _site/
 docs/_site/
+.jekyll-cache/
+docs/.jekyll-cache/
+docs/.jekyll-metadata
+
+# ─── 本地 Jekyll 构建 ──────────────────────
+# Gemfile.lock 保持跟踪（仓库原有约定），不要 ignore
+docs/vendor/
+.bundle/
+
+# ─── 本地工具/记忆数据 ─────────────────────
+.workbuddy/
 
 # ┟─────────────────────────────────────────
 

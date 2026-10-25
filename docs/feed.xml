@@ -1,0 +1,41 @@
+---
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+{%- comment -%}
+  自定义 Atom feed：本站没有 _posts 目录（文章都在 notes/ 下的 pages 里），
+  jekyll-feed 只会生成空壳，所以这里手工出 feed。
+  Jekyll 3.10 的 where_exp 不支持 and/or，用 for + if 筛选。
+{%- endcomment -%}
+{%- assign all_md = site.pages | where_exp: "p", "p.path contains '.md'" -%}
+{%- assign items = "" | split: "" -%}
+{%- for p in all_md -%}
+{%- assign seg0 = p.path | split: '/' | first -%}
+{%- if seg0 == 'notes' or seg0 == 'log' or seg0 == 'life' -%}
+{%- if p.date and p.name != 'index.md' -%}{%- assign items = items | push: p -%}{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+{%- assign items = items | sort: "date" | reverse -%}
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title | xml_escape }}</title>
+  <subtitle>{{ site.description | xml_escape }}</subtitle>
+  <link href="{{ '/feed.xml' | absolute_url }}" rel="self" type="application/atom+xml"/>
+  <link href="{{ '/' | absolute_url }}" rel="alternate" type="text/html"/>
+  <id>{{ '/' | absolute_url }}</id>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <author>
+    <name>{{ site.author | xml_escape }}</name>
+  </author>
+  <generator>Jekyll</generator>
+{%- for p in items limit: 20 %}
+  <entry>
+    <title>{{ p.title | default: p.name | xml_escape }}</title>
+    <link href="{{ p.url | absolute_url }}" rel="alternate" type="text/html"/>
+    <id>{{ p.url | absolute_url }}</id>
+    <published>{{ p.date | date_to_xmlschema }}</published>
+    <updated>{{ p.date | date_to_xmlschema }}</updated>
+    <summary type="text">{{ p.content | strip_html | normalize_whitespace | truncate: 200 | xml_escape }}</summary>
+  </entry>
+{%- endfor %}
+</feed>

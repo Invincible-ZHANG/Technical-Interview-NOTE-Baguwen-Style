@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "RTOS 基础"
 date: 2025-07-07

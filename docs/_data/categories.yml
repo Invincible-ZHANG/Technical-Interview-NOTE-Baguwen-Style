@@ -1,0 +1,44 @@
+# ══════════════════════════════════════════════════════════
+#  笔记分类：归档页与分类页显示用的中文名 / 一句话说明
+#  键名 = notes/ 下的一级目录名
+# ══════════════════════════════════════════════════════════
+
+mbd:
+  name: 多体动力学
+  desc: 毕业设计留下的东西 —— 引擎结构、求解器、并行化，还有几十份周报。
+
+software:
+  name: 嵌入式与系统
+  desc: C/C++、RTOS、驱动与通信协议，以及当年校招背过的八股。
+
+algorithms:
+  name: 算法
+  desc: 数据结构、LeetCode 记录和一些零散整理。
+
+Fall_Reviews:
+  name: 秋招记录
+  desc: 面试流程、公司记录。已经过期了，纯当存档。
+
+AI_Infra:
+  name: AI 基础设施
+  desc: PyTorch、编译器、科学计算工具链的笔记。
+
+LLM:
+  name: 大模型
+  desc: Transformer 和 LLM 导览，读资料时的整理。
+
+gpu_cuda:
+  name: GPU / CUDA
+  desc: CUDA 入门与并行计算的基本概念。
+
+Linux:
+  name: Linux
+  desc: 内核阅读笔记。
+
+English:
+  name: 英语
+  desc: 日常学习记录，更新得少。
+
+web:
+  name: 前端
+  desc: 零散的网页相关笔记。

@@ -1,4 +1,4 @@
-﻿---
+---
 layout: note
 title: "算法汇总"
 date: 2025-08-08
