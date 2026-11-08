@@ -15,6 +15,7 @@
 * [项目结构](#项目结构)
 * [示例](#示例)
 * [定制与部署](#定制与部署)
+* [小K 站内助手](#小k-站内助手)
 * [贡献指南](#贡献指南)
 * [许可证](#许可证)
 
@@ -71,6 +72,8 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 🎮 游戏栏目 `/game/`：攻略与打法，带 Leaflet 互动地图（可拖拽缩放，机密 / 绝密两套数据）
 
 🔍 纯前端搜索：`search.json` 静态索引，无后端依赖
+
+🤖 小K 智能助手：右下角悬浮球，接自己的 Key（DeepSeek / Kimi / 智谱 / 通义 / 硅基流动 / OpenAI），流式回答并检索站内文章
 
 🌙 暗色暖金主题：手写 CSS，无 UI 框架，支持自适应与动效降级
 
@@ -146,6 +149,36 @@ bundle exec jekyll serve  #尽量用这个，可以实时看自己改的结果
 2. 更新或新增 Markdown 文件到对应集合目录 (`docs/_embedded`, `docs/_software` 等)。
 3. 在 `.github/workflows/deploy.yml` 配置自动化构建（参考模板已有示例）。
 4. 推送到 `main` 分支，GitHub Actions 会自动部署。
+
+---
+
+## 小K 站内助手
+
+右下角那颗金球就是它。任意页面按 `Alt + K` 唤起，也可以直接开独立页 `/assistant/`。设计上跟站里一套令牌（暖金 + 玻璃），没有引入任何 UI 框架或第三方脚本。
+
+**接入方式**：静态站没有后端，所以走「浏览器直连 + 访客自带 Key（BYOK）」。统一用各家 OpenAI 兼容的 `/chat/completions`，已内置：
+
+| 服务商 | 默认模型 | 申请 Key |
+| --- | --- | --- |
+| DeepSeek | `deepseek-chat` | platform.deepseek.com |
+| Kimi（月之暗面） | `kimi-latest` | platform.moonshot.cn |
+| 智谱 GLM | `glm-4.5` | open.bigmodel.cn |
+| 通义千问（百炼） | `qwen-plus` | bailian.console.aliyun.com |
+| 硅基流动 | `deepseek-ai/DeepSeek-V3` | cloud.siliconflow.cn |
+| OpenAI | `gpt-4o-mini` | platform.openai.com |
+| 自定义 | 手填 | 中转 / Ollama（`http://localhost:11434/v1`） |
+
+模型名可手填，服务商出新模型不用改代码。填完点「测试连接」，会打一次真实请求报时延。
+
+**改文案与默认值**：`docs/_data/assistant.yml` —— 名字、开场白、推荐问题、默认服务商/模型、历史条数、温度都在这里，不用碰 JS。
+
+**关于 Key 的安全**：Key 只写进访客自己浏览器的 `localStorage`，直接从浏览器发给你选的服务商，不经过本站服务器。所以请不要把 Key 填进 `assistant.yml`（本站是公开仓库，填了等于公开发布）；需要「开箱即用」就自建一个转发（Cloudflare Worker 之类），把地址写进 `proxy_url`，浏览器就不会接触 Key 了。
+
+**CORS 提醒**：部分服务商不允许浏览器直连（表现为控制台 `Failed to fetch`）。遇到就换 DeepSeek / 硅基流动，或走上面的代理。
+
+**站内检索**：每次提问前会读一遍 `search.json`，用关键词打分取前 3 篇摘要塞进 system prompt，回答里引用的文章会在气泡下方列成「站内」小标签。只在设置里关掉「检索站内文章」就不再读索引。
+
+相关文件：`_data/assistant.yml`、`_includes/assistant.html`、`assets/css/assistant.css`、`assets/js/assistant.js`、`assistant/index.md`。
 
 ---
 

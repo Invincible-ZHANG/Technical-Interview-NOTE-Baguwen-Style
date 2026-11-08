@@ -1,0 +1,1486 @@
+/* ============================================================
+   assistant.css —— 小K 智能助手
+   暖金 · 玻璃拟态，复用 design.css 的令牌，独立命名空间 kk-
+   层级：悬浮球/面板 9000（低于图片灯箱 9999）
+   ============================================================ */
+
+.kk-root {
+    --kk-gold: var(--gold-400, #f0b64f);
+    --kk-gold-hi: var(--gold-300, #ffd479);
+    --kk-gold-pale: var(--gold-200, #ffedb2);
+    --kk-teal: var(--teal-300, #7de5cb);
+    --kk-ink: #0b0a0d;
+    --kk-panel: rgba(20, 17, 24, 0.97);
+    --kk-panel-solid: #16131a;
+    --kk-line: rgba(255, 212, 121, 0.18);
+    --kk-line-soft: rgba(255, 255, 255, 0.08);
+    --kk-text: #f3ead9;
+    --kk-text-dim: rgba(243, 234, 217, 0.62);
+    --kk-text-faint: rgba(243, 234, 217, 0.38);
+    --kk-radius: 22px;
+    --kk-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 212, 121, 0.06);
+    --kk-font: var(--font-sans, 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif);
+    --kk-mono: var(--font-mono, 'JetBrains Mono', 'Consolas', monospace);
+
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    z-index: 9000;
+    font-family: var(--kk-font);
+}
+
+.kk-root *,
+.kk-root *::before,
+.kk-root *::after {
+    box-sizing: border-box;
+}
+
+/* ══════════════════════════════════════════
+   1. 悬浮球
+   ══════════════════════════════════════════ */
+.kk-fab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 58px;
+    padding: 0 6px;
+    margin-left: auto;
+    border: 1px solid rgba(255, 212, 121, 0.42);
+    border-radius: 999px;
+    background:
+        radial-gradient(120% 120% at 30% 10%, rgba(255, 237, 178, 0.26), transparent 55%),
+        linear-gradient(180deg, rgba(46, 38, 30, 0.96), rgba(20, 17, 22, 0.98));
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(0, 0, 0, 0.25) inset;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.kk-fab:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 212, 121, 0.72);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.52), 0 0 22px rgba(255, 190, 90, 0.24);
+}
+
+.kk-fab:focus-visible {
+    outline: 2px solid var(--kk-gold-hi);
+    outline-offset: 3px;
+}
+
+.kk-fab-orb {
+    position: relative;
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(from 200deg, #f7cd86, #c98d2b 35%, #ffe6ad 62%, #d9a03f 88%, #f7cd86);
+    color: #201607;
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.55), 0 4px 14px rgba(255, 178, 64, 0.32);
+}
+
+.kk-fab-orb::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    mix-blend-mode: overlay;
+}
+
+.kk-fab-label {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--kk-gold-pale);
+    letter-spacing: 0.04em;
+    transition: max-width 0.34s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.24s ease, margin 0.34s ease;
+}
+
+.kk-fab:hover .kk-fab-label,
+.kk-root.is-open .kk-fab-label {
+    max-width: 110px;
+    opacity: 1;
+    margin: 0 14px 0 10px;
+}
+
+/* 呼吸光环 */
+.kk-fab::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 212, 121, 0.5);
+    opacity: 0;
+    animation: kk-ring 3.6s ease-out infinite;
+    pointer-events: none;
+}
+
+@keyframes kk-ring {
+    0% { transform: scale(0.94); opacity: 0.6; }
+    55% { opacity: 0; }
+    100% { transform: scale(1.12); opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   2. 面板
+   ══════════════════════════════════════════ */
+.kk-panel {
+    position: absolute;
+    right: 0;
+    bottom: 74px;
+    display: flex;
+    flex-direction: column;
+    width: 404px;
+    height: min(640px, calc(100vh - 150px));
+    max-height: calc(100vh - 150px);
+    border-radius: var(--kk-radius);
+    background:
+        radial-gradient(120% 60% at 50% -12%, rgba(255, 212, 121, 0.13), transparent 62%),
+        linear-gradient(180deg, rgba(26, 22, 30, 0.985), rgba(16, 14, 20, 0.995));
+    border: 1px solid var(--kk-line);
+    box-shadow: var(--kk-shadow);
+    backdrop-filter: blur(26px) saturate(1.35);
+    -webkit-backdrop-filter: blur(26px) saturate(1.35);
+    overflow: hidden;
+    transform-origin: 100% 100%;
+    opacity: 0;
+    transform: translateY(14px) scale(0.965);
+    pointer-events: none;
+    transition: opacity 0.24s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.kk-root.is-open .kk-panel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* 顶部一道细金线 */
+.kk-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 12%;
+    right: 12%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 212, 121, 0.75), transparent);
+    pointer-events: none;
+}
+
+/* ── 头部 ── */
+.kk-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 12px 13px 16px;
+    border-bottom: 1px solid var(--kk-line-soft);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent);
+    flex: 0 0 auto;
+}
+
+.kk-id {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.kk-avatar {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: conic-gradient(from 200deg, #f7cd86, #c98d2b 35%, #ffe6ad 62%, #d9a03f 88%, #f7cd86);
+    color: #201607;
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(255, 178, 64, 0.22);
+}
+
+.kk-avatar i {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--kk-teal);
+    border: 2px solid #17141a;
+    box-shadow: 0 0 8px rgba(125, 229, 203, 0.8);
+}
+
+.kk-avatar i.is-off {
+    background: #8b8177;
+    box-shadow: none;
+}
+
+.kk-id-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.kk-name {
+    font-size: 14.5px;
+    font-weight: 650;
+    color: var(--kk-text);
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+}
+
+.kk-sub {
+    font-size: 11px;
+    color: var(--kk-text-faint);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.kk-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 0 0 auto;
+}
+
+.kk-icon-btn {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--kk-text-dim);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.kk-icon-btn svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.kk-icon-btn:hover {
+    color: var(--kk-gold-pale);
+    background: rgba(255, 212, 121, 0.1);
+    border-color: rgba(255, 212, 121, 0.24);
+}
+
+.kk-icon-btn:active {
+    transform: scale(0.94);
+}
+
+.kk-icon-btn.is-active {
+    color: var(--kk-gold-hi);
+    background: rgba(255, 212, 121, 0.14);
+    border-color: rgba(255, 212, 121, 0.34);
+}
+
+/* ── 主体区 ── */
+.kk-body {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.kk-thread {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 16px 16px 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 212, 121, 0.28) transparent;
+}
+
+.kk-thread::-webkit-scrollbar {
+    width: 6px;
+}
+
+.kk-thread::-webkit-scrollbar-thumb {
+    background: rgba(255, 212, 121, 0.24);
+    border-radius: 3px;
+}
+
+.kk-thread::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 212, 121, 0.42);
+}
+
+/* ══════════════════════════════════════════
+   3. 空态
+   ══════════════════════════════════════════ */
+.kk-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 2px 8px;
+    animation: kk-fade-up 0.4s ease both;
+}
+
+@keyframes kk-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+.kk-hero-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 20px;
+    color: var(--kk-gold-pale);
+    letter-spacing: 0.06em;
+}
+
+.kk-hero-mark span {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    background: conic-gradient(from 200deg, #f7cd86, #c98d2b 35%, #ffe6ad 62%, #d9a03f 88%, #f7cd86);
+    color: #201607;
+    font-size: 19px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(255, 178, 64, 0.26);
+}
+
+.kk-hero p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.72;
+    color: var(--kk-text-dim);
+    white-space: pre-line;
+}
+
+.kk-sug {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.kk-sug-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 10px 12px;
+    text-align: left;
+    font-family: inherit;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--kk-text-dim);
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--kk-line-soft);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.kk-sug-btn::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--kk-gold);
+    box-shadow: 0 0 8px rgba(255, 190, 90, 0.7);
+}
+
+.kk-sug-btn:hover {
+    color: var(--kk-gold-pale);
+    background: rgba(255, 212, 121, 0.08);
+    border-color: rgba(255, 212, 121, 0.3);
+    transform: translateX(2px);
+}
+
+.kk-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-top: 4px;
+    padding: 9px 11px;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: rgba(255, 237, 178, 0.7);
+    background: rgba(255, 212, 121, 0.06);
+    border: 1px dashed rgba(255, 212, 121, 0.24);
+    border-radius: 10px;
+}
+
+.kk-tip svg {
+    flex: 0 0 auto;
+    width: 13px;
+    height: 13px;
+    margin-top: 2px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+}
+
+.kk-tip button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--kk-gold-hi);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+/* ══════════════════════════════════════════
+   4. 消息
+   ══════════════════════════════════════════ */
+.kk-msg {
+    display: flex;
+    gap: 9px;
+    margin-bottom: 15px;
+    animation: kk-fade-up 0.3s ease both;
+}
+
+.kk-msg.user {
+    justify-content: flex-end;
+}
+
+.kk-msg-main {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.kk-msg.user .kk-msg-main {
+    max-width: 84%;
+}
+
+/* 助手消息铺满剩余宽度，长回答不用挤成一条 */
+.kk-msg.bot .kk-msg-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.kk-badge {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    margin-top: 2px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 12px;
+    font-weight: 700;
+    color: #201607;
+    background: conic-gradient(from 200deg, #f7cd86, #c98d2b 40%, #ffe6ad 70%, #e0aa4c);
+    box-shadow: 0 3px 10px rgba(255, 178, 64, 0.2);
+}
+
+.kk-bubble {
+    position: relative;
+    padding: 11px 13px;
+    border-radius: 4px 14px 14px 14px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--kk-text);
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid var(--kk-line-soft);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.kk-msg.user .kk-bubble {
+    border-radius: 14px 4px 14px 14px;
+    background: linear-gradient(160deg, rgba(255, 212, 121, 0.16), rgba(255, 178, 64, 0.07));
+    border-color: rgba(255, 212, 121, 0.28);
+    color: var(--gold-100, #fff7e2);
+}
+
+/* 助手的回答不套气泡，直接排在面板底色上，长文更好读 */
+.kk-msg.bot .kk-bubble {
+    padding: 2px 0;
+    background: transparent;
+    border-color: transparent;
+}
+
+.kk-msg.is-error .kk-bubble {
+    padding: 10px 12px;
+    background: rgba(255, 106, 92, 0.09);
+    border: 1px solid rgba(255, 122, 108, 0.34);
+    border-radius: 10px;
+    color: #ffc9c2;
+}
+
+.kk-msg-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    padding-left: 2px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.kk-msg:hover .kk-msg-foot,
+.kk-msg:focus-within .kk-msg-foot {
+    opacity: 1;
+}
+
+.kk-msg-foot button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--kk-text-faint);
+    font-family: inherit;
+    font-size: 10.5px;
+    cursor: pointer;
+    transition: color 0.18s ease, background 0.18s ease;
+}
+
+.kk-msg-foot button:hover {
+    color: var(--kk-gold-pale);
+    background: rgba(255, 212, 121, 0.1);
+}
+
+.kk-msg-foot svg {
+    width: 11px;
+    height: 11px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* 思考块（DeepSeek-R 等推理模型） */
+.kk-think {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-left: 2px solid rgba(255, 212, 121, 0.35);
+    border-radius: 0 8px 8px 0;
+    background: rgba(255, 255, 255, 0.028);
+    color: var(--kk-text-faint);
+    font-size: 11.5px;
+    line-height: 1.66;
+    white-space: pre-wrap;
+    max-height: 148px;
+    overflow: auto;
+}
+
+.kk-think b {
+    display: block;
+    margin-bottom: 4px;
+    color: rgba(255, 212, 121, 0.6);
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* 输入中 */
+.kk-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 18px;
+    vertical-align: middle;
+}
+
+.kk-dots i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--kk-gold);
+    opacity: 0.4;
+    animation: kk-blink 1.2s ease-in-out infinite;
+}
+
+.kk-dots i:nth-child(2) { animation-delay: 0.16s; }
+.kk-dots i:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes kk-blink {
+    0%, 70%, 100% { opacity: 0.28; transform: translateY(0); }
+    35% { opacity: 1; transform: translateY(-2px); }
+}
+
+/* ── Markdown ── */
+.kk-md > *:first-child { margin-top: 0; }
+.kk-md > *:last-child { margin-bottom: 0; }
+
+.kk-md p {
+    margin: 0 0 0.72em;
+}
+
+.kk-md h1,
+.kk-md h2,
+.kk-md h3,
+.kk-md h4 {
+    margin: 1.05em 0 0.45em;
+    font-size: 13.5px;
+    font-weight: 650;
+    color: var(--kk-gold-pale);
+    letter-spacing: 0.02em;
+    line-height: 1.45;
+}
+
+.kk-md h1 { font-size: 15px; }
+
+.kk-md strong {
+    color: var(--gold-100, #fff7e2);
+    font-weight: 650;
+}
+
+.kk-md em {
+    color: var(--kk-text-dim);
+    font-style: italic;
+}
+
+.kk-md a {
+    color: var(--kk-gold-hi);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 212, 121, 0.4);
+    transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.kk-md a:hover {
+    color: #fff;
+    border-bottom-color: var(--kk-gold-hi);
+}
+
+.kk-md ul,
+.kk-md ol {
+    margin: 0.35em 0 0.72em;
+    padding-left: 1.25em;
+}
+
+.kk-md li {
+    margin-bottom: 0.28em;
+}
+
+.kk-md li::marker {
+    color: rgba(255, 212, 121, 0.65);
+}
+
+.kk-md code {
+    padding: 1.5px 5px;
+    border-radius: 5px;
+    background: rgba(255, 212, 121, 0.1);
+    border: 1px solid rgba(255, 212, 121, 0.14);
+    font-family: var(--kk-mono);
+    font-size: 0.88em;
+    color: var(--gold-200, #ffedb2);
+}
+
+.kk-md pre {
+    position: relative;
+    margin: 0.6em 0 0.8em;
+    padding: 11px 12px;
+    border-radius: 10px;
+    background: rgba(8, 7, 10, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.kk-md pre code {
+    padding: 0;
+    background: none;
+    border: 0;
+    color: #e6dcc8;
+    font-size: 11.8px;
+    line-height: 1.65;
+    white-space: pre;
+}
+
+.kk-md blockquote {
+    margin: 0.5em 0;
+    padding: 4px 0 4px 11px;
+    border-left: 2px solid rgba(255, 212, 121, 0.35);
+    color: var(--kk-text-dim);
+}
+
+.kk-md hr {
+    height: 1px;
+    margin: 1em 0;
+    border: 0;
+    background: var(--kk-line-soft);
+}
+
+.kk-md table {
+    width: 100%;
+    margin: 0.6em 0;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.kk-md th,
+.kk-md td {
+    padding: 5px 7px;
+    border: 1px solid var(--kk-line-soft);
+    text-align: left;
+}
+
+.kk-md th {
+    background: rgba(255, 212, 121, 0.08);
+    color: var(--kk-gold-pale);
+    font-weight: 600;
+}
+
+/* 引用来源 */
+.kk-src {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255, 212, 121, 0.18);
+}
+
+.kk-src-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--kk-text-faint);
+    align-self: center;
+    text-transform: uppercase;
+}
+
+.kk-src a {
+    display: inline-block;
+    max-width: 100%;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(255, 212, 121, 0.08);
+    border: 1px solid rgba(255, 212, 121, 0.2);
+    color: var(--gold-200, #ffedb2);
+    font-size: 11px;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+}
+
+.kk-src a:hover {
+    background: rgba(255, 212, 121, 0.16);
+    border-color: rgba(255, 212, 121, 0.45);
+}
+
+/* ══════════════════════════════════════════
+   5. 输入区
+   ══════════════════════════════════════════ */
+.kk-composer {
+    flex: 0 0 auto;
+    padding: 10px 12px 11px;
+    border-top: 1px solid var(--kk-line-soft);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.025), transparent);
+}
+
+.kk-input-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 7px 7px 7px 12px;
+    border-radius: 14px;
+    background: rgba(10, 9, 12, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kk-input-wrap:focus-within {
+    border-color: rgba(255, 212, 121, 0.42);
+    box-shadow: 0 0 0 3px rgba(255, 212, 121, 0.07);
+}
+
+.kk-input {
+    flex: 1 1 auto;
+    min-height: 24px;
+    max-height: 132px;
+    padding: 4px 0;
+    border: 0;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--kk-text);
+    font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.6;
+    scrollbar-width: thin;
+}
+
+.kk-input::placeholder {
+    color: var(--kk-text-faint);
+}
+
+.kk-send {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(160deg, #ffd479, #e0a13a);
+    color: #231806;
+    cursor: pointer;
+    transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+    box-shadow: 0 4px 12px rgba(255, 178, 64, 0.24);
+}
+
+.kk-send svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.kk-send:hover:not(:disabled) {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+}
+
+.kk-send:disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.kk-send.is-stop {
+    background: linear-gradient(160deg, #ff9d8f, #d9543f);
+    color: #2a0d08;
+}
+
+.kk-send.is-stop svg {
+    fill: currentColor;
+    stroke: none;
+}
+
+.kk-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 7px;
+    padding: 0 2px;
+}
+
+.kk-model-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 62%;
+    padding: 3px 8px;
+    border: 1px solid var(--kk-line-soft);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--kk-text-faint);
+    font-family: inherit;
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+}
+
+.kk-model-chip::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--kk-teal);
+    box-shadow: 0 0 6px rgba(125, 229, 203, 0.8);
+}
+
+.kk-model-chip.is-empty::before {
+    background: #ff9d8f;
+    box-shadow: 0 0 6px rgba(255, 157, 143, 0.7);
+}
+
+.kk-model-chip:hover {
+    color: var(--kk-gold-pale);
+    border-color: rgba(255, 212, 121, 0.32);
+}
+
+.kk-hint {
+    font-size: 10px;
+    color: var(--kk-text-faint);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════
+   6. 设置抽屉
+   ══════════════════════════════════════════ */
+.kk-settings {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #1a161d 0%, #141118 100%);
+    border-radius: inherit;
+    transform: translateX(101%);
+    transition: transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 4;
+}
+
+.kk-settings.is-open {
+    transform: translateX(0);
+}
+
+.kk-set-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 12px 12px 16px;
+    border-bottom: 1px solid var(--kk-line-soft);
+}
+
+.kk-set-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.kk-set-title strong {
+    font-size: 13.5px;
+    color: var(--kk-text);
+    letter-spacing: 0.03em;
+}
+
+.kk-set-title span {
+    font-size: 10.5px;
+    color: var(--kk-text-faint);
+}
+
+.kk-set-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 14px 16px 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 212, 121, 0.24) transparent;
+}
+
+.kk-set-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.kk-set-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 212, 121, 0.22);
+    border-radius: 3px;
+}
+
+.kk-field {
+    margin-bottom: 13px;
+}
+
+.kk-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--kk-text-dim);
+    text-transform: uppercase;
+}
+
+.kk-label a {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--kk-gold);
+    text-decoration: none;
+    text-transform: none;
+    border-bottom: 1px dotted rgba(255, 212, 121, 0.45);
+}
+
+.kk-label a:hover {
+    color: var(--kk-gold-hi);
+}
+
+.kk-providers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.kk-prov {
+    padding: 7px 8px;
+    text-align: left;
+    font-family: inherit;
+    font-size: 11.5px;
+    line-height: 1.3;
+    color: var(--kk-text-dim);
+    background: rgba(255, 255, 255, 0.032);
+    border: 1px solid var(--kk-line-soft);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.kk-prov small {
+    display: block;
+    margin-top: 2px;
+    font-size: 9px;
+    color: var(--kk-text-faint);
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kk-prov:hover {
+    border-color: rgba(255, 212, 121, 0.3);
+    color: var(--kk-gold-pale);
+}
+
+.kk-prov.is-active {
+    background: rgba(255, 212, 121, 0.11);
+    border-color: rgba(255, 212, 121, 0.45);
+    color: var(--kk-gold-pale);
+    box-shadow: 0 0 0 1px rgba(255, 212, 121, 0.12) inset;
+}
+
+.kk-prov.is-active small {
+    color: rgba(255, 237, 178, 0.6);
+}
+
+.kk-input-t,
+.kk-select-t {
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 9px;
+    background: rgba(9, 8, 11, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: var(--kk-text);
+    font-family: var(--kk-mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.kk-input-t:focus,
+.kk-select-t:focus {
+    border-color: rgba(255, 212, 121, 0.45);
+    box-shadow: 0 0 0 3px rgba(255, 212, 121, 0.07);
+}
+
+.kk-input-t::placeholder {
+    color: rgba(243, 234, 217, 0.24);
+}
+
+.kk-key-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.kk-key-row .kk-input-t {
+    padding-right: 42px;
+}
+
+.kk-eye {
+    position: absolute;
+    right: 6px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--kk-text-faint);
+    cursor: pointer;
+}
+
+.kk-eye:hover {
+    color: var(--kk-gold-pale);
+    background: rgba(255, 212, 121, 0.1);
+}
+
+.kk-eye svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.kk-note {
+    margin: 6px 0 0;
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: var(--kk-text-faint);
+}
+
+.kk-note b {
+    color: rgba(255, 212, 121, 0.75);
+    font-weight: 600;
+}
+
+.kk-switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 11px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.028);
+    border: 1px solid var(--kk-line-soft);
+    border-radius: 10px;
+}
+
+.kk-switch-row div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.kk-switch-row strong {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kk-text);
+}
+
+.kk-switch-row span {
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--kk-text-faint);
+}
+
+.kk-switch {
+    position: relative;
+    flex: 0 0 auto;
+    width: 38px;
+    height: 21px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    transition: background 0.22s ease;
+}
+
+.kk-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #cfc4b0;
+    transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.22s ease;
+}
+
+.kk-switch[aria-pressed="true"] {
+    background: linear-gradient(90deg, rgba(255, 212, 121, 0.55), rgba(224, 161, 58, 0.85));
+}
+
+.kk-switch[aria-pressed="true"]::after {
+    transform: translateX(17px);
+    background: #fff8ea;
+}
+
+.kk-set-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.kk-set-foot {
+    flex: 0 0 auto;
+    padding: 8px 16px 14px;
+    border-top: 1px solid var(--kk-line-soft);
+    background: #15121a;
+    box-shadow: 0 -14px 24px rgba(10, 8, 12, 0.55);
+}
+
+.kk-set-foot .kk-set-actions {
+    margin-top: 0;
+}
+
+.kk-set-foot .kk-btn,
+.kk-set-foot .kk-btn.ghost {
+    flex: 1 1 auto;
+}
+
+.kk-btn {
+    flex: 1 1 auto;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.kk-btn.primary {
+    color: #231806;
+    background: linear-gradient(160deg, #ffd479, #e0a13a);
+    box-shadow: 0 6px 18px rgba(255, 178, 64, 0.22);
+}
+
+.kk-btn.primary:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+}
+
+.kk-btn.ghost {
+    flex: 0 0 auto;
+    color: var(--kk-text-dim);
+    background: transparent;
+    border-color: var(--kk-line-soft);
+}
+
+.kk-btn.ghost:hover {
+    color: var(--kk-gold-pale);
+    border-color: rgba(255, 212, 121, 0.32);
+}
+
+.kk-test-out {
+    margin: 0 0 8px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--kk-text-faint);
+}
+
+.kk-test-out:empty {
+    display: none;
+}
+
+.kk-test-out.ok { color: var(--kk-teal); }
+.kk-test-out.bad { color: #ff9d8f; }
+
+/* ══════════════════════════════════════════
+   7. 页面模式（/assistant/）
+   ══════════════════════════════════════════ */
+.kk-root.kk-page {
+    position: static;
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+.kk-root.kk-page .kk-fab {
+    display: none;
+}
+
+.kk-root.kk-page .kk-panel {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: min(62vh, 620px);
+    max-height: none;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 212, 121, 0.08);
+}
+
+.kk-root.kk-page .kk-head {
+    padding: 16px 16px 15px 20px;
+}
+
+.kk-root.kk-page .kk-thread {
+    padding: 22px 24px 10px;
+}
+
+.kk-root.kk-page .kk-bubble {
+    font-size: 14px;
+    padding: 12px 15px;
+}
+
+.kk-root.kk-page .kk-composer {
+    padding: 12px 20px 14px;
+}
+
+.kk-root.kk-page .kk-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 17px;
+}
+
+.kk-root.kk-page .kk-sub {
+    max-width: 320px;
+}
+
+/* 页面上已经有标题，面板里就不再重复一遍「K 小K」 */
+.kk-root.kk-page .kk-hero-mark {
+    display: none;
+}
+
+.kk-root.kk-page .kk-hero p {
+    max-width: 640px;
+    font-size: 14px;
+}
+
+.kk-root.kk-page .kk-sug {
+    max-width: 640px;
+}
+
+.kk-root.kk-page .kk-tip {
+    max-width: 640px;
+}
+
+/* 独立页外框 */
+.kk-page-wrap {
+    margin: 8px 0 40px;
+}
+
+.kk-page-note {
+    max-width: 880px;
+    margin: 16px auto 0;
+    padding: 0 2px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--cream-faint, rgba(255, 251, 231, 0.55));
+    text-align: center;
+}
+
+.kk-page-note a {
+    color: var(--gold-300, #ffd479);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 212, 121, 0.4);
+}
+
+/* ══════════════════════════════════════════
+   8. 响应式
+   ══════════════════════════════════════════ */
+@media (max-width: 720px) {
+    .kk-root {
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
+    }
+
+    .kk-fab {
+        margin-left: auto;
+        width: 54px;
+        height: 54px;
+        padding: 4px;
+        justify-content: center;
+    }
+
+    .kk-fab-label,
+    .kk-fab:hover .kk-fab-label,
+    .kk-root.is-open .kk-fab-label {
+        display: none;
+    }
+
+    .kk-fab-orb {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+
+    .kk-panel {
+        position: fixed;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 20px 20px 0 0;
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0;
+        transform-origin: 50% 100%;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .kk-hint {
+        display: none;
+    }
+
+    .kk-msg.user .kk-msg-main {
+        max-width: 90%;
+    }
+
+    .kk-root.kk-page .kk-panel {
+        height: min(76vh, 640px);
+        border-radius: var(--kk-radius);
+        border: 1px solid var(--kk-line);
+    }
+
+    .kk-root.kk-page .kk-thread {
+        padding: 16px 14px 6px;
+    }
+
+    .kk-root.kk-page .kk-composer {
+        padding: 10px 12px 12px;
+    }
+}
+
+body.kk-lock {
+    overflow: hidden;
+}
+
+/* 动效降级 */
+@media (prefers-reduced-motion: reduce) {
+    .kk-root *,
+    .kk-root *::before,
+    .kk-root *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .kk-fab::after {
+        display: none;
+    }
+}

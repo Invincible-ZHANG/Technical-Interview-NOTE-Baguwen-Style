@@ -1,0 +1,30 @@
+{%- comment -%}
+  _includes/assistant.html —— 小K 智能助手挂载点
+  由各 layout 在 </body> 前引入；配置读 _data/assistant.yml
+  渲染出的 DOM 全部由 assets/js/assistant.js 生成，这里只负责搬运配置
+{%- endcomment -%}
+{%- assign kk = site.data.assistant -%}
+{%- if kk.enabled != false -%}
+<link rel="stylesheet" href="{{ '/assets/css/assistant.css' | relative_url }}">
+<div id="kk-root" class="kk-root" aria-live="polite"></div>
+
+<script>
+window.__KK_CONFIG__ = {
+  name: {{ kk.name | default: "小K" | jsonify }},
+  mark: {{ kk.mark | default: "K" | jsonify }},
+  tagline: {{ kk.tagline | default: "站内助理" | jsonify }},
+  welcome: {{ kk.welcome | default: "" | strip | jsonify }},
+  suggestions: {{ kk.suggestions | jsonify }},
+  defaultProvider: {{ kk.default_provider | default: "deepseek" | jsonify }},
+  defaultModel: {{ kk.default_model | default: "" | jsonify }},
+  proxyUrl: {{ kk.proxy_url | default: "" | jsonify }},
+  siteKey: {{ kk.api_key | default: "" | jsonify }},
+  useSiteSearch: {{ kk.use_site_search | default: true | jsonify }},
+  maxHistory: {{ kk.max_history | default: 12 }},
+  temperature: {{ kk.temperature | default: 0.4 }},
+  searchIndex: {{ '/search.json' | relative_url | jsonify }},
+  pageUrl: {{ '/assistant/' | relative_url | jsonify }}
+};
+</script>
+<script src="{{ '/assets/js/assistant.js' | relative_url }}" defer></script>
+{%- endif -%}
