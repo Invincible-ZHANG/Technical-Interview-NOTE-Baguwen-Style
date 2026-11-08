@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-11-08T15:48:36.667110+00:00",
+  "before": {
+    "http": "200",
+    "body": {
+      "url": "https://api.github.com/repos/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style/pages",
+      "status": "building",
+      "cname": "www.zhangzijian.cn",
+      "custom_404": false,
+      "html_url": "http://www.zhangzijian.cn/",
+      "build_type": "legacy",
+      "source": {
+        "branch": "main",
+        "path": "/docs"
+      },
+      "public": true,
+      "protected_domain_state": null,
+      "pending_domain_unverified_at": null,
+      "https_enforced": false
+    }
+  },
+  "put": {
+    "http": "403",
+    "body": {
+      "message": "Resource not accessible by integration",
+      "documentation_url": "https://docs.github.com/rest/pages/pages#update-information-about-a-apiname-pages-site",
+      "status": "403"
+    }
+  },
+  "after": {
+    "http": "200",
+    "body": {
+      "url": "https://api.github.com/repos/Invincible-ZHANG/Technical-Interview-NOTE-Baguwen-Style/pages",
+      "status": "building",
+      "cname": "www.zhangzijian.cn",
+      "custom_404": false,
+      "html_url": "http://www.zhangzijian.cn/",
+      "build_type": "legacy",
+      "source": {
+        "branch": "main",
+        "path": "/docs"
+      },
+      "public": true,
+      "protected_domain_state": null,
+      "pending_domain_unverified_at": null,
+      "https_enforced": false
+    }
+  }
+}
